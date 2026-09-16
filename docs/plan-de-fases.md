@@ -91,15 +91,24 @@ test: no hay forma barata de correr GitHub Actions localmente.
 
 ### Definiciones pendientes a tomar al llegar
 
-- ~~Proveedor del remoto~~ — GitHub (2026-09-16).
-- ~~Dónde corre el agente~~ — hook local de pre-push, decisión 0016.
+- ~~Proveedor del remoto~~ — GitHub, repo público `PabloESanabriaQ/proyecto-final`
+  (2026-09-16; público porque la protección de rama no está disponible en repos privados del
+  plan gratuito, y el proyecto no tiene datos reales).
+- ~~Dónde corre el agente~~ — hook local de pre-push, decisión 0016; cualquier agente, 0018.
 - ~~Versión de Python y de Node~~ — 3.14 y 24 LTS, decisión 0017.
-- Nombre y clave del proyecto en Jira (este plan usa `AUL` como ejemplo).
+- ~~Clave del proyecto en Jira~~ — `AUL` (2026-09-16).
 
 ### Cierre
 
-CI verde sobre el esqueleto; el PR de prueba bloqueado y el correcto mergeado quedan como
-evidencia; `arquitectura.md` §5 ("Cómo correrlo") completada.
+CI verde sobre el esqueleto; el PR correcto mergeado con aprobación queda como evidencia;
+`arquitectura.md` §5 ("Cómo correrlo") completada. El "PR que rompe lint queda bloqueado" del
+lado de CI no se prueba con un PR real: exigiría saltear el hook con `--no-verify`; se verifica
+que `CI OK` sea check obligatorio de `main` (API de GitHub) y que el hook bloquee localmente
+(tests del hook).
+
+**Estado al 2026-09-16:** todo hecho y verificado salvo el merge del PR #1, que espera la
+aprobación de otro integrante, y el enlace del repo desde Jira (HU-0.5), que se hace al crear
+el proyecto `AUL`.
 
 ---
 

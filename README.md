@@ -79,7 +79,8 @@ Formatear: `uv run ruff format backend solver` y `cd frontend && npm run format`
 2. `git push` corre el hook: lint, tests y **revisión del agente**. Si dice `BLOQUEADO`, corregí
    y volvé a pushear. La salida queda en `.review/ultima.md`.
 3. Abrí el PR y **pegá la salida de `.review/ultima.md`** en la descripción.
-4. Otra persona aprueba; CI en verde; merge.
+4. Otra persona aprueba; CI en verde (`CI OK`); merge. `main` lo exige: no se puede pushear
+   directo ni mergear sin las dos cosas, tampoco siendo administrador.
 
 `git push --no-verify` saltea la puerta y no se usa. Si un bloqueante no aplica:
 `AULERO_REVIEW_DESCARTAR="motivo" git push` — el motivo queda en la salida y va al PR.

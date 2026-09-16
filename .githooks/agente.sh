@@ -27,7 +27,22 @@ fi
 command -v "$AGENTE" >/dev/null 2>&1 \
   || { echo "No se encontró '$AGENTE' en el PATH. Instalá Claude Code, Codex CLI o Gemini CLI (README), o cambiá AULERO_AGENTE." >&2; exit 2; }
 
-extraer() { python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get(sys.argv[1], ""))' "$1"; }
+# Imprime el campo pedido del JSON. Si falta o está vacío (por ejemplo, el agente agotó sus
+# turnos), manda el JSON completo a stderr —que el hook guarda en .review/error.log— y falla.
+extraer() {
+  python3 -c '
+import json, sys
+crudo = sys.stdin.read()
+try:
+    valor = json.loads(crudo).get(sys.argv[1])
+except ValueError:
+    valor = None
+if not valor:
+    sys.stderr.write("El agente no devolvió el campo %r. Respuesta completa:\n%s\n" % (sys.argv[1], crudo))
+    sys.exit(3)
+print(valor)
+' "$1"
+}
 
 case "$AGENTE" in
   claude)

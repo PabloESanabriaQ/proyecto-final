@@ -5,7 +5,8 @@
 > las decisiones enlazadas y la deuda. El estado en lenguaje llano va en `informe-de-gestion.md`.
 >
 > **Última actualización:** 2026-09-16 — Fase 0 en curso: esqueleto, linters, hook de pre-push
-> con agente y CI hechos y verificados; falta proteger `main` en GitHub y enlazar Jira.
+> con agente, CI y `main` protegida, hechos y verificados; falta el merge del PR #1 (aprobación
+> de otro integrante) y enlazar Jira.
 
 ## 1. Stack y arquitectura
 
@@ -166,7 +167,14 @@ cd frontend && npm run lint && npm run format:check && npm run typecheck && npm 
 bash .githooks/tests/test_pre_push.sh
 ```
 
-### 5.1 La puerta de pre-push
+### 5.1 Las puertas
+
+**En GitHub:** `main` está protegida (activado el 2026-09-16 por API): check `CI OK` obligatorio
+y al día con `main`, 1 aprobación de otra persona, conversaciones resueltas, sin force push ni
+borrado, aplica también a administradores. El repo es público porque la protección de rama no
+existe en repos privados del plan gratuito.
+
+**En la máquina de cada uno:** la puerta de pre-push.
 
 `.githooks/pre-push` corre, por cada rama que se sube: lint y tests de las partes tocadas
 (Python, frontend, el propio hook), y después la revisión del agente sobre el diff acumulado
@@ -181,7 +189,7 @@ casos borde tienen test en `.githooks/tests/test_pre_push.sh`, con un agente sim
 
 | Fase | Qué entra | Estado |
 |---|---|---|
-| 0 | Repo, estructura, hook de pre-push con agente, CI de lint y tests | **En curso** — hecho: HU-0.1, 0.2, 0.4 y el workflow de 0.3; falta: protección de `main` y PR de prueba (0.3), Jira (0.5) |
+| 0 | Repo, estructura, hook de pre-push con agente, CI de lint y tests, `main` protegida | **En curso** — hecho: HU-0.1 a 0.4 (CI verde en PR #1, `main` exige `CI OK` + 1 aprobación); falta: merge de #1 con aprobación ajena, enlace desde Jira (0.5) |
 | 1 | Importación Excel, validación, BD, API de consulta, vista de datos cargados, contrato de instancia | No iniciada |
 | 2 | Solver A con restricciones de recursos, validador, CLI, juguete | No iniciada |
 | 3 | Solver A con restricciones curriculares, diagnóstico de infactibilidad | No iniciada |

@@ -139,7 +139,7 @@ revisar_ref() {
   diff="$(git diff "$base" "$sha_local" -- . "${EXCLUIR_DEL_DIFF[@]}")"
   prompt="$(cat .githooks/revision-prompt.md)"
 
-  log "Revisión del agente (${AULERO_AGENTE:-el primero instalado}): $ref_local, $(wc -l <<<"$archivos" | tr -d ' ') archivo(s) (${base:0:7}..${corto}). Suele tardar 1–3 minutos (tope: ${TIMEOUT_AGENTE}s)."
+  log "Revisión del agente (${AULERO_AGENTE_CMD:-${AULERO_AGENTE:-el primero instalado}}): $ref_local, $(wc -l <<<"$archivos" | tr -d ' ') archivo(s) (${base:0:7}..${corto}). Suele tardar 1–3 minutos (tope: ${TIMEOUT_AGENTE}s)."
   set +e
   # Cerca de seis acentos: un diff puede contener ``` (por ejemplo, un README).
   texto="$(printf '%s\n\n## Diff a revisar\n\n``````diff\n%s\n``````\n' "$prompt" "$diff" \

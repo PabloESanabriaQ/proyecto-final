@@ -45,5 +45,8 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 
 ## Próximo paso
 
-**Fase 0** del plan, en curso. Hecho: esqueleto, linters, hook de pre-push con agente, CI. Falta:
-proteger `main` en GitHub con `CI OK` + una aprobación (HU-0.3), enlazar Jira (HU-0.5).
+**Fase 0** del plan, en curso. Hecho: esqueleto, linters, hook de pre-push con agente, CI,
+`main` protegida. Falta: que otro integrante apruebe y mergee el PR #1, y enlazar el repo desde
+Jira (`AUL`, HU-0.5). Al mergear, cerrar la fase con el checklist de `docs/plan-de-fases.md` y
+el commit `Fase 0 — Base del proyecto y puerta de calidad`. Después: Fase 1 (PPS) y Fase 2
+(CP-SAT) en paralelo, tomando antes sus definiciones pendientes.
