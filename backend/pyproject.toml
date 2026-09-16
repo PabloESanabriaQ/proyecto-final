@@ -1,0 +1,32 @@
+[project]
+name = "aulero-api"
+version = "0.1.0"
+description = "API y persistencia de Aulero UNViMe (FastAPI + PostgreSQL)."
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "aulero-solver",
+    "fastapi>=0.118",
+    "uvicorn[standard]>=0.37",
+    "sqlalchemy>=2.0",
+    "alembic>=1.16",
+    "psycopg[binary]>=3.2",
+    "pydantic-settings>=2.10",
+]
+
+[dependency-groups]
+dev = [
+    "httpx>=0.28",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["aulero_api"]
+
+[tool.mypy]
+strict = true
+python_version = "3.14"
+files = ["aulero_api", "tests"]
+plugins = ["pydantic.mypy"]

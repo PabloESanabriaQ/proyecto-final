@@ -1,0 +1,5 @@
+# Versiones base del proyecto (decisión 0017). CI usa exactamente estas.
+[tools]
+python = "3.14"
+node = "24"
+uv = "latest"
