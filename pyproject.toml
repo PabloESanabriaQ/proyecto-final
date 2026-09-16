@@ -36,7 +36,8 @@ src = ["backend", "solver"]
 select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "RUF"]
 
 [tool.ruff.lint.per-file-ignores]
-# En tests se admiten nombres largos y asserts sueltos.
+# En tests se admiten nombres de función y de variable que no sigan pep8 (nombres largos que
+# describen el caso).
 "**/tests/**" = ["N802", "N806"]
 
 # --- pytest: se corre desde la raíz sobre los dos paquetes ---

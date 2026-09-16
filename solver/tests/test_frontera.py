@@ -28,6 +28,7 @@ def correr_lint_imports() -> subprocess.CompletedProcess[str]:
 
 def test_solver_importando_backend_hace_fallar_lint_imports() -> None:
     intruso = PAQUETE / "_intruso_de_prueba.py"
+    intruso.unlink(missing_ok=True)  # por si una corrida anterior murió a mitad
     try:
         intruso.write_text("import aulero_api  # noqa: F401\n")
         resultado = correr_lint_imports()

@@ -136,9 +136,10 @@ el contrato es un cambio para los dos equipos y se anuncia en el PR.
 
 ### 3.2 API (lo define el equipo PPS, Fase 1 en adelante)
 
-Se documenta automáticamente con OpenAPI. Recursos previstos: períodos, importación de Excel,
-entidades de carga (CRUD), corridas (lanzar, consultar estado, resultado, publicar, comparar),
-excepciones de aula, vistas de horario (por aula, docente, carrera/año, semana).
+Se documenta automáticamente con OpenAPI (`/docs`). Hoy expone `GET /salud` (estado, versión de
+la API y del solver enlazado; schema `Salud`). Recursos previstos: períodos, importación de
+Excel, entidades de carga (CRUD), corridas (lanzar, consultar estado, resultado, publicar,
+comparar), excepciones de aula, vistas de horario (por aula, docente, carrera/año, semana).
 
 ## 4. Estrategia de tests
 
@@ -169,11 +170,12 @@ bash .githooks/tests/test_pre_push.sh
 
 `.githooks/pre-push` corre, por cada rama que se sube: lint y tests de las partes tocadas
 (Python, frontend, el propio hook), y después la revisión del agente sobre el diff acumulado
-contra `origin/main` (sin lockfiles), con `claude -p` en modo solo lectura (`Read`, `Grep`,
-`Glob`) y un tope de 10 minutos. El prompt está en `.githooks/revision-prompt.md` y pide un
-veredicto en la última línea; `BLOQUEADO` corta el push. La salida queda en `.review/<sha>.md`
-y `.review/ultima.md` para pegarla en el PR. Sus casos borde tienen test en
-`.githooks/tests/test_pre_push.sh`, con un `claude` simulado.
+contra `origin/main` (sin lockfiles), con un tope de 10 minutos. El agente lo elige cada
+integrante (`AULERO_AGENTE=claude|codex|gemini`, decisión 0018) y lo invoca
+`.githooks/agente.sh` en modo no interactivo y solo lectura. El prompt está en
+`.githooks/revision-prompt.md` y pide un veredicto en la última línea; `BLOQUEADO` corta el
+push. La salida queda en `.review/<sha>.md` y `.review/ultima.md` para pegarla en el PR. Sus
+casos borde tienen test en `.githooks/tests/test_pre_push.sh`, con un agente simulado.
 
 ## 6. Estado por fase
 
@@ -200,6 +202,9 @@ El detalle, las historias y las definiciones pendientes por fase están en `plan
 - **El hook depende de bash y de `python3` en el PATH** para leer el JSON del agente. En
   Windows exige WSL2 (README). **La señal:** un integrante que no pueda pushear desde su
   entorno habitual.
+- **Los adaptadores de Codex y Gemini en `.githooks/agente.sh` no se corrieron de punta a
+  punta** (sin credenciales el 2026-09-16); se escribieron contra `--help`. **La señal:** el
+  primer push de quien use uno de los dos. Se corrige en ese PR.
 - **`fastapi.testclient` avisa que `httpx` está deprecado a favor de `httpx2`** (warning en
   `pytest`). No afecta hoy. **La señal:** que Starlette lo convierta en error en una versión
   nueva; ahí se migra el cliente de tests.

@@ -1,8 +1,8 @@
 # Plan por fases
 
 > Público: el equipo. Cada fase es una rebanada vertical que se puede demostrar sola y no está
-> terminada hasta que `informe-de-gestion.md` y `arquitectura.md` quedaron al día
-> (checklist de cierre en la skill `avanzar-por-fases`).
+> terminada hasta que `informe-de-gestion.md` y `arquitectura.md` quedaron al día (checklist
+> al final de este documento, "Cierre de una fase").
 >
 > **Convención de este documento.** Cada fase lleva: qué permite hacer que antes no se podía,
 > equipo responsable, historias de usuario (para cargar en Jira), casos borde que la fase tiene
@@ -65,12 +65,16 @@ agente en su máquina, y que nada llegue a `main` sin CI verde y una aprobación
 
 ### Casos borde
 
-Todos con test en `.githooks/tests/test_pre_push.sh` salvo el de import-linter, que está en
-`solver/tests/test_frontera.py`.
+La parte del hook de cada caso tiene test en `.githooks/tests/test_pre_push.sh`; la regla de
+import-linter, en `solver/tests/test_frontera.py`. La parte de CI de los dos primeros ("CI
+pasa sin correr tests", "CI falla") se verifica a ojo con el PR de prueba de HU-0.3, no con un
+test: no hay forma barata de correr GitHub Actions localmente.
 
 - PR que toca solo `docs/`: CI pasa sin correr tests de código; el hook no invoca al agente.
 - PR que toca solo `frontend/`: no corre los tests de Python (y viceversa).
 - `solver/` importando `backend/`: CI falla (regla de import-linter).
+- Ningún agente instalado, o `AULERO_AGENTE` apunta a uno que no está: mensaje que dice qué
+  instalar (decisión 0018).
 - Push sin cambios respecto de `origin/main` (rama ya subida): el hook no invoca al agente.
 - Push con el agente no disponible (ausente del PATH, caído, o colgado más de 10 min): el hook
   falla con un mensaje claro, no deja pasar en silencio.
@@ -81,6 +85,9 @@ Todos con test en `.githooks/tests/test_pre_push.sh` salvo el de import-linter, 
   la línea completa).
 - El diff que ve el agente no incluye lockfiles; un diff con ``` adentro no rompe el prompt.
 - Cambios sin commitear: aviso, no bloqueo.
+- Borrar una rama remota (`git push --delete`): no se revisa nada.
+- Push de varias ramas a la vez: se revisa cada una, con una salida por commit.
+- Sin red: se usa la última `origin/main` conocida, con aviso.
 
 ### Definiciones pendientes a tomar al llegar
 
@@ -584,6 +591,34 @@ buena voluntad:
 | Más de un período planificado a la vez | Un período por corrida. |
 | Gestión de cupos e inscripciones | Los alumnos por comisión son entrada (0005). |
 | Notificaciones (correo, mensajes) al publicar | Sin pedido; puede revisarse al cerrar la Fase 8. |
+
+## Cierre de una fase
+
+Una fase no está terminada cuando compila: está terminada cuando pasa esta revisión **y** los
+dos documentos vivos quedaron actualizados. Cumplir a medias es no cumplir.
+
+1. **Verificación, con la salida a la vista.** Correr la verificación completa (README,
+   "Verificar") y **pegar la salida real de ahora** en el cierre. "La corrí hace un rato y
+   pasaba" no es haber verificado. Además: cada caso borde de la fase tiene un test que lo
+   nombra; los cambios de esquema aplican sobre un entorno limpio y sobre uno que viene de las
+   fases anteriores; las interfaces nuevas están documentadas; ninguna convención violada; toda
+   decisión de diseño que apareció está en `decisiones/`.
+2. **`informe-de-gestion.md`:** marcar la fase y la fecha; en una o dos frases, qué capacidad
+   nueva tiene el sistema contada desde quien lo usa; si cambió una regla del dominio,
+   explicarla en lenguaje llano; avanzar el ejemplo narrado.
+3. **`arquitectura.md`:** módulos, tablas e interfaces nuevas; enlace a las decisiones que la
+   fase aplicó o creó; marcar la fase y la fecha; la deuda que deja, **con la señal que
+   indicaría pagarla**.
+4. **Un commit `Fase N — Nombre`** que diga qué entra, qué decisión aplicó y qué casos borde
+   cubre. Si la fase no se puede cerrar en esta sesión, el commit es `Fase N (en curso) — Nombre`
+   con "Falta para cerrar: …" en el cuerpo, y los documentos muestran la fase en curso, nunca
+   como hecha.
+5. **Handoff** al equipo con cuatro líneas: `Funciona:` / `Abierto:` / `Decisiones:` / `Sigue:`.
+
+Excusas que aparecen justo cuando "ya está", y todas significan que sigue abierta: "los informes
+los actualizo al final", "el caso borde está cubierto indirectamente", "el test de integración
+lo agrego en la fase que viene", "esta decisión es obvia", "falta un detalle menor, lo dejo
+anotado y cierro" (anotarlo en la deuda es válido; cerrar sin anotarlo, no).
 
 ## Cómo cargar esto en Jira
 

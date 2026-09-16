@@ -21,8 +21,10 @@ docs/      documentación viva, plan y decisiones
 ## Arranque en un clon nuevo
 
 Requisitos: [mise](https://mise.jdx.dev) (instala Python 3.14, Node 24 y uv desde `mise.toml`),
-[Docker](https://docs.docker.com/get-docker/) (PostgreSQL) y [Claude Code](https://claude.com/claude-code)
-(revisión del agente antes de cada push).
+[Docker](https://docs.docker.com/get-docker/) (PostgreSQL) y **un agente de código** para la
+revisión antes de cada push: [Claude Code](https://claude.com/claude-code),
+[Codex CLI](https://github.com/openai/codex) o [Gemini CLI](https://github.com/google-gemini/gemini-cli)
+(el de Antigravity). Con el que uses, iniciá sesión una vez antes del primer push.
 
 ```bash
 git clone git@github.com:PabloESanabriaQ/proyecto-final.git && cd proyecto-final
@@ -81,3 +83,26 @@ Formatear: `uv run ruff format backend solver` y `cd frontend && npm run format`
 
 `git push --no-verify` saltea la puerta y no se usa. Si un bloqueante no aplica:
 `AULERO_REVIEW_DESCARTAR="motivo" git push` — el motivo queda en la salida y va al PR.
+
+### Qué agente usa el hook
+
+El primero que encuentre instalado, en este orden: `claude`, `codex`, `gemini`. Para elegir:
+
+```bash
+export AULERO_AGENTE=codex      # o claude, o gemini — ponelo en tu shell
+```
+
+| Agente | Cómo lo invoca el hook | Estado |
+|---|---|---|
+| Claude Code | `claude -p`, solo lectura (`Read`, `Grep`, `Glob`) | Probado de punta a punta |
+| Codex CLI | `codex exec --sandbox read-only` | A confirmar en el primer push de quien lo use |
+| Gemini CLI (Antigravity) | `gemini --approval-mode plan` — marcá la carpeta como confiable en Gemini antes, si no degrada el modo | A confirmar en el primer push de quien lo use |
+
+Si un adaptador falla en tu máquina, el error queda en `.review/error.log`; corregí
+`.githooks/agente.sh` en tu PR y sacá el "a confirmar" de esta tabla.
+
+### Contexto para el agente
+
+`AGENTS.md` es el archivo de contexto del proyecto para cualquier agente (Codex y Antigravity lo
+leen directo; `CLAUDE.md` y `GEMINI.md` lo importan). Lo que un agente tiene que saber al abrir
+el repo va ahí.

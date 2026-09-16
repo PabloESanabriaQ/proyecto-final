@@ -6,16 +6,19 @@
 # 2. Corre lint y tests de las partes tocadas (no gasta una revisión sobre código roto).
 #    Lint y tests corren sobre el árbol de trabajo; el agente revisa el commit. Si hay cambios
 #    sin commitear el hook avisa, porque pueden diverger.
-# 3. Pide la revisión al agente (Claude Code en modo no interactivo, solo lectura) y bloquea el
-#    push si el veredicto es BLOQUEADO. La salida queda en .review/ para pegarla en el PR.
+# 3. Pide la revisión al agente (el que tenga cada integrante: Claude Code, Codex o Gemini, vía
+#    .githooks/agente.sh, en modo no interactivo y solo lectura) y bloquea el push si el
+#    veredicto es BLOQUEADO. La salida queda en .review/ para pegarla en el PR.
 #
 # Activar una vez por clon:  git config core.hooksPath .githooks
+# Elegir agente:             AULERO_AGENTE=codex git push   (por defecto, el primero instalado)
 # Descartar un bloqueante que no aplica (queda escrito en la salida, y el motivo va al PR):
 #   AULERO_REVIEW_DESCARTAR="motivo" git push
 #
 # Variables para tests (.githooks/tests/test_pre_push.sh): AULERO_HOOK_SIN_CHEQUEOS=1 saltea
-# lint y tests (pero registra qué hubiera corrido en $AULERO_HOOK_REGISTRO); CLAUDE_BIN apunta a
-# otro ejecutable en lugar de `claude`; AULERO_HOOK_TIMEOUT tope en segundos para el agente.
+# lint y tests (pero registra qué hubiera corrido en $AULERO_HOOK_REGISTRO); AULERO_AGENTE_CMD
+# reemplaza al agente por un ejecutable que lee stdin e imprime texto; AULERO_HOOK_TIMEOUT tope
+# en segundos para el agente.
 set -euo pipefail
 
 RAIZ="$(git rev-parse --show-toplevel)"
@@ -30,7 +33,7 @@ else
 fi
 mx() { ${MX[@]+"${MX[@]}"} "$@" </dev/null; }
 
-CLAUDE_BIN="${CLAUDE_BIN:-claude}"
+AGENTE_SH="$RAIZ/.githooks/agente.sh"
 TIMEOUT_AGENTE="${AULERO_HOOK_TIMEOUT:-600}"
 if command -v timeout >/dev/null 2>&1; then
   CON_TIMEOUT=(timeout "$TIMEOUT_AGENTE")
@@ -87,10 +90,10 @@ revisar_ref() {
     return 0
   fi
 
-  /usr/bin/grep -qE "$PAT_PYTHON" <<<"$archivos" && toca_python=true
-  /usr/bin/grep -qE "$PAT_FRONTEND" <<<"$archivos" && toca_frontend=true
-  /usr/bin/grep -qE "$PAT_HOOK" <<<"$archivos" && toca_hook=true
-  if $toca_python || $toca_frontend || $toca_hook || /usr/bin/grep -qE "$PAT_INFRA" <<<"$archivos"; then
+  grep -qE "$PAT_PYTHON" <<<"$archivos" && toca_python=true
+  grep -qE "$PAT_FRONTEND" <<<"$archivos" && toca_frontend=true
+  grep -qE "$PAT_HOOK" <<<"$archivos" && toca_hook=true
+  if $toca_python || $toca_frontend || $toca_hook || grep -qE "$PAT_INFRA" <<<"$archivos"; then
     toca_codigo=true
   fi
 
@@ -129,32 +132,26 @@ revisar_ref() {
     return 0
   fi
 
-  command -v "$CLAUDE_BIN" >/dev/null 2>&1 \
-    || fallo "No se encontró '$CLAUDE_BIN' en el PATH. Instalá Claude Code (README) o, si es una emergencia, avisá en el PR."
-
   mkdir -p .review
-  local corto salida diff prompt respuesta estado texto veredicto
+  local corto salida diff prompt texto estado veredicto
   corto="$(git rev-parse --short "$sha_local")"
   salida=".review/${corto}.md"
   diff="$(git diff "$base" "$sha_local" -- . "${EXCLUIR_DEL_DIFF[@]}")"
   prompt="$(cat .githooks/revision-prompt.md)"
 
-  log "Revisión del agente: $ref_local, $(wc -l <<<"$archivos" | tr -d ' ') archivo(s) (${base:0:7}..${corto}). Suele tardar 1–3 minutos (tope: ${TIMEOUT_AGENTE}s)."
+  log "Revisión del agente (${AULERO_AGENTE:-el primero instalado}): $ref_local, $(wc -l <<<"$archivos" | tr -d ' ') archivo(s) (${base:0:7}..${corto}). Suele tardar 1–3 minutos (tope: ${TIMEOUT_AGENTE}s)."
   set +e
   # Cerca de seis acentos: un diff puede contener ``` (por ejemplo, un README).
-  respuesta="$(printf '%s\n\n## Diff a revisar\n\n``````diff\n%s\n``````\n' "$prompt" "$diff" \
-    | ${CON_TIMEOUT[@]+"${CON_TIMEOUT[@]}"} "$CLAUDE_BIN" -p --output-format json --allowedTools Read Grep Glob --max-turns 40 2>.review/error.log)"
+  texto="$(printf '%s\n\n## Diff a revisar\n\n``````diff\n%s\n``````\n' "$prompt" "$diff" \
+    | ${CON_TIMEOUT[@]+"${CON_TIMEOUT[@]}"} bash "$AGENTE_SH" 2>.review/error.log)"
   estado=$?
   set -e
   if [[ $estado -eq 124 ]]; then
     fallo "El agente no respondió en ${TIMEOUT_AGENTE}s. Reintentá, o subí el tope con AULERO_HOOK_TIMEOUT."
   fi
-  if [[ $estado -ne 0 || -z "$respuesta" ]]; then
+  if [[ $estado -ne 0 || -z "$texto" ]]; then
     fallo "El agente no respondió (código $estado). Detalle en .review/error.log: $(head -c 300 .review/error.log | tr '\n' ' ')"
   fi
-
-  texto="$(python3 -c 'import json,sys; d=json.load(sys.stdin); print(d.get("result",""))' <<<"$respuesta")" \
-    || fallo "No se pudo leer la respuesta del agente (no es JSON). Guardada en .review/error.log."
 
   {
     printf '# Revisión del agente — %s\n\n' "$corto"
@@ -163,8 +160,9 @@ revisar_ref() {
   } >"$salida"
   cp "$salida" .review/ultima.md
 
-  # Solo cuenta una línea que sea exactamente el veredicto (el prompt lo pide como última línea).
-  veredicto="$(/usr/bin/grep -oE '^VEREDICTO: *(APROBADO|BLOQUEADO) *$' <<<"$texto" | tail -1 | /usr/bin/grep -oE 'APROBADO|BLOQUEADO' || true)"
+  # Solo cuenta una línea que sea el veredicto y nada más (el prompt lo pide como última línea);
+  # se tolera que venga en negrita.
+  veredicto="$(grep -oE '^\**VEREDICTO: *(APROBADO|BLOQUEADO)\** *$' <<<"$texto" | tail -1 | grep -oE 'APROBADO|BLOQUEADO' || true)"
 
   case "$veredicto" in
     APROBADO)

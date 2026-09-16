@@ -25,7 +25,9 @@
 Corre en la máquina de quien pushea, sobre el diff entre `origin/main` y lo que se va a subir
 (decisión 0016). **Si hay hallazgos bloqueantes, el push no sale.** El hook está en
 `.githooks/pre-push`; se activa una vez por clon con `git config core.hooksPath .githooks` (lo
-dice el README). Revisa el diff con foco en, en este orden:
+dice el README). El agente es el que tenga cada integrante —Claude Code, Codex o Gemini CLI
+(Antigravity)— vía `.githooks/agente.sh` y `AULERO_AGENTE` (decisión 0018); el prompt y el
+criterio son los mismos para todos. Revisa el diff con foco en, en este orden:
 
 1. **Correctitud:** bugs, casos borde sin manejar, condiciones de carrera, errores de tipo.
 2. **Contratos:** cambios en el formato de instancia/solución del solver o en los `schemas` de la
@@ -157,6 +159,9 @@ Lo que se verifica en cada PR de frontend:
 
 ## 6. Herramientas de IA en el código
 
+- Cada integrante usa el agente que tiene (Claude Code, Codex, Antigravity). El contexto del
+  proyecto para todos está en `AGENTS.md` (decisión 0018); nada que un agente necesite saber va
+  en otro lado.
 - El agente revisa; las personas deciden. Un hallazgo del agente se responde, no se obedece sin
   leerlo.
 - Código generado con asistencia se revisa igual que el escrito a mano, con la misma puerta.
