@@ -9,6 +9,11 @@ de la UNViMe. Proyecto Final + PPS. OR-Tools CP-SAT · FastAPI · React · Postg
 - **Por qué está hecho así:** [`docs/decisiones/`](docs/decisiones/README.md)
 - **Cómo trabajamos:** [`docs/convenciones.md`](docs/convenciones.md)
 
+## Licencia
+
+Código públicamente visible, **todos los derechos reservados** a sus autores. La licencia se
+define con el Profesor Guía al presentar las propuestas de Proyecto Final (decisión 0021).
+
 ## Estructura
 
 ```

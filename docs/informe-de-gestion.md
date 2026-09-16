@@ -70,6 +70,16 @@ en el [registro de decisiones](decisiones/README.md).
 - **La jornada es de lunes a sábado, de 8 a 22, en bloques de media hora** (0004). Los turnos
   arrancan como 8–13, 13–18 y 18–22, y se ajustan cuando la institución los defina (0011).
 
+## Cómo se organiza el trabajo académico
+
+El reglamento de Proyecto Final admite equipos de hasta dos personas, así que el trabajo se
+presenta como **dos Proyectos Finales** que comparten el sistema: el **Proyecto A** (una
+persona) construye el motor que encuentra horarios válidos o explica por qué no existen; el
+**Proyecto B** (dos personas) lo extiende para que, cuando no hay horario perfecto, entregue el
+mejor posible con sus reglas violadas a la vista y mejore su calidad. La aplicación web la hace
+una **Práctica Profesional Supervisada**. Las propuestas están en `propuestas/` y lo que el
+reglamento nos exige, en `marco-reglamentario.md`.
+
 ## Estado de avance
 
 | Fase | Qué permite hacer | Estado |

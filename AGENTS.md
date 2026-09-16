@@ -17,6 +17,9 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 - **Decisiones de diseño:** `docs/decisiones/` — cuando contradice a otro documento, manda el
   registro. Antes de codificar una decisión nueva, se escribe ahí con la plantilla del índice.
 - **Convenciones (ramas, revisión, linters, accesibilidad, tests):** `docs/convenciones.md`.
+- **Reglamento de Proyecto Final y lo que nos impone; propuestas de los dos proyectos (A: 1
+  persona, B: 2):** `docs/marco-reglamentario.md`, `docs/propuestas/`. El alcance de las
+  propuestas aprobadas no se cambia sin registrar la decisión **y** avisar a la Comisión.
 - **Material histórico** (PDF de estado del arte, `AULERO.md`, Excel de ejemplo): `docs/README.md`
   dice qué de cada uno quedó superado.
 

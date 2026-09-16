@@ -14,21 +14,29 @@
 > **estudiante**, **integrante CP-SAT** (equipo de optimización), **desarrollador** (cualquier
 > integrante, para historias de infraestructura).
 >
-> Equipos: **PPS** (API, frontend, importación y BD) y **CP-SAT** (paquete `solver/`), según
-> [decisión 0012](decisiones/0012-el-solver-es-un-paquete-python-independiente-de-la-api-y-la-base.md).
+> Equipos: **PPS** (API, frontend, importación y BD), **A** (una persona: formulación
+> curricular, diagnóstico, escalado) y **B** (dos personas: holguras, blandas, comparación),
+> según [0012](decisiones/0012-el-solver-es-un-paquete-python-independiente-de-la-api-y-la-base.md)
+> y [0020](decisiones/0020-el-trabajo-se-presenta-como-dos-proyectos-finales-en-paralelo-sobre-una-base-comun.md).
+> Donde dice "CP-SAT" son A y B juntos (base común). Cada Proyecto Final tiene su propuesta con
+> cronograma en `propuestas/`; el marco reglamentario está en `marco-reglamentario.md`.
 >
 > **Última actualización:** 2026-09-16.
 
 ## Orden y paralelismo
 
 ```
-Fase 0 ──► Fase 1 (PPS) ──────────────► Fase 4 ──► Fase 5 (PPS) ──► Fase 6 ──► Fase 7 ──► Fase 8
-       └─► Fase 2 (CP-SAT) ─► Fase 3 ─┘                              (ambos)   (CP-SAT)  (ambos)
+Fase 0 ──► Fase 1 (PPS) ────────────────► Fase 4 (PPS) ──► Fase 5 (PPS) ──► Fase 6 (A + PPS)
+       └─► Fase 2 (A + B, base común) ─┬─► Fase 3 (A) ─────────────────────┘        │
+                                       └─► Fase 7 (B, sobre recursos) ─► Fase 7 (B, curricular, tras Fase 3) ─► Fase 8 (B + PPS)
 ```
 
-Las Fases 1 y 2–3 corren en paralelo, unidas por el contrato de instancia (historia 1.5). El
-Proyecto A queda completo a nivel modelo al cerrar la Fase 3 y a nivel sistema al cerrar la Fase
-4; la Fase 6 es su validación sobre datos reales. Las Fases 7 y 8 son el Proyecto B.
+Las Fases 1 y 2 corren en paralelo, unidas por el contrato de instancia (historia 1.5). Desde
+la Fase 2 se abren tres líneas: PPS sigue con 4 y 5; A hace la 3 y después la 6; B arranca la 7
+sobre las restricciones de recursos sin esperar a la 3, e integra la relajación curricular
+cuando la 3 cierra. El Proyecto A queda completo a nivel modelo al cerrar la 3 y a nivel
+sistema al cerrar la 4; la 6 es su validación sobre datos reales. Las Fases 7 y 8 son el
+Proyecto B. Los meses de cada línea están en los cronogramas de `propuestas/`.
 
 ---
 
@@ -185,8 +193,8 @@ produce los datos en la web; subir uno con cada error de la lista produce el men
 prueba un horario que respeta docentes, aulas, capacidad, tipo de aula, bloqueos y grilla, y lo
 verifique con un validador que no depende del solver.
 
-**Equipo:** CP-SAT. **Decisiones que aplica:** 0003, 0004, 0005, 0007 (parcial: un dictado),
-0009, 0012.
+**Equipo:** A + B (base común, decisión 0020). **Decisiones que aplica:** 0003, 0004, 0005,
+0007 (parcial: un dictado), 0009, 0012.
 
 ### Historias
 
@@ -249,7 +257,7 @@ varios dictados por semana, una materia compartida— se resuelva respetando R1�
 existencial, o que el solver diga qué grupo de restricciones impide resolverlo. Con esto el
 Proyecto A queda completo a nivel modelo.
 
-**Equipo:** CP-SAT. **Decisiones que aplica:** 0001, 0006, 0007, 0015.
+**Equipo:** A. **Decisiones que aplica:** 0001, 0006, 0007, 0015.
 
 ### Historias
 
@@ -434,8 +442,9 @@ aula posible y ver el aviso; cada caso borde con test nombrado.
 luego un escenario con varias carreras que comparten aulas y docentes, dentro de un tiempo
 acotado, con los tiempos medidos y comparables entre corridas.
 
-**Equipo:** ambos (CP-SAT en rendimiento, PPS en datos y visualización a escala).
-**Decisiones que aplica:** 0002, 0003, 0006.
+**Equipo:** A (rendimiento y descomposición) + PPS (datos y visualización a escala). Si A queda
+sobrecargado, B absorbe el escenario multi-carrera (señal de 0020).
+**Decisiones que aplica:** 0002, 0003, 0006, 0020.
 
 ### Historias
 
@@ -485,7 +494,10 @@ referencia en el repo con test de regresión.
 posible, con la lista exacta de qué reglas se violaron, dónde y cuánto, y que sobre una instancia
 factible entregue el mismo resultado que el Proyecto A con cero violaciones.
 
-**Equipo:** CP-SAT (7.1–7.4), PPS (7.5). **Decisiones que aplica:** 0002, 0010.
+**Equipo:** B (7.1–7.4), PPS (7.5). **Decisiones que aplica:** 0002, 0010, 0020.
+
+**Orden interno (0020):** primero las holguras de R7 y R8 sobre la base de recursos de la
+Fase 2, sin esperar a la Fase 3; la holgura de R1/R3 se integra cuando A cierra la Fase 3.
 
 ### Historias
 
@@ -538,7 +550,7 @@ violaciones; comparación A/B pegada en el cierre; cada caso borde con test nomb
 preferencias horarias de los docentes; varias corridas guardadas y comparables lado a lado; y la
 publicación de una como horario oficial del período.
 
-**Equipo:** CP-SAT (8.1–8.2), PPS (8.3–8.6). **Decisiones que aplica:** 0007, 0010, 0011.
+**Equipo:** B (8.1–8.2), PPS (8.3–8.6). **Decisiones que aplica:** 0007, 0010, 0011, 0020.
 
 ### Historias
 
@@ -588,7 +600,9 @@ el estado final y la deuda anotada.
 ## Fuera de alcance del proyecto
 
 Lo que queda afuera y por qué, para que un pedido nuevo se compare contra esto y no contra la
-buena voluntad:
+buena voluntad. **Esta tabla tiene que coincidir con el "Alcance y limitaciones" de cada
+propuesta** (`propuestas/`): una vez aprobadas, cambiar el alcance exige comunicarlo a la
+Comisión de Carrera (`marco-reglamentario.md` §2).
 
 | Fuera | Por qué |
 |---|---|

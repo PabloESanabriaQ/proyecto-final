@@ -49,7 +49,7 @@ entiende el criterio) y consecuencias solo favorables (sin costo ni señal es pu
 | # | Decisión | Estado |
 |---|---|---|
 | [0001](0001-el-problema-se-modela-bajo-el-modelo-curricular.md) | El problema se modela bajo el modelo curricular, no por inscripción real | Aceptada |
-| [0002](0002-el-trabajo-se-divide-en-proyecto-a-duras-y-proyecto-b-relajacion.md) | El trabajo se divide en Proyecto A (restricciones duras) y Proyecto B (relajación y calidad) sobre la misma instancia, API y frontend | Aceptada |
+| [0002](0002-el-trabajo-se-divide-en-proyecto-a-duras-y-proyecto-b-relajacion.md) | El trabajo se divide en Proyecto A (restricciones duras) y Proyecto B (relajación y calidad) sobre la misma instancia, API y frontend | Aceptada — modificada por 0020 |
 | [0003](0003-cp-sat-es-el-unico-motor-de-resolucion.md) | CP-SAT es el único motor de resolución; se descartan el algoritmo genético y el aprendizaje por refuerzo | Aceptada |
 | [0004](0004-la-grilla-temporal-es-lunes-a-sabado-de-8-a-22-en-bloques-de-30-minutos.md) | La grilla temporal es lunes a sábado, 08:00 a 22:00, en bloques de 30 minutos | Aceptada |
 | [0005](0005-la-cantidad-de-alumnos-de-una-comision-es-entrada-y-el-solver-elige-el-aula.md) | La cantidad de alumnos de una comisión es dato de entrada y el solver elige un aula que la contenga | Aceptada |
@@ -67,3 +67,5 @@ entiende el criterio) y consecuencias solo favorables (sin costo ni señal es pu
 | [0017](0017-las-versiones-base-son-python-3-14-y-node-24-lts.md) | Las versiones base son Python 3.14 y Node 24 LTS | Aceptada |
 | [0018](0018-el-proyecto-funciona-con-cualquier-agente-de-codigo-del-equipo.md) | El proyecto funciona con cualquier agente de código del equipo: Claude Code, Codex o Antigravity/Gemini | Aceptada |
 | [0019](0019-backend-y-solver-comparten-un-workspace-de-uv.md) | `backend/` y `solver/` comparten un workspace de uv con un solo entorno y un solo lock | Aceptada |
+| [0020](0020-el-trabajo-se-presenta-como-dos-proyectos-finales-en-paralelo-sobre-una-base-comun.md) | El trabajo se presenta como dos Proyectos Finales (A: 1 persona, B: 2 personas) que avanzan en paralelo sobre una base común | Aceptada — modifica 0002 |
+| [0021](0021-el-codigo-no-lleva-licencia-hasta-acordarla-con-el-profesor-guia.md) | El código no lleva licencia hasta acordarla con el Profesor Guía | Aceptada |
