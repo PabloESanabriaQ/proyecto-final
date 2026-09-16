@@ -7,7 +7,7 @@ from aulero_api.schemas.salud import Salud
 router = APIRouter(tags=["salud"])
 
 
-@router.get("/salud", response_model=Salud)
+@router.get("/salud")
 def salud() -> Salud:
     """Confirma que la API responde y con qué versión del solver está enlazada."""
     return Salud(estado="ok", version_api=__version__, version_solver=aulero_solver.__version__)

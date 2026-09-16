@@ -19,8 +19,9 @@ lint y tests en GitHub Actions.
 
 ```
 proyecto-final/
-├── backend/                 # FastAPI (equipo PPS)
-│   ├── app/
+├── backend/                 # FastAPI (equipo PPS) — paquete aulero_api
+│   ├── aulero_api/
+│   │   ├── main.py          # app FastAPI
 │   │   ├── routers/         # endpoints HTTP, sin lógica
 │   │   ├── schemas/         # Pydantic: contratos de la API
 │   │   ├── services/        # casos de uso; único lugar que llama a solver.solve
@@ -28,7 +29,7 @@ proyecto-final/
 │   │   ├── models/          # tablas
 │   │   ├── importers/       # Excel → validación → BD
 │   │   └── adapters/        # BD ↔ solver.Instancia / solver.Solucion
-│   ├── alembic/             # migraciones
+│   ├── alembic/             # migraciones (Fase 1)
 │   └── tests/
 ├── frontend/                # React + Vite + TS (equipo PPS)
 │   └── src/
@@ -39,7 +40,7 @@ proyecto-final/
 │       │   └── corridas/    # lanzar, estado, comparar
 │       ├── api/             # cliente generado desde OpenAPI
 │       └── components/      # compartidos
-├── solver/                  # paquete Python independiente (equipo CP-SAT)
+├── solver/                  # paquete Python independiente (equipo CP-SAT) — aulero_solver
 │   ├── aulero_solver/
 │   │   ├── instancia.py     # Pydantic: formato de entrada normalizado
 │   │   ├── solucion.py      # Pydantic: formato de salida + violaciones
@@ -51,6 +52,10 @@ proyecto-final/
 │   ├── instancias/          # juguete y otras instancias de referencia (JSON)
 │   └── tests/
 ├── docs/
+├── .githooks/               # pre-push: lint, tests y revisión del agente (0016) + sus tests
+├── .github/workflows/       # CI: lint y tests, sin agente
+├── pyproject.toml           # workspace uv (backend + solver), ruff, pytest, import-linter
+├── mise.toml                # Python 3.14, Node 24, uv (0017)
 └── docker-compose.yml       # PostgreSQL de desarrollo
 ```
 

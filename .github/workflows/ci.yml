@@ -28,6 +28,8 @@ jobs:
       - id: filtro
         uses: dorny/paths-filter@v3
         with:
+          # Mismas listas que PAT_PYTHON / PAT_FRONTEND en .githooks/pre-push (más este
+          # workflow, que el hook no necesita). Si se cambia una, se cambia la otra.
           filters: |
             python:
               - 'backend/**'
@@ -96,8 +98,12 @@ jobs:
     steps:
       - name: Verificar resultados
         run: |
+          echo "cambios:  ${{ needs.cambios.result }}"
           echo "python:   ${{ needs.python.result }}"
           echo "frontend: ${{ needs.frontend.result }}"
+          # Si la detección de cambios falla, python y frontend quedan "skipped" sin haber
+          # corrido: por eso `cambios` tiene que ser success, no alcanza con que no falle.
+          [[ "${{ needs.cambios.result }}" == "success" ]] || { echo "La detección de cambios no corrió."; exit 1; }
           for r in "${{ needs.python.result }}" "${{ needs.frontend.result }}"; do
             case "$r" in
               success|skipped) ;;

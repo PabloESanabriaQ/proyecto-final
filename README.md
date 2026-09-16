@@ -50,10 +50,9 @@ uv run --directory backend uvicorn aulero_api.main:app --reload
 
 # Frontend en http://localhost:5173 (proxy /api → 8000)
 cd frontend && npm run dev
-
-# Solver, desde la Fase 2
-uv run aulero-solver --help
 ```
+
+El solver se corre por línea de comandos a partir de la Fase 2 (`docs/plan-de-fases.md`).
 
 ## Verificar
 
@@ -66,6 +65,8 @@ uv run lint-imports                        # solver/ no importa backend/
 uv run pytest
 
 cd frontend && npm run lint && npm run format:check && npm run typecheck && npm run test
+
+bash .githooks/tests/test_pre_push.sh       # el hook de pre-push, con un agente simulado
 ```
 
 Formatear: `uv run ruff format backend solver` y `cd frontend && npm run format`.

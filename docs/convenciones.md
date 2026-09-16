@@ -32,9 +32,12 @@ dice el README). Revisa el diff con foco en, en este orden:
    API sin actualizar su documentación y sus tests.
 3. **Convenciones de este documento:** capas del backend, estructura del frontend, accesibilidad.
 4. **Tests:** cada caso borde nombrado en la historia tiene un test que lo nombra.
+5. **Decisiones:** si el cambio toma una decisión de diseño con alternativa real, existe su
+   registro en `decisiones/` (o el diff lo agrega).
 
-Es **bloqueante** un hallazgo de correctitud o de contrato. Es **no bloqueante** una sugerencia de
-estilo o simplificación. Ante un bloqueante, el autor lo corrige y vuelve a pushear (el hook
+Es **bloqueante** un hallazgo de correctitud o de contrato, y un caso borde nuevo sin test que lo
+nombre. Es **no bloqueante** una sugerencia de estilo, simplificación o nombre. El prompt exacto
+está en `.githooks/revision-prompt.md`; si se cambia el criterio, se cambian los dos. Ante un bloqueante, el autor lo corrige y vuelve a pushear (el hook
 revisa de nuevo), o —si no aplica— lo marca como descartado con el motivo en la salida y ese
 motivo queda en el PR.
 
@@ -75,9 +78,12 @@ Versiones base ([decisión 0017](decisiones/0017-las-versiones-base-son-python-3
 
 | Herramienta | Para qué | Configuración |
 |---|---|---|
-| **Ruff** | lint y formato (reemplaza flake8, isort, black) | `pyproject.toml` de cada paquete; reglas `E, F, W, I, N, UP, B, SIM, RUF` |
-| **mypy** | tipos, modo estricto | `pyproject.toml`; `strict = true` |
-| **pytest** | tests | `tests/` junto a cada paquete |
+| **Ruff** | lint y formato (reemplaza flake8, isort, black) | `pyproject.toml` de la raíz, común a los dos paquetes; reglas `E, F, W, I, N, UP, B, SIM, RUF` |
+| **mypy** | tipos, modo estricto | `pyproject.toml` de cada paquete; `strict = true` |
+| **pytest** | tests | `tests/` junto a cada paquete; se corre desde la raíz |
+| **import-linter** | `solver/` no importa `backend/` ni FastAPI/SQLAlchemy | `pyproject.toml` de la raíz |
+
+Los dos paquetes viven en un *workspace* de `uv` (un solo `uv sync`, un solo `uv.lock`).
 
 Reglas que van más allá del linter:
 
