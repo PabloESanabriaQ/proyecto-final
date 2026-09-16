@@ -83,6 +83,9 @@ test: no hay forma barata de correr GitHub Actions localmente.
 - `solver/` importando `backend/`: CI falla (regla de import-linter).
 - Ningún agente instalado, o `AULERO_AGENTE` apunta a uno que no está: mensaje que dice qué
   instalar (decisión 0018).
+- La suite de tests del hook ignora las `AULERO_*` exportadas en el shell de quien la corre
+  (quien siguió el README y exportó `AULERO_AGENTE` tiene que poder pushear cambios en
+  `.githooks/`).
 - Push sin cambios respecto de `origin/main` (rama ya subida): el hook no invoca al agente.
 - Push con el agente no disponible (ausente del PATH, caído, o colgado más de 10 min): el hook
   falla con un mensaje claro, no deja pasar en silencio.

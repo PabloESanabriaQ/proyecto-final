@@ -78,7 +78,7 @@ correr_hook_con_stdin() {
   REGISTRO="$dir/.registro"; : >"$REGISTRO"
   set +e
   SALIDA_HOOK="$(cd "$dir" && printf '%s\n' "$stdin" \
-    | env AULERO_HOOK_SIN_CHEQUEOS=1 AULERO_HOOK_REGISTRO="$REGISTRO" AULERO_AGENTE_CMD="$TMP/bin/agente-falso" "$@" bash .githooks/pre-push 2>&1)"
+    | env "${LIMPIAR[@]}" AULERO_HOOK_SIN_CHEQUEOS=1 AULERO_HOOK_REGISTRO="$REGISTRO" AULERO_AGENTE_CMD="$TMP/bin/agente-falso" "$@" bash .githooks/pre-push 2>&1)"
   CODIGO_HOOK=$?
   set -e
 }
@@ -92,6 +92,11 @@ correr_hook() {
 }
 
 llamadas_al_agente() { find "$1/.llamadas" -type f | wc -l | tr -d ' '; }
+
+# Variables AULERO_* que el shell de quien corre la suite puede tener exportadas (el README
+# recomienda `export AULERO_AGENTE=...`). Cada invocación del hook las limpia primero y después
+# aplica solo las del caso, para que la suite dé lo mismo en cualquier máquina.
+LIMPIAR=(-u AULERO_AGENTE -u AULERO_AGENTE_CMD -u AULERO_REVIEW_DESCARTAR -u AULERO_HOOK_TIMEOUT -u AULERO_HOOK_SIN_CHEQUEOS -u AULERO_HOOK_REGISTRO)
 
 ok() { printf '  \033[32mOK\033[0m  %s\n' "$1"; }
 fallo() { printf '  \033[31mFALLO\033[0m %s\n        %s\n' "$1" "$2"; FALLOS=$((FALLOS + 1)); }
@@ -135,29 +140,29 @@ esperar "el hook bloquea" '[[ $CODIGO_HOOK -ne 0 ]]' "pasó con código 0"
 esperar "el mensaje nombra al agente y el código" '[[ "$SALIDA_HOOK" == *"no respondió"* && "$SALIDA_HOOK" == *"código 7"* ]]' "$SALIDA_HOOK"
 esperar "el stderr del agente queda en .review/error.log" 'grep -q "no disponible" "$DIR/.review/error.log"' "$(cat "$DIR/.review/error.log" 2>/dev/null)"
 
+correr_hook_real_sin_agentes() {
+  # correr_hook_real_sin_agentes <dir> [VAR=valor ...]: como correr_hook pero SIN agente falso y
+  # con un PATH mínimo (todo lo que el hook necesita, ningún agente), para probar agente.sh.
+  local dir="$1"; shift
+  export LLAMADAS_DIR="$dir/.llamadas"; mkdir -p "$LLAMADAS_DIR"
+  set +e
+  SALIDA_HOOK="$(cd "$dir" && printf 'refs/heads/rama %s refs/heads/rama 0000000000000000000000000000000000000000\n' "$(git -C "$dir" rev-parse HEAD)" \
+    | env "${LIMPIAR[@]}" AULERO_HOOK_SIN_CHEQUEOS=1 PATH="$TMP/binmin" "$@" bash .githooks/pre-push 2>&1)"
+  CODIGO_HOOK=$?
+  set -e
+}
+
 echo "Caso: push sin ningún agente instalado falla con mensaje claro"
 DIR="$(nuevo_repo ausente)"
 (cd "$DIR" && echo "print(2)" >>backend/x.py && git commit -qam code)
-SHA="$(git -C "$DIR" rev-parse HEAD)"
-export LLAMADAS_DIR="$DIR/.llamadas"; mkdir -p "$LLAMADAS_DIR"
-set +e
-# PATH mínimo: solo lo que el hook necesita (git, grep, python3, bash), sin agentes.
-SALIDA_HOOK="$(cd "$DIR" && printf 'refs/heads/rama %s refs/heads/rama 0000000000000000000000000000000000000000\n' "$SHA" \
-  | env AULERO_HOOK_SIN_CHEQUEOS=1 PATH="$TMP/binmin" bash .githooks/pre-push 2>&1)"
-CODIGO_HOOK=$?
-set -e
+correr_hook_real_sin_agentes "$DIR"
 esperar "el hook bloquea" '[[ $CODIGO_HOOK -ne 0 ]]' "pasó con código 0"
 esperar "el mensaje dice qué instalar" '[[ "$SALIDA_HOOK" == *"No se encontró ningún agente"* ]]' "$SALIDA_HOOK"
 
 echo "Caso: AULERO_AGENTE apunta a un agente no instalado"
 DIR="$(nuevo_repo noinstalado)"
 (cd "$DIR" && echo "print(2)" >>backend/x.py && git commit -qam code)
-export LLAMADAS_DIR="$DIR/.llamadas"; mkdir -p "$LLAMADAS_DIR"
-set +e
-SALIDA_HOOK="$(cd "$DIR" && printf 'refs/heads/rama %s refs/heads/rama 0000000000000000000000000000000000000000\n' "$(git -C "$DIR" rev-parse HEAD)" \
-  | env AULERO_HOOK_SIN_CHEQUEOS=1 AULERO_AGENTE=codex PATH="$TMP/binmin" bash .githooks/pre-push 2>&1)"
-CODIGO_HOOK=$?
-set -e
+correr_hook_real_sin_agentes "$DIR" AULERO_AGENTE=codex
 esperar "el hook bloquea" '[[ $CODIGO_HOOK -ne 0 ]]' "pasó con código 0"
 esperar "nombra al agente pedido" '[[ "$SALIDA_HOOK" == *"No se encontró "*"codex"*"en el PATH"* ]]' "$SALIDA_HOOK"
 
@@ -251,6 +256,21 @@ DIR="$(nuevo_repo sucio)"
 correr_hook "$DIR" VEREDICTO_FALSO=APROBADO
 esperar "el hook pasa" '[[ $CODIGO_HOOK -eq 0 ]]' "código $CODIGO_HOOK: $SALIDA_HOOK"
 esperar "avisa de la divergencia" '[[ "$SALIDA_HOOK" == *"sin commitear"* ]]' "$SALIDA_HOOK"
+
+echo "Caso: la suite ignora las variables AULERO_* exportadas en el shell de quien la corre"
+# Simula a quien siguió el README (export AULERO_AGENTE=codex) y además tiene un descarte
+# pendiente en el entorno: los escenarios "sin agente" y "BLOQUEADO bloquea" tienen que dar lo
+# mismo que sin esas variables.
+export AULERO_AGENTE=codex AULERO_REVIEW_DESCARTAR="descarte heredado del shell"
+DIR="$(nuevo_repo heredado1)"
+(cd "$DIR" && echo "print(2)" >>backend/x.py && git commit -qam code)
+correr_hook_real_sin_agentes "$DIR"
+esperar "sin agente: sigue diciendo 'ningún agente', no 'codex'" '[[ "$SALIDA_HOOK" == *"No se encontró ningún agente"* ]]' "$SALIDA_HOOK"
+DIR="$(nuevo_repo heredado2)"
+(cd "$DIR" && echo "print(2)" >>backend/x.py && git commit -qam code)
+correr_hook "$DIR" VEREDICTO_FALSO=BLOQUEADO
+esperar "BLOQUEADO: sigue bloqueando, el descarte del shell no cuenta" '[[ $CODIGO_HOOK -ne 0 ]]' "pasó con código 0: $SALIDA_HOOK"
+unset AULERO_AGENTE AULERO_REVIEW_DESCARTAR
 
 echo
 if [[ $FALLOS -eq 0 ]]; then
