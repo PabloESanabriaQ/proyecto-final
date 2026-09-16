@@ -1,0 +1,22 @@
+# Revisiones locales del agente (decisión 0016)
+.review/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+
+# Node
+node_modules/
+dist/
+
+# Entornos y editores
+.env
+.env.*
+!.env.example
+.idea/
+.vscode/
+.DS_Store
