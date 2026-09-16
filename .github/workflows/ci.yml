@@ -14,7 +14,9 @@ permissions:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  # En PRs, un push nuevo cancela la corrida anterior. En main no: dos merges seguidos tienen
+  # que quedar los dos en el historial.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   cambios:
@@ -23,6 +25,7 @@ jobs:
     outputs:
       python: ${{ steps.filtro.outputs.python }}
       frontend: ${{ steps.filtro.outputs.frontend }}
+      hook: ${{ steps.filtro.outputs.hook }}
     steps:
       - uses: actions/checkout@v5
       - id: filtro
@@ -41,6 +44,9 @@ jobs:
             frontend:
               - 'frontend/**'
               - 'mise.toml'
+              - '.github/workflows/ci.yml'
+            hook:
+              - '.githooks/**'
               - '.github/workflows/ci.yml'
 
   python:
@@ -90,9 +96,19 @@ jobs:
       - name: Vitest
         run: npm run test
 
+  hook:
+    name: Hook de pre-push
+    needs: cambios
+    if: needs.cambios.outputs.hook == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Tests del hook (con agente simulado)
+        run: bash .githooks/tests/test_pre_push.sh
+
   ci-ok:
     name: CI OK
-    needs: [cambios, python, frontend]
+    needs: [cambios, python, frontend, hook]
     if: always()
     runs-on: ubuntu-latest
     steps:
@@ -101,10 +117,11 @@ jobs:
           echo "cambios:  ${{ needs.cambios.result }}"
           echo "python:   ${{ needs.python.result }}"
           echo "frontend: ${{ needs.frontend.result }}"
-          # Si la detección de cambios falla, python y frontend quedan "skipped" sin haber
-          # corrido: por eso `cambios` tiene que ser success, no alcanza con que no falle.
+          echo "hook:     ${{ needs.hook.result }}"
+          # Si la detección de cambios falla, los demás quedan "skipped" sin haber corrido: por
+          # eso `cambios` tiene que ser success, no alcanza con que no falle.
           [[ "${{ needs.cambios.result }}" == "success" ]] || { echo "La detección de cambios no corrió."; exit 1; }
-          for r in "${{ needs.python.result }}" "${{ needs.frontend.result }}"; do
+          for r in "${{ needs.python.result }}" "${{ needs.frontend.result }}" "${{ needs.hook.result }}"; do
             case "$r" in
               success|skipped) ;;
               *) echo "Un job falló o se canceló."; exit 1 ;;

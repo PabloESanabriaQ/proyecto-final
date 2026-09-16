@@ -35,9 +35,9 @@ dice el README). Revisa el diff con foco en, en este orden:
 5. **Decisiones:** si el cambio toma una decisión de diseño con alternativa real, existe su
    registro en `decisiones/` (o el diff lo agrega).
 
-Es **bloqueante** un hallazgo de correctitud o de contrato, y un caso borde nuevo sin test que lo
-nombre. Es **no bloqueante** una sugerencia de estilo, simplificación o nombre. El prompt exacto
-está en `.githooks/revision-prompt.md`; si se cambia el criterio, se cambian los dos. Ante un bloqueante, el autor lo corrige y vuelve a pushear (el hook
+Es **bloqueante** un hallazgo de correctitud o de contrato, y un caso borde nuevo sin test que
+lo nombre. Es **no bloqueante** una sugerencia de estilo, simplificación o nombre. El prompt
+exacto está en `.githooks/revision-prompt.md`; si se cambia el criterio, se cambian los dos. Ante un bloqueante, el autor lo corrige y vuelve a pushear (el hook
 revisa de nuevo), o —si no aplica— lo marca como descartado con el motivo en la salida y ese
 motivo queda en el PR.
 
@@ -60,10 +60,11 @@ No se aprueba un PR "para no trabar": si no hay tiempo de revisarlo, se dice y s
 
 ### 2.3 CI (GitHub Actions, sobre el PR)
 
-Corre lint, formato y tests de cada parte tocada, y la regla de que `solver/` no importa
-`backend/`. Sin agente. Es un check obligatorio para mergear, igual que la aprobación humana. El
-mismo hook de pre-push corre lint y tests antes del agente, para no gastar una revisión sobre
-código que no compila.
+Corre lint, formato y tests de cada parte tocada, la regla de que `solver/` no importa
+`backend/`, y los tests del propio hook cuando cambia `.githooks/`. Sin agente. El check
+obligatorio para mergear es **`CI OK`**, junto con la aprobación humana. El mismo hook de
+pre-push corre lint y tests antes del agente, para no gastar una revisión sobre código que no
+compila.
 
 ## 3. Estilo y linters
 

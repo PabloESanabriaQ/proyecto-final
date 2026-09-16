@@ -65,13 +65,22 @@ agente en su máquina, y que nada llegue a `main` sin CI verde y una aprobación
 
 ### Casos borde
 
+Todos con test en `.githooks/tests/test_pre_push.sh` salvo el de import-linter, que está en
+`solver/tests/test_frontera.py`.
+
 - PR que toca solo `docs/`: CI pasa sin correr tests de código; el hook no invoca al agente.
 - PR que toca solo `frontend/`: no corre los tests de Python (y viceversa).
 - `solver/` importando `backend/`: CI falla (regla de import-linter).
 - Push sin cambios respecto de `origin/main` (rama ya subida): el hook no invoca al agente.
-- Push con el agente no disponible (sin red, sin sesión): el hook falla con un mensaje claro, no
-  deja pasar en silencio.
+- Push con el agente no disponible (ausente del PATH, caído, o colgado más de 10 min): el hook
+  falla con un mensaje claro, no deja pasar en silencio.
 - Push de una rama con varios commits: el agente revisa el diff acumulado, no commit por commit.
+- Veredicto `BLOQUEADO`: corta el push y muestra cómo descartar; con descarte del autor, deja
+  pasar y registra el motivo.
+- Un `APROBADO` seguido de una mención a "BLOQUEADO" en el texto no bloquea (el veredicto es
+  la línea completa).
+- El diff que ve el agente no incluye lockfiles; un diff con ``` adentro no rompe el prompt.
+- Cambios sin commitear: aviso, no bloqueo.
 
 ### Definiciones pendientes a tomar al llegar
 

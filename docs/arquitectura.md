@@ -4,8 +4,8 @@
 > Público: quien se suma al proyecto o lo defiende técnicamente. Acá va el modelo, las interfaces,
 > las decisiones enlazadas y la deuda. El estado en lenguaje llano va en `informe-de-gestion.md`.
 >
-> **Última actualización:** 2026-09-16 — Fase 0 no iniciada. Hay decisiones, plan y convenciones;
-> no hay código.
+> **Última actualización:** 2026-09-16 — Fase 0 en curso: esqueleto, linters, hook de pre-push
+> con agente y CI hechos y verificados; falta proteger `main` en GitHub y enlazar Jira.
 
 ## 1. Stack y arquitectura
 
@@ -149,13 +149,37 @@ Schema publicado.
 
 ## 5. Cómo correrlo
 
-*(Se completa en la Fase 0, cuando exista qué correr.)*
+Los comandos exactos están en el [`README`](../README.md) de la raíz (arranque en un clon
+nuevo, correr, verificar, subir cambios). Resumen: `mise install` instala Python 3.14, Node 24 y
+uv; `uv sync` arma el entorno Python de los dos paquetes; `npm ci` en `frontend/`;
+`docker compose up -d` levanta PostgreSQL 17; `git config core.hooksPath .githooks` activa la
+puerta de pre-push.
+
+La verificación completa (la misma que corre el hook y CI):
+
+```bash
+uv run ruff check backend solver && uv run ruff format --check backend solver
+(cd solver && uv run mypy .) && (cd backend && uv run mypy .)
+uv run lint-imports && uv run pytest
+cd frontend && npm run lint && npm run format:check && npm run typecheck && npm run test
+bash .githooks/tests/test_pre_push.sh
+```
+
+### 5.1 La puerta de pre-push
+
+`.githooks/pre-push` corre, por cada rama que se sube: lint y tests de las partes tocadas
+(Python, frontend, el propio hook), y después la revisión del agente sobre el diff acumulado
+contra `origin/main` (sin lockfiles), con `claude -p` en modo solo lectura (`Read`, `Grep`,
+`Glob`) y un tope de 10 minutos. El prompt está en `.githooks/revision-prompt.md` y pide un
+veredicto en la última línea; `BLOQUEADO` corta el push. La salida queda en `.review/<sha>.md`
+y `.review/ultima.md` para pegarla en el PR. Sus casos borde tienen test en
+`.githooks/tests/test_pre_push.sh`, con un `claude` simulado.
 
 ## 6. Estado por fase
 
 | Fase | Qué entra | Estado |
 |---|---|---|
-| 0 | Repo, estructura, hook de pre-push con agente, CI de lint y tests | No iniciada |
+| 0 | Repo, estructura, hook de pre-push con agente, CI de lint y tests | **En curso** — hecho: HU-0.1, 0.2, 0.4 y el workflow de 0.3; falta: protección de `main` y PR de prueba (0.3), Jira (0.5) |
 | 1 | Importación Excel, validación, BD, API de consulta, vista de datos cargados, contrato de instancia | No iniciada |
 | 2 | Solver A con restricciones de recursos, validador, CLI, juguete | No iniciada |
 | 3 | Solver A con restricciones curriculares, diagnóstico de infactibilidad | No iniciada |
@@ -169,4 +193,13 @@ El detalle, las historias y las definiciones pendientes por fase están en `plan
 
 ## 7. Deuda técnica anotada
 
-*(Vacía: no hay código todavía. Cada fase agrega la suya con la señal que indicaría pagarla.)*
+- **Las listas de "qué toca cada parte" están duplicadas** entre `.githooks/pre-push`
+  (`PAT_*`) y `.github/workflows/ci.yml` (filtros). Hoy son cuatro patrones y se mantienen a
+  mano. **La señal:** un PR donde el hook y CI corran chequeos distintos para el mismo cambio.
+  La salida es un archivo compartido que los dos lean.
+- **El hook depende de bash y de `python3` en el PATH** para leer el JSON del agente. En
+  Windows exige WSL2 (README). **La señal:** un integrante que no pueda pushear desde su
+  entorno habitual.
+- **`fastapi.testclient` avisa que `httpx` está deprecado a favor de `httpx2`** (warning en
+  `pytest`). No afecta hoy. **La señal:** que Starlette lo convierta en error en una versión
+  nueva; ahí se migra el cliente de tests.

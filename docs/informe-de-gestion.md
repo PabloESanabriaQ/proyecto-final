@@ -4,7 +4,8 @@
 > Público: quien evalúa el trabajo (tribunal, tutores, secretaría académica) o va a usar el
 > sistema. Sin código ni jerga técnica; eso va en `arquitectura.md`.
 >
-> **Última actualización:** 2026-09-16 — Definición cerrada y plan armado. Ninguna fase iniciada.
+> **Última actualización:** 2026-09-16 — Fase 0 en curso: el equipo ya tiene el repositorio con
+> la revisión automática antes de subir código; falta activar la protección de la rama principal.
 
 ## El problema
 
@@ -72,7 +73,7 @@ en el [registro de decisiones](decisiones/README.md).
 
 | Fase | Qué permite hacer | Estado |
 |---|---|---|
-| 0 | El equipo trabaja sobre un repositorio con revisión automática y humana obligatoria. | No iniciada |
+| 0 | El equipo trabaja sobre un repositorio con revisión automática y humana obligatoria. | **En curso.** Hoy: nadie puede subir código sin que un revisor automático lo apruebe, y el repositorio verifica cada cambio. Falta: que la rama principal rechace cambios sin aprobación de otra persona. |
 | 1 | Subir el Excel del período, ver los errores de carga y los datos cargados en la web. | No iniciada |
 | 2 | Obtener un primer horario del caso de prueba (9 materias) que respeta docentes, aulas, capacidad y bloqueos. | No iniciada |
 | 3 | Obtener un horario que además respeta las reglas del plan de estudios, o saber por qué no existe. | No iniciada |
