@@ -5,7 +5,7 @@
 # la respuesta en texto plano por stdout. Código de salida distinto de cero si el agente no
 # respondió. Cada integrante usa el agente que tiene:
 #
-#   AULERO_AGENTE=claude | codex | gemini   (si no se define: el primero instalado, en ese orden)
+#   AULERO_AGENTE=claude | codex | agy | gemini   (si no se define: el primero instalado, en ese orden)
 #   AULERO_AGENTE_CMD=<ejecutable>          (reemplaza todo; para tests: recibe stdin, imprime texto)
 #
 # Verificado contra --help de cada CLI el 2026-09-16; claude probado de punta a punta. codex y
@@ -18,19 +18,30 @@ fi
 
 AGENTE="${AULERO_AGENTE:-}"
 if [[ -z "$AGENTE" ]]; then
-  for candidato in claude codex gemini; do
+  for candidato in claude codex agy gemini; do
     if command -v "$candidato" >/dev/null 2>&1; then AGENTE="$candidato"; break; fi
   done
-  [[ -n "$AGENTE" ]] || { echo "No se encontró ningún agente (claude, codex o gemini) en el PATH. Instalá uno (README) o definí AULERO_AGENTE." >&2; exit 2; }
+  [[ -n "$AGENTE" ]] || { echo "No se encontró ningún agente (claude, codex, agy o gemini) en el PATH. Instalá uno (README) o definí AULERO_AGENTE." >&2; exit 2; }
 fi
 
 command -v "$AGENTE" >/dev/null 2>&1 \
-  || { echo "No se encontró '$AGENTE' en el PATH. Instalá Claude Code, Codex CLI o Gemini CLI (README), o cambiá AULERO_AGENTE." >&2; exit 2; }
+  || { echo "No se encontró '$AGENTE' en el PATH. Instalá Claude Code, Codex CLI o Antigravity/Gemini CLI (README), o cambiá AULERO_AGENTE." >&2; exit 2; }
 
 # Imprime el campo pedido del JSON. Si falta o está vacío (por ejemplo, el agente agotó sus
 # turnos), manda el JSON completo a stderr —que el hook guarda en .review/error.log— y falla.
 extraer() {
-  python3 -c '
+  local py=""
+  for c in python3 python py; do
+    if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys' >/dev/null 2>&1; then
+      py="$c"
+      break
+    fi
+  done
+  if [[ -z "$py" ]]; then
+    echo "No se encontró un intérprete de Python funcional (python3, python o py) en el PATH." >&2
+    exit 3
+  fi
+  "$py" -c '
 import json, sys
 crudo = sys.stdin.read()
 try:
@@ -57,13 +68,19 @@ case "$AGENTE" in
     codex exec --sandbox read-only --skip-git-repo-check -o "$salida" - >/dev/null
     cat "$salida"
     ;;
+  agy)
+    # agy es el CLI de Antigravity (https://antigravity.google).
+    # --mode plan = solo lectura.
+    prompt="$(cat)"
+    agy -p "$prompt" --mode plan
+    ;;
   gemini)
     # --approval-mode plan = solo lectura. Gemini lo degrada a "default" si la carpeta no está
     # marcada como confiable: marcarla una vez desde Gemini CLI antes del primer push.
     gemini --approval-mode plan --output-format json | extraer response
     ;;
   *)
-    echo "AULERO_AGENTE='$AGENTE' no es un agente conocido (claude, codex, gemini)." >&2
+    echo "AULERO_AGENTE='$AGENTE' no es un agente conocido (claude, codex, agy, gemini)." >&2
     exit 2
     ;;
 esac

@@ -654,5 +654,6 @@ anotado y cierro" (anotarlo en la deuda es válido; cerrar sin anotarlo, no).
 - Las **definiciones pendientes** de cada fase como tareas del epic, etiquetadas `definicion`,
   que se cierran registrando la decisión en `docs/decisiones/` antes de empezar las historias de
   la fase.
-- El **cierre** de cada fase como una tarea `cierre` con el checklist de `cierre-de-fase.md` de la
-  skill `avanzar-por-fases`.
+- El **cierre** de cada fase como una tarea `cierre` con el checklist de la sección
+  ["Cierre de una fase"](#cierre-de-una-fase) de este documento (también disponible en
+  `.agents/skills/avanzar-por-fases/cierre-de-fase.md`).
