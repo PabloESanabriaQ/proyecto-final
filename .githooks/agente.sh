@@ -71,11 +71,16 @@ case "$AGENTE" in
   agy)
     # agy es el CLI de Antigravity (https://antigravity.google).
     # --mode plan = solo lectura. El diff y las instrucciones completas entran por stdin.
-    # Bufferizamos stdin en un archivo temporal para evitar SIGPIPE (141) en la tubería con pipefail.
-    entrada="$(mktemp)"
+    # Bufferizamos stdin en un archivo temporal para evitar SIGPIPE (141) y desbordamiento de línea de comandos en Windows.
+    entrada="$(mktemp --suffix=.md)"
     trap 'rm -f "$entrada"' EXIT
     cat > "$entrada"
-    agy -p "No ejecutes comandos de terminal ni tareas en segundo plano. Analizá el diff y las instrucciones provistas por stdin y emití directamente el informe de revisión en Markdown terminando exactamente con VEREDICTO: APROBADO o VEREDICTO: BLOQUEADO." --mode plan --dangerously-skip-permissions --print-timeout 10m < "$entrada"
+    if command -v cygpath >/dev/null 2>&1; then
+      entrada_win="$(cygpath -w "$entrada")"
+    else
+      entrada_win="$entrada"
+    fi
+    agy -p "Lee el archivo '$entrada_win' que contiene las instrucciones y el diff de la revisión. Seguí esas pautas al pie de la letra y emití directamente el informe en Markdown finalizando exactamente con la línea VEREDICTO: APROBADO o VEREDICTO: BLOQUEADO según corresponda." --mode plan --dangerously-skip-permissions --print-timeout 10m
     ;;
   gemini)
     # --approval-mode plan = solo lectura. Gemini lo degrada a "default" si la carpeta no está
