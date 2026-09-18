@@ -12,5 +12,9 @@ export default defineConfig({
     environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test/setup.ts'],
+    // Un único worker evita timeouts al iniciar el pool de forks en Windows.
+    pool: 'threads',
+    maxWorkers: 1,
+    fileParallelism: false,
   },
 });
