@@ -75,7 +75,7 @@ case "$AGENTE" in
     entrada="$(mktemp)"
     trap 'rm -f "$entrada"' EXIT
     cat > "$entrada"
-    agy -p "Seguí las instrucciones de revisión provistas por stdin para emitir el veredicto." --mode plan --dangerously-skip-permissions --print-timeout 10m < "$entrada"
+    agy -p "No ejecutes comandos de terminal ni tareas en segundo plano. Analizá el diff y las instrucciones provistas por stdin y emití directamente el informe de revisión en Markdown terminando exactamente con VEREDICTO: APROBADO o VEREDICTO: BLOQUEADO." --mode plan --dangerously-skip-permissions --print-timeout 10m < "$entrada"
     ;;
   gemini)
     # --approval-mode plan = solo lectura. Gemini lo degrada a "default" si la carpeta no está
