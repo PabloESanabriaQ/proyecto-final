@@ -108,3 +108,13 @@ Aceptación: sin confirmación no se toca nada; con confirmación, el reemplazo 
 19,8,Cierre de la Fase 1,Task,cierre,"Criterio: subir el Excel del juguete (o el de ejemplo adaptado a la plantilla nueva) produce los datos en la web; subir uno con cada error de la lista produce el mensaje correcto; exportar-instancia genera un JSON válido contra el esquema publicado.
 
 Checklist de cierre en docs/plan-de-fases.md (""Cierre de una fase""): verificación con salida pegada, los dos documentos vivos actualizados, commit ""Fase 1 — Cargar los datos de un período y verlos"", handoff."
+20,1,Soporte de Antigravity CLI (agy) y robustecimiento del hook de pre-push en Windows,Task,"agente,windows,fase-0","Permite: usar el hook de pre-push con Antigravity CLI (agy) en Windows nativo y WSL2, resolviendo la deprecación de Gemini CLI y evitando desbordes de longitud de comando (E2BIG).
+
+Aceptación:
+- .githooks/agente.sh soporta agy con flags no interactivas (--mode plan --dangerously-skip-permissions --print-timeout 10m).
+- Paso de diff acumulado y prompt por stdin bufferizado en archivo temporal para evitar límite de argumentos E2BIG y SIGPIPE en Windows.
+- Autodetección dinámica del runtime de Python (python3, python, py) en el PATH para extracción del veredicto.
+- Suite de tests del pre-push compatible con binarios de agentes con extensión .exe.
+- Skills de gestión del proyecto disponibles en .agents/skills/.
+
+Relacionada con: AUL-8 (HU-0.2). Estado al 2026-09-17: implementado y probado de punta a punta en chore/AUL-1-fase-0-base."

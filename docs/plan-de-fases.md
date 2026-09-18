@@ -99,6 +99,10 @@ test: no hay forma barata de correr GitHub Actions localmente.
 - Borrar una rama remota (`git push --delete`): no se revisa nada.
 - Push de varias ramas a la vez: se revisa cada una, con una salida por commit.
 - Sin red: se usa la última `origin/main` conocida, con aviso.
+- Push en Windows nativo con agentes CLI (como Antigravity `agy`): el paso de diff y prompt por
+  stdin bufferizado en archivo temporal evita el desborde de longitud de comando (`E2BIG`), y la
+  extracción del veredicto funciona con `python3`, `python` o `py` (tarea AUL-24, relacionada
+  con HU-0.2).
 
 ### Definiciones pendientes a tomar al llegar
 
