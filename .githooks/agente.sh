@@ -70,9 +70,12 @@ case "$AGENTE" in
     ;;
   agy)
     # agy es el CLI de Antigravity (https://antigravity.google).
-    # --mode plan = solo lectura.
-    prompt="$(cat)"
-    agy -p "$prompt" --mode plan
+    # --mode plan = solo lectura. El diff y las instrucciones completas entran por stdin.
+    # Bufferizamos stdin en un archivo temporal para evitar SIGPIPE (141) en la tubería con pipefail.
+    entrada="$(mktemp)"
+    trap 'rm -f "$entrada"' EXIT
+    cat > "$entrada"
+    agy -p "Seguí las instrucciones de revisión provistas por stdin para emitir el veredicto." --mode plan --dangerously-skip-permissions --print-timeout 10m < "$entrada"
     ;;
   gemini)
     # --approval-mode plan = solo lectura. Gemini lo degrada a "default" si la carpeta no está

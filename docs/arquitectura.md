@@ -207,9 +207,9 @@ El detalle, las historias y las definiciones pendientes por fase están en `plan
   (`PAT_*`) y `.github/workflows/ci.yml` (filtros). Hoy son cuatro patrones y se mantienen a
   mano. **La señal:** un PR donde el hook y CI corran chequeos distintos para el mismo cambio.
   La salida es un archivo compartido que los dos lean.
-- **El hook depende de bash y de Python (`python3`, `python` o `py`) en el PATH** para leer el JSON
-  del agente. En Windows se recomienda WSL2 (README). **La señal:** un integrante que no pueda pushear desde su
-  entorno habitual.
+- **El hook depende de bash y de Python (`python3`, `python` o `py`) en el PATH** para leer el
+  JSON del agente. En Windows se recomienda WSL2 (README). **La señal:** un integrante que no
+  pueda pushear desde su entorno habitual.
 - **El adaptador de Antigravity CLI (`agy`) quedó probado de punta a punta** (2026-09-17).
   Codex y Gemini CLI quedan a confirmar en el primer push de quien los use. **La señal:** el
   primer push de quien use uno de los dos. Se corrige en ese PR.
