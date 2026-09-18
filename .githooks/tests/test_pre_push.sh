@@ -33,17 +33,14 @@ esac
 EOF
 chmod +x "$TMP/bin/agente-falso"
 
-# PATH mínimo para los casos "sin agente": todo lo que hay en el PATH real, menos los agentes.
+# PATH mínimo para los casos "sin agente": solo los comandos que necesita el hook. Se usan
+# wrappers en vez de symlinks para que la suite funcione en Windows sin permisos especiales.
 mkdir -p "$TMP/binmin"
-IFS=: read -ra DIRS_PATH <<<"$PATH"
-for d in "${DIRS_PATH[@]}"; do
-  [[ -d "$d" ]] || continue
-  for f in "$d"/*; do
-    [[ -x "$f" && ! -d "$f" ]] || continue
-    nombre="$(basename "$f")"
-    case "$nombre" in claude|codex|gemini) continue ;; esac
-    [[ -e "$TMP/binmin/$nombre" ]] || ln -s "$f" "$TMP/binmin/$nombre"
-  done
+for nombre in bash cat cp date env find git grep head mkdir mktemp rm rmdir sleep timeout gtimeout tr wc; do
+  ruta="$(command -v "$nombre" || true)"
+  [[ -n "$ruta" ]] || continue
+  printf '#!/bin/sh\nexec %q "$@"\n' "$ruta" >"$TMP/binmin/$nombre"
+  chmod +x "$TMP/binmin/$nombre"
 done
 
 nuevo_repo() {
