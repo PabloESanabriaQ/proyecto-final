@@ -1,0 +1,25 @@
+[project]
+name = "aulero-solver"
+version = "0.1.0"
+description = "Motor de asignación de horarios y aulas (UCTP) para Aulero UNViMe, sobre OR-Tools CP-SAT."
+requires-python = ">=3.14,<3.15"
+dependencies = [
+    "ortools>=9.15",
+    "pydantic>=2.11",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["aulero_solver"]
+
+[tool.mypy]
+strict = true
+python_version = "3.14"
+files = ["aulero_solver", "tests"]
+# OR-Tools publica stubs parciales; se tipa en la frontera del paquete.
+[[tool.mypy.overrides]]
+module = ["ortools.*"]
+ignore_missing_imports = true

@@ -1,0 +1,130 @@
+# CI de lint y tests (decisión 0014 modificada por 0016: sin agente; el agente corre en el
+# hook local). `ci-ok` es el único check obligatorio: siempre reporta, aunque los jobs de
+# código no hayan corrido porque el PR solo toca docs/.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  pull-requests: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  # En PRs, un push nuevo cancela la corrida anterior. En main no: dos merges seguidos tienen
+  # que quedar los dos en el historial.
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  cambios:
+    name: Qué cambió
+    runs-on: ubuntu-latest
+    outputs:
+      python: ${{ steps.filtro.outputs.python }}
+      frontend: ${{ steps.filtro.outputs.frontend }}
+      hook: ${{ steps.filtro.outputs.hook }}
+    steps:
+      - uses: actions/checkout@v5
+      - id: filtro
+        uses: dorny/paths-filter@v3
+        with:
+          # Mismas listas que PAT_PYTHON / PAT_FRONTEND en .githooks/pre-push (más este
+          # workflow, que el hook no necesita). Si se cambia una, se cambia la otra.
+          filters: |
+            python:
+              - 'backend/**'
+              - 'solver/**'
+              - 'pyproject.toml'
+              - 'uv.lock'
+              - 'mise.toml'
+              - '.github/workflows/ci.yml'
+            frontend:
+              - 'frontend/**'
+              - 'mise.toml'
+              - '.github/workflows/ci.yml'
+            hook:
+              - '.githooks/**'
+              - '.gitattributes'
+              - '.github/workflows/ci.yml'
+
+  python:
+    name: Python (backend + solver)
+    needs: cambios
+    if: needs.cambios.outputs.python == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v2 # instala Python 3.14, Node 24 y uv desde mise.toml (decisión 0017)
+      - name: Instalar dependencias
+        run: uv sync --locked
+      - name: Ruff (lint)
+        run: uv run ruff check backend solver
+      - name: Ruff (formato)
+        run: uv run ruff format --check backend solver
+      - name: mypy solver
+        working-directory: solver
+        run: uv run mypy .
+      - name: mypy backend
+        working-directory: backend
+        run: uv run mypy .
+      - name: import-linter (solver no importa backend)
+        run: uv run lint-imports
+      - name: pytest
+        run: uv run pytest
+
+  frontend:
+    name: Frontend
+    needs: cambios
+    if: needs.cambios.outputs.frontend == 'true'
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v2
+      - name: Instalar dependencias
+        run: npm ci
+      - name: ESLint
+        run: npm run lint
+      - name: Prettier
+        run: npm run format:check
+      - name: TypeScript
+        run: npm run typecheck
+      - name: Vitest
+        run: npm run test
+
+  hook:
+    name: Hook de pre-push
+    needs: cambios
+    if: needs.cambios.outputs.hook == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - name: Tests del hook (con agente simulado)
+        run: bash .githooks/tests/test_pre_push.sh
+
+  ci-ok:
+    name: CI OK
+    needs: [cambios, python, frontend, hook]
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Verificar resultados
+        run: |
+          echo "cambios:  ${{ needs.cambios.result }}"
+          echo "python:   ${{ needs.python.result }}"
+          echo "frontend: ${{ needs.frontend.result }}"
+          echo "hook:     ${{ needs.hook.result }}"
+          # Si la detección de cambios falla, los demás quedan "skipped" sin haber corrido: por
+          # eso `cambios` tiene que ser success, no alcanza con que no falle.
+          [[ "${{ needs.cambios.result }}" == "success" ]] || { echo "La detección de cambios no corrió."; exit 1; }
+          for r in "${{ needs.python.result }}" "${{ needs.frontend.result }}" "${{ needs.hook.result }}"; do
+            case "$r" in
+              success|skipped) ;;
+              *) echo "Un job falló o se canceló."; exit 1 ;;
+            esac
+          done

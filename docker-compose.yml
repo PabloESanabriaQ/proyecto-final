@@ -1,0 +1,20 @@
+# PostgreSQL de desarrollo (decisión 0013). `docker compose up -d` y listo.
+services:
+  db:
+    image: postgres:17
+    environment:
+      POSTGRES_USER: aulero
+      POSTGRES_PASSWORD: aulero
+      POSTGRES_DB: aulero
+    ports:
+      - "5432:5432"
+    volumes:
+      - aulero-db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aulero -d aulero"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  aulero-db:

@@ -1,0 +1,120 @@
+Issue ID,Parent ID,Summary,Issue Type,Labels,Description
+1,,Fase 0 — Base del proyecto y puerta de calidad,Epic,fase,"Permite: que ningún integrante pueda pushear código que no pasó lint, tests y la revisión del agente en su máquina, y que nada llegue a main sin CI verde y una aprobación humana.
+
+Equipo: ambos. Decisiones que aplica: 0013, 0014, 0016, 0017, 0018.
+Detalle: docs/plan-de-fases.md, ""Fase 0""."
+2,1,HU-0.1 Estructura del monorepo con linters y formateadores,Story,historia,"Como desarrollador, quiero que el repositorio tenga la estructura backend/, frontend/, solver/, docs/ con los linters y formateadores de cada parte configurados, para que los cuatro trabajemos con las mismas reglas desde el primer commit.
+
+Aceptación:
+- ruff, mypy, eslint, prettier, tsc corren sin errores sobre el esqueleto.
+- Cada parte tiene un test trivial que pasa.
+- Versiones fijadas: Python 3.14, Node 24 (decisión 0017).
+
+Estado al 2026-09-16: hecho en PR #1."
+3,1,"HU-0.2 Hook de pre-push con lint, tests y revisión del agente",Story,historia,"Como desarrollador, quiero un hook de pre-push versionado en el repo que corra lint, tests y la revisión del agente sobre lo que voy a subir, y que bloquee el push si hay hallazgos bloqueantes, para no subir código que no pasa la puerta (decisiones 0016, 0018).
+
+Aceptación:
+- Un push con un bug plantado queda bloqueado con el hallazgo a la vista; uno correcto sale.
+- La salida queda en .review/ lista para pegar en el PR.
+- El README explica cómo activar el hook en un clon nuevo.
+- Funciona con Claude Code, Codex o Gemini (AULERO_AGENTE).
+
+Casos borde (cada uno con test en .githooks/tests/test_pre_push.sh):
+- Push que toca solo docs/: no invoca al agente.
+- Push que toca solo frontend/: no corre los chequeos de Python (y viceversa).
+- Push sin cambios respecto de origin/main: no invoca al agente.
+- Agente ausente del PATH, caído o colgado más de 10 min: falla con mensaje claro.
+- Rama con varios commits: revisa el diff acumulado.
+- Veredicto BLOQUEADO: corta el push y muestra cómo descartar; con descarte del autor, deja pasar y registra el motivo.
+- APROBADO seguido de una mención a BLOQUEADO en el texto: no bloquea.
+- El diff no incluye lockfiles; un diff con ``` no rompe el prompt.
+- Cambios sin commitear: aviso, no bloqueo.
+- Borrar una rama remota: no revisa nada. Varias ramas a la vez: una revisión por rama. Sin red: última origin/main conocida, con aviso.
+
+Estado al 2026-09-16: hecho en PR #1."
+4,1,HU-0.3 CI en GitHub Actions y main protegida,Story,historia,"Como desarrollador, quiero que cada pull request corra lint, formato, tests y la regla de importación solver/ ↛ backend/ en GitHub Actions, y que main esté protegida exigiendo CI verde y la aprobación de otro integrante, para que haya revisión humana además de la del agente.
+
+Aceptación:
+- Un PR de prueba que rompe lint queda bloqueado; uno correcto se mergea solo con aprobación.
+- main: check ""CI OK"" obligatorio, 1 aprobación, conversaciones resueltas, sin force push, aplica a admins.
+
+Casos borde:
+- PR que toca solo docs/: CI pasa sin correr tests de código.
+- solver/ importando backend/: CI falla (test en solver/tests/test_frontera.py).
+
+Estado al 2026-09-16: protección activa; PR #1 pasa CI y espera la primera aprobación ajena."
+5,1,HU-0.4 README de arranque,Story,historia,"Como desarrollador, quiero un README en la raíz con cómo levantar cada parte y la base de datos con un solo comando, para ponerme a trabajar sin preguntar.
+
+Aceptación: clon nuevo → mise install, uv sync, npm ci, docker compose up -d, git config core.hooksPath .githooks; instrucciones para Linux, macOS y Windows (WSL2); qué agente usa el hook.
+
+Estado al 2026-09-16: hecho en PR #1."
+6,1,HU-0.5 Enlace del repositorio con Jira,Story,historia,"Como desarrollador, quiero que el remoto tenga el proyecto de Jira enlazado (clave AUL en ramas y commits), para seguir el avance sin cargar nada a mano.
+
+Aceptación: la integración GitHub ↔ Jira muestra ramas y PRs con clave AUL-n en la historia correspondiente."
+7,1,Cierre de la Fase 0,Task,cierre,"Checklist de cierre (docs/plan-de-fases.md, ""Cierre de una fase""):
+1. Verificación completa con la salida pegada (README → Verificar).
+2. informe-de-gestion.md: fase marcada, fecha, capacidad nueva en lenguaje llano.
+3. arquitectura.md: módulos, interfaces, decisiones aplicadas, deuda con su señal.
+4. Commit ""Fase 0 — Base del proyecto y puerta de calidad"".
+5. Handoff: Funciona / Abierto / Decisiones / Sigue.
+
+Bloqueado por: merge del PR #1 con aprobación ajena; HU-0.5."
+8,,Fase 1 — Cargar los datos de un período y verlos,Epic,fase,"Permite: que el planificador suba el Excel de un período, vea la lista de errores de validación con fila y motivo, y vea los datos cargados en la web. Y que los equipos A y B tengan el formato de instancia normalizada publicado, generable desde la base, para trabajar sin la web.
+
+Equipo: PPS (1.1–1.4, 1.6), A + B (1.5). Decisiones que aplica: 0004, 0005, 0006, 0007, 0009, 0012, 0013, 0015.
+Detalle: docs/plan-de-fases.md, ""Fase 1"". Las definiciones pendientes de esta fase se toman ANTES de empezar sus historias."
+9,8,HU-1.1 Descargar la plantilla Excel del período,Story,historia,"Como planificador, quiero descargar la plantilla Excel del período con todas sus hojas y columnas, para cargar los datos sin adivinar el formato.
+
+Aceptación: la plantilla refleja los cambios respecto del Excel de ejemplo (docs/arquitectura.md §2): hoja Materia_Carrera; una sola columna Alumnos; Dictados_Semana (defecto 1) y Tipos_Aula_Alternativos; varios docentes por comisión; configuración con semanas, fecha de inicio y turnos; bloque de 30 min; hojas Preferencia_Docente y Dictados_Prefijados."
+10,8,HU-1.2 Subir el Excel y validarlo entero antes de guardar,Story,historia,"Como planificador, quiero subir el Excel completo y que el sistema lo valide entero antes de guardar nada, para no dejar un período a medio cargar.
+
+Aceptación: si hay al menos un error, no se persiste nada; si no hay errores, se persiste todo en una transacción.
+
+Casos borde (un test nombrado por cada uno):
+- Falta una hoja obligatoria; falta una columna obligatoria; columna extra desconocida (se ignora con advertencia).
+- Excel vacío; Excel con solo la configuración.
+- Período reimportado mientras existe una corrida: se bloquea (la regla definitiva es de la Fase 4)."
+11,8,HU-1.3 Lista completa de errores de validación,Story,historia,"Como planificador, quiero recibir la lista completa de errores de validación (hoja, fila, columna, motivo en lenguaje claro), para corregir el archivo de una sola vez.
+
+Casos borde (un test nombrado por cada uno):
+- ID duplicado dentro de una hoja; referencia a un ID inexistente (docente, aula, materia, tipo de aula, teoría asociada).
+- Teoria_Asociada apunta a una práctica, a una comisión de otra materia, o está presente en una teoría.
+- Práctica sin teoría asociada; teórico-práctica con teoría asociada.
+- Comisión sin docente; comisión con el mismo docente repetido.
+- Duración no múltiplo del bloque; duración mayor que la jornada; dictados por semana mayor que los días habilitados; dictados por semana en 0.
+- Aula con capacidad 0; alumnos en 0 (se acepta con advertencia); alumnos mayores que toda aula disponible (se acepta: lo resuelve el solver).
+- No-disponibilidad o bloqueo fuera de la grilla, con desde ≥ hasta, o en un día no habilitado.
+- Materia sin carrera; materia en dos carreras con distinto año; materia en la misma carrera dos veces.
+- Tipo alternativo igual al requerido; tipo alternativo inexistente.
+- Dictado pre-fijado incoherente por sí solo: fuera de grilla, aula inexistente o de tipo no declarado, capacidad insuficiente, choque con no-disponibilidad del docente o bloqueo del aula (decisión 0015)."
+12,8,HU-1.4 Ver los datos cargados en la web,Story,historia,"Como planificador, quiero ver en la web las carreras, materias con su ubicación en cada plan, comisiones, docentes, no-disponibilidades, aulas y bloqueos del período cargado, para verificar que la entrada es la que quería.
+
+Aceptación: una vista por entidad, con filtros básicos; accesibilidad según docs/convenciones.md §4 (tablas con encabezados, navegación por teclado, axe sin violaciones serias)."
+13,8,HU-1.5 Formato de instancia normalizada y exportación desde la base,Story,historia,"Como integrante de A o B, quiero que exista un formato de instancia normalizada (JSON con esquema publicado) y un comando que lo exporte desde la base para un período, para desarrollar el solver contra el mismo dato que va a usar la API.
+
+Aceptación:
+- Modelos Pydantic en solver/aulero_solver/instancia.py y solucion.py; JSON Schema generado y versionado.
+- Comando de la API que exporta la instancia de un período; el JSON valida contra el esquema.
+- Los tests de conversión BD ↔ instancia corren contra el esquema publicado.
+
+Responsable: equipos A y B (decisión 0012); PPS lo consume."
+14,8,HU-1.6 Resubir el Excel de un período con confirmación,Story,historia,"Como planificador, quiero que al resubir el Excel de un período ya cargado el sistema me pida confirmación y reemplace los datos, para corregir sin duplicar.
+
+Aceptación: sin confirmación no se toca nada; con confirmación, el reemplazo es completo y atómico."
+15,8,Definición: plantilla definitiva del Excel,Task,definicion,"Cómo se expresan varios docentes por comisión (columna con separador vs. hoja Comision_Docente), cómo se expresan los tipos alternativos (ídem), y las columnas nuevas de configuración. Se decide y se registra en docs/decisiones/ antes de HU-1.1."
+16,8,Definición: esquema exacto del JSON de instancia,Task,definicion,Lo definen los equipos A y B; PPS lo consume. Se acuerda antes de la primera historia de cada equipo. Registrar en docs/decisiones/ y publicar el JSON Schema.
+17,8,Definición: autenticación para subir un Excel,Task,definicion,"Para esta fase se asume sin login (un solo planificador). La decisión formal de roles y acceso se toma en la Fase 4, donde aparecen docentes y estudiantes como lectores. Dejar registrado el supuesto."
+18,8,Definición: identificación del período,Task,definicion,"Si un período se identifica por (ciclo lectivo, cuatrimestre) o por un ID libre. Registrar en docs/decisiones/."
+19,8,Cierre de la Fase 1,Task,cierre,"Criterio: subir el Excel del juguete (o el de ejemplo adaptado a la plantilla nueva) produce los datos en la web; subir uno con cada error de la lista produce el mensaje correcto; exportar-instancia genera un JSON válido contra el esquema publicado.
+
+Checklist de cierre en docs/plan-de-fases.md (""Cierre de una fase""): verificación con salida pegada, los dos documentos vivos actualizados, commit ""Fase 1 — Cargar los datos de un período y verlos"", handoff."
+20,1,Soporte de Antigravity CLI (agy) y robustecimiento del hook de pre-push en Windows,Task,"agente,windows,fase-0","Permite: usar el hook de pre-push con Antigravity CLI (agy) en Windows nativo y WSL2, resolviendo la deprecación de Gemini CLI y evitando desbordes de longitud de comando (E2BIG).
+
+Aceptación:
+- .githooks/agente.sh soporta agy con flags no interactivas (--mode plan --dangerously-skip-permissions --print-timeout 10m).
+- Paso de diff acumulado y prompt por stdin bufferizado en archivo temporal para evitar límite de argumentos E2BIG y SIGPIPE en Windows.
+- Autodetección dinámica del runtime de Python (python3, python, py) en el PATH para extracción del veredicto.
+- Suite de tests del pre-push compatible con binarios de agentes con extensión .exe.
+- Skills de gestión del proyecto disponibles en .agents/skills/.
+
+Relacionada con: AUL-8 (HU-0.2). Estado al 2026-09-17: implementado y probado de punta a punta en chore/AUL-1-fase-0-base."

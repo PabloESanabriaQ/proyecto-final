@@ -1,0 +1,57 @@
+# Raíz del workspace Python (uv). No es un paquete: agrupa backend/ y solver/ en un solo
+# entorno y centraliza la configuración de ruff, pytest e import-linter.
+[project]
+name = "aulero-workspace"
+version = "0.0.0"
+requires-python = ">=3.14,<3.15"
+# La raíz depende de los dos miembros para que `uv sync` instale todo con un solo comando.
+dependencies = ["aulero-api", "aulero-solver"]
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["backend", "solver"]
+
+[tool.uv.sources]
+aulero-api = { workspace = true }
+aulero-solver = { workspace = true }
+
+[dependency-groups]
+dev = [
+    "ruff>=0.13",
+    "mypy>=1.18",
+    "pytest>=8.4",
+    "import-linter>=2.3",
+    "httpx>=0.28",
+]
+
+# --- Ruff: lint y formato para backend/ y solver/ (convenciones.md §3.1) ---
+[tool.ruff]
+line-length = 100
+target-version = "py314"
+src = ["backend", "solver"]
+
+[tool.ruff.lint]
+select = ["E", "F", "W", "I", "N", "UP", "B", "SIM", "RUF"]
+
+[tool.ruff.lint.per-file-ignores]
+# En tests se admiten nombres de función y de variable que no sigan pep8 (nombres largos que
+# describen el caso).
+"**/tests/**" = ["N802", "N806"]
+
+# --- pytest: se corre desde la raíz sobre los dos paquetes ---
+[tool.pytest.ini_options]
+testpaths = ["backend/tests", "solver/tests"]
+addopts = "--import-mode=importlib -q"
+
+# --- import-linter: solver/ no importa backend/ (decisión 0012) ---
+[tool.importlinter]
+root_packages = ["aulero_solver", "aulero_api"]
+include_external_packages = true
+
+[[tool.importlinter.contracts]]
+name = "El solver no conoce la API ni la base de datos"
+type = "forbidden"
+source_modules = ["aulero_solver"]
+forbidden_modules = ["aulero_api", "fastapi", "sqlalchemy", "alembic"]

@@ -7,6 +7,14 @@
 | [`plan-de-fases.md`](plan-de-fases.md) | El equipo | Fases, historias de usuario para Jira, casos borde, **definiciones pendientes por fase**, fuera de alcance. |
 | [`decisiones/`](decisiones/README.md) | El equipo | Registro de decisiones de diseño, una por archivo (17 al 2026-09-16). **Cuando contradice a cualquier otro documento, manda el registro.** |
 | [`convenciones.md`](convenciones.md) | El equipo | Ramas, las dos puertas de revisión, linters por parte, accesibilidad, tests. |
+| [`marco-reglamentario.md`](marco-reglamentario.md) | El equipo y los Profesores Guía | Qué nos aplica del reglamento de Proyecto Final y cómo lo cumplimos; de dónde sale cada capítulo del informe. |
+| [`propuestas/proyecto-a.md`](propuestas/proyecto-a.md), [`propuestas/proyecto-b.md`](propuestas/proyecto-b.md) | Comisión de Carrera | Borradores de las propuestas de los dos Proyectos Finales (§5.a del reglamento): definición del problema, objetivos, alcance y cronograma de 12 meses. |
+
+## Material de referencia (acordado con la institución; no se edita)
+
+| Documento | Qué es | Qué nos aplica |
+|---|---|---|
+| [`reglamento-proyecto-final-resol-12-2023.pdf`](reglamento-proyecto-final-resol-12-2023.pdf) | Reglamento de Proyecto Final de ISI, UNViMe (Resol. C.Esc.Ing. y Cs.Amb. N.º 12/2023, 19 páginas). | Lo que nos aplica y cómo, en [`marco-reglamentario.md`](marco-reglamentario.md). Donde este reglamento contradiga algo nuestro, **manda el reglamento**: lo nuestro se adapta y se registra la decisión. |
 
 ## Material histórico
 
