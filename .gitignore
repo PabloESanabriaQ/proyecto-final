@@ -8,10 +8,12 @@ __pycache__/
 .mypy_cache/
 .ruff_cache/
 .pytest_cache/
+.import_linter_cache/
 
 # Node
 node_modules/
 dist/
+*.tsbuildinfo
 
 # Entornos y editores
 .env

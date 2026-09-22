@@ -1,8 +1,8 @@
 # Plan por fases
 
 > Público: el equipo. Cada fase es una rebanada vertical que se puede demostrar sola y no está
-> terminada hasta que `informe-de-gestion.md` y `arquitectura.md` quedaron al día
-> (checklist de cierre en la skill `avanzar-por-fases`).
+> terminada hasta que `informe-de-gestion.md` y `arquitectura.md` quedaron al día (checklist
+> al final de este documento, "Cierre de una fase").
 >
 > **Convención de este documento.** Cada fase lleva: qué permite hacer que antes no se podía,
 > equipo responsable, historias de usuario (para cargar en Jira), casos borde que la fase tiene
@@ -14,21 +14,29 @@
 > **estudiante**, **integrante CP-SAT** (equipo de optimización), **desarrollador** (cualquier
 > integrante, para historias de infraestructura).
 >
-> Equipos: **PPS** (API, frontend, importación y BD) y **CP-SAT** (paquete `solver/`), según
-> [decisión 0012](decisiones/0012-el-solver-es-un-paquete-python-independiente-de-la-api-y-la-base.md).
+> Equipos: **PPS** (API, frontend, importación y BD), **A** (una persona: formulación
+> curricular, diagnóstico, escalado) y **B** (dos personas: holguras, blandas, comparación),
+> según [0012](decisiones/0012-el-solver-es-un-paquete-python-independiente-de-la-api-y-la-base.md)
+> y [0020](decisiones/0020-el-trabajo-se-presenta-como-dos-proyectos-finales-en-paralelo-sobre-una-base-comun.md).
+> Donde dice "CP-SAT" son A y B juntos (base común). Cada Proyecto Final tiene su propuesta con
+> cronograma en `propuestas/`; el marco reglamentario está en `marco-reglamentario.md`.
 >
 > **Última actualización:** 2026-09-16.
 
 ## Orden y paralelismo
 
 ```
-Fase 0 ──► Fase 1 (PPS) ──────────────► Fase 4 ──► Fase 5 (PPS) ──► Fase 6 ──► Fase 7 ──► Fase 8
-       └─► Fase 2 (CP-SAT) ─► Fase 3 ─┘                              (ambos)   (CP-SAT)  (ambos)
+Fase 0 ──► Fase 1 (PPS) ────────────────► Fase 4 (PPS) ──► Fase 5 (PPS) ──► Fase 6 (A + PPS)
+       └─► Fase 2 (A + B, base común) ─┬─► Fase 3 (A) ─────────────────────┘        │
+                                       └─► Fase 7 (B, sobre recursos) ─► Fase 7 (B, curricular, tras Fase 3) ─► Fase 8 (B + PPS)
 ```
 
-Las Fases 1 y 2–3 corren en paralelo, unidas por el contrato de instancia (historia 1.5). El
-Proyecto A queda completo a nivel modelo al cerrar la Fase 3 y a nivel sistema al cerrar la Fase
-4; la Fase 6 es su validación sobre datos reales. Las Fases 7 y 8 son el Proyecto B.
+Las Fases 1 y 2 corren en paralelo, unidas por el contrato de instancia (historia 1.5). Desde
+la Fase 2 se abren tres líneas: PPS sigue con 4 y 5; A hace la 3 y después la 6; B arranca la 7
+sobre las restricciones de recursos sin esperar a la 3, e integra la relajación curricular
+cuando la 3 cierra. El Proyecto A queda completo a nivel modelo al cerrar la 3 y a nivel
+sistema al cerrar la 4; la 6 es su validación sobre datos reales. Las Fases 7 y 8 son el
+Proyecto B. Los meses de cada línea están en los cronogramas de `propuestas/`.
 
 ---
 
@@ -65,25 +73,57 @@ agente en su máquina, y que nada llegue a `main` sin CI verde y una aprobación
 
 ### Casos borde
 
+La parte del hook de cada caso tiene test en `.githooks/tests/test_pre_push.sh`; la regla de
+import-linter, en `solver/tests/test_frontera.py`. La parte de CI de los dos primeros ("CI
+pasa sin correr tests", "CI falla") se verifica a ojo con el PR de prueba de HU-0.3, no con un
+test: no hay forma barata de correr GitHub Actions localmente.
+
 - PR que toca solo `docs/`: CI pasa sin correr tests de código; el hook no invoca al agente.
 - PR que toca solo `frontend/`: no corre los tests de Python (y viceversa).
 - `solver/` importando `backend/`: CI falla (regla de import-linter).
+- Ningún agente instalado, o `AULERO_AGENTE` apunta a uno que no está: mensaje que dice qué
+  instalar (decisión 0018).
+- La suite de tests del hook ignora las `AULERO_*` exportadas en el shell de quien la corre
+  (quien siguió el README y exportó `AULERO_AGENTE` tiene que poder pushear cambios en
+  `.githooks/`).
 - Push sin cambios respecto de `origin/main` (rama ya subida): el hook no invoca al agente.
-- Push con el agente no disponible (sin red, sin sesión): el hook falla con un mensaje claro, no
-  deja pasar en silencio.
+- Push con el agente no disponible (ausente del PATH, caído, o colgado más de 10 min): el hook
+  falla con un mensaje claro, no deja pasar en silencio.
 - Push de una rama con varios commits: el agente revisa el diff acumulado, no commit por commit.
+- Veredicto `BLOQUEADO`: corta el push y muestra cómo descartar; con descarte del autor, deja
+  pasar y registra el motivo.
+- Un `APROBADO` seguido de una mención a "BLOQUEADO" en el texto no bloquea (el veredicto es
+  la línea completa).
+- El diff que ve el agente no incluye lockfiles; un diff con ``` adentro no rompe el prompt.
+- Cambios sin commitear: aviso, no bloqueo.
+- Borrar una rama remota (`git push --delete`): no se revisa nada.
+- Push de varias ramas a la vez: se revisa cada una, con una salida por commit.
+- Sin red: se usa la última `origin/main` conocida, con aviso.
+- Push en Windows nativo con agentes CLI (como Antigravity `agy`): el paso de diff y prompt por
+  stdin bufferizado en archivo temporal evita el desborde de longitud de comando (`E2BIG`), y la
+  extracción del veredicto funciona con `python3`, `python` o `py` (tarea AUL-24, relacionada
+  con HU-0.2).
 
 ### Definiciones pendientes a tomar al llegar
 
-- ~~Proveedor del remoto~~ — GitHub (2026-09-16).
-- ~~Dónde corre el agente~~ — hook local de pre-push, decisión 0016.
+- ~~Proveedor del remoto~~ — GitHub, repo público `PabloESanabriaQ/proyecto-final`
+  (2026-09-16; público porque la protección de rama no está disponible en repos privados del
+  plan gratuito, y el proyecto no tiene datos reales).
+- ~~Dónde corre el agente~~ — hook local de pre-push, decisión 0016; cualquier agente, 0018.
 - ~~Versión de Python y de Node~~ — 3.14 y 24 LTS, decisión 0017.
-- Nombre y clave del proyecto en Jira (este plan usa `AUL` como ejemplo).
+- ~~Clave del proyecto en Jira~~ — `AUL` (2026-09-16).
 
 ### Cierre
 
-CI verde sobre el esqueleto; el PR de prueba bloqueado y el correcto mergeado quedan como
-evidencia; `arquitectura.md` §5 ("Cómo correrlo") completada.
+CI verde sobre el esqueleto; el PR correcto mergeado con aprobación queda como evidencia;
+`arquitectura.md` §5 ("Cómo correrlo") completada. El "PR que rompe lint queda bloqueado" del
+lado de CI no se prueba con un PR real: exigiría saltear el hook con `--no-verify`; se verifica
+que `CI OK` sea check obligatorio de `main` (API de GitHub) y que el hook bloquee localmente
+(tests del hook).
+
+**Estado al 2026-09-16:** todo hecho y verificado salvo el merge del PR #1, que espera la
+aprobación de otro integrante, y el enlace del repo desde Jira (HU-0.5), que se hace al crear
+el proyecto `AUL`.
 
 ---
 
@@ -160,8 +200,8 @@ produce los datos en la web; subir uno con cada error de la lista produce el men
 prueba un horario que respeta docentes, aulas, capacidad, tipo de aula, bloqueos y grilla, y lo
 verifique con un validador que no depende del solver.
 
-**Equipo:** CP-SAT. **Decisiones que aplica:** 0003, 0004, 0005, 0007 (parcial: un dictado),
-0009, 0012.
+**Equipo:** A + B (base común, decisión 0020). **Decisiones que aplica:** 0003, 0004, 0005,
+0007 (parcial: un dictado), 0009, 0012.
 
 ### Historias
 
@@ -224,7 +264,7 @@ varios dictados por semana, una materia compartida— se resuelva respetando R1�
 existencial, o que el solver diga qué grupo de restricciones impide resolverlo. Con esto el
 Proyecto A queda completo a nivel modelo.
 
-**Equipo:** CP-SAT. **Decisiones que aplica:** 0001, 0006, 0007, 0015.
+**Equipo:** A. **Decisiones que aplica:** 0001, 0006, 0007, 0015.
 
 ### Historias
 
@@ -409,8 +449,9 @@ aula posible y ver el aviso; cada caso borde con test nombrado.
 luego un escenario con varias carreras que comparten aulas y docentes, dentro de un tiempo
 acotado, con los tiempos medidos y comparables entre corridas.
 
-**Equipo:** ambos (CP-SAT en rendimiento, PPS en datos y visualización a escala).
-**Decisiones que aplica:** 0002, 0003, 0006.
+**Equipo:** A (rendimiento y descomposición) + PPS (datos y visualización a escala). Si A queda
+sobrecargado, B absorbe el escenario multi-carrera (señal de 0020).
+**Decisiones que aplica:** 0002, 0003, 0006, 0020.
 
 ### Historias
 
@@ -460,7 +501,10 @@ referencia en el repo con test de regresión.
 posible, con la lista exacta de qué reglas se violaron, dónde y cuánto, y que sobre una instancia
 factible entregue el mismo resultado que el Proyecto A con cero violaciones.
 
-**Equipo:** CP-SAT (7.1–7.4), PPS (7.5). **Decisiones que aplica:** 0002, 0010.
+**Equipo:** B (7.1–7.4), PPS (7.5). **Decisiones que aplica:** 0002, 0010, 0020.
+
+**Orden interno (0020):** primero las holguras de R7 y R8 sobre la base de recursos de la
+Fase 2, sin esperar a la Fase 3; la holgura de R1/R3 se integra cuando A cierra la Fase 3.
 
 ### Historias
 
@@ -513,7 +557,7 @@ violaciones; comparación A/B pegada en el cierre; cada caso borde con test nomb
 preferencias horarias de los docentes; varias corridas guardadas y comparables lado a lado; y la
 publicación de una como horario oficial del período.
 
-**Equipo:** CP-SAT (8.1–8.2), PPS (8.3–8.6). **Decisiones que aplica:** 0007, 0010, 0011.
+**Equipo:** B (8.1–8.2), PPS (8.3–8.6). **Decisiones que aplica:** 0007, 0010, 0011, 0020.
 
 ### Historias
 
@@ -563,7 +607,9 @@ el estado final y la deuda anotada.
 ## Fuera de alcance del proyecto
 
 Lo que queda afuera y por qué, para que un pedido nuevo se compare contra esto y no contra la
-buena voluntad:
+buena voluntad. **Esta tabla tiene que coincidir con el "Alcance y limitaciones" de cada
+propuesta** (`propuestas/`): una vez aprobadas, cambiar el alcance exige comunicarlo a la
+Comisión de Carrera (`marco-reglamentario.md` §2).
 
 | Fuera | Por qué |
 |---|---|
@@ -576,6 +622,34 @@ buena voluntad:
 | Gestión de cupos e inscripciones | Los alumnos por comisión son entrada (0005). |
 | Notificaciones (correo, mensajes) al publicar | Sin pedido; puede revisarse al cerrar la Fase 8. |
 
+## Cierre de una fase
+
+Una fase no está terminada cuando compila: está terminada cuando pasa esta revisión **y** los
+dos documentos vivos quedaron actualizados. Cumplir a medias es no cumplir.
+
+1. **Verificación, con la salida a la vista.** Correr la verificación completa (README,
+   "Verificar") y **pegar la salida real de ahora** en el cierre. "La corrí hace un rato y
+   pasaba" no es haber verificado. Además: cada caso borde de la fase tiene un test que lo
+   nombra; los cambios de esquema aplican sobre un entorno limpio y sobre uno que viene de las
+   fases anteriores; las interfaces nuevas están documentadas; ninguna convención violada; toda
+   decisión de diseño que apareció está en `decisiones/`.
+2. **`informe-de-gestion.md`:** marcar la fase y la fecha; en una o dos frases, qué capacidad
+   nueva tiene el sistema contada desde quien lo usa; si cambió una regla del dominio,
+   explicarla en lenguaje llano; avanzar el ejemplo narrado.
+3. **`arquitectura.md`:** módulos, tablas e interfaces nuevas; enlace a las decisiones que la
+   fase aplicó o creó; marcar la fase y la fecha; la deuda que deja, **con la señal que
+   indicaría pagarla**.
+4. **Un commit `Fase N — Nombre`** que diga qué entra, qué decisión aplicó y qué casos borde
+   cubre. Si la fase no se puede cerrar en esta sesión, el commit es `Fase N (en curso) — Nombre`
+   con "Falta para cerrar: …" en el cuerpo, y los documentos muestran la fase en curso, nunca
+   como hecha.
+5. **Handoff** al equipo con cuatro líneas: `Funciona:` / `Abierto:` / `Decisiones:` / `Sigue:`.
+
+Excusas que aparecen justo cuando "ya está", y todas significan que sigue abierta: "los informes
+los actualizo al final", "el caso borde está cubierto indirectamente", "el test de integración
+lo agrego en la fase que viene", "esta decisión es obvia", "falta un detalle menor, lo dejo
+anotado y cierro" (anotarlo en la deuda es válido; cerrar sin anotarlo, no).
+
 ## Cómo cargar esto en Jira
 
 - Un **epic por fase** (`Fase N — Nombre`), con la descripción "Permite:" como resumen del epic.
@@ -584,5 +658,6 @@ buena voluntad:
 - Las **definiciones pendientes** de cada fase como tareas del epic, etiquetadas `definicion`,
   que se cierran registrando la decisión en `docs/decisiones/` antes de empezar las historias de
   la fase.
-- El **cierre** de cada fase como una tarea `cierre` con el checklist de `cierre-de-fase.md` de la
-  skill `avanzar-por-fases`.
+- El **cierre** de cada fase como una tarea `cierre` con el checklist de la sección
+  ["Cierre de una fase"](#cierre-de-una-fase) de este documento (también disponible en
+  `.agents/skills/avanzar-por-fases/cierre-de-fase.md`).

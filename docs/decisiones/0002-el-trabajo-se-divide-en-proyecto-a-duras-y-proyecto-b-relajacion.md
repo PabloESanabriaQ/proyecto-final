@@ -1,6 +1,10 @@
 # 0002 — El trabajo se divide en Proyecto A (restricciones duras) y Proyecto B (relajación y calidad) sobre la misma instancia, API y frontend
 
 **Estado:** Aceptada — 2026-09-16
+**Modificada por:** [[0020]] — el reglamento limita cada Proyecto Final a dos personas, así que
+A y B se presentan como dos Proyectos Finales (A: 1 persona, B: 2) que avanzan **en paralelo**
+sobre una base común, en vez de A primero y B después. La división y lo que comparten siguen
+vigentes. Leer junto con 0020.
 
 ## Contexto
 

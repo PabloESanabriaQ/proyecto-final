@@ -4,7 +4,9 @@
 > Público: quien evalúa el trabajo (tribunal, tutores, secretaría académica) o va a usar el
 > sistema. Sin código ni jerga técnica; eso va en `arquitectura.md`.
 >
-> **Última actualización:** 2026-09-16 — Definición cerrada y plan armado. Ninguna fase iniciada.
+> **Última actualización:** 2026-09-16 — Fase 0 en curso: el repositorio ya exige revisión
+> automática antes de subir código y aprobación de otra persona antes de integrarlo; falta que
+> el primer cambio pase por esa aprobación y enlazar el tablero de seguimiento.
 
 ## El problema
 
@@ -68,11 +70,21 @@ en el [registro de decisiones](decisiones/README.md).
 - **La jornada es de lunes a sábado, de 8 a 22, en bloques de media hora** (0004). Los turnos
   arrancan como 8–13, 13–18 y 18–22, y se ajustan cuando la institución los defina (0011).
 
+## Cómo se organiza el trabajo académico
+
+El reglamento de Proyecto Final admite equipos de hasta dos personas, así que el trabajo se
+presenta como **dos Proyectos Finales** que comparten el sistema: el **Proyecto A** (una
+persona) construye el motor que encuentra horarios válidos o explica por qué no existen; el
+**Proyecto B** (dos personas) lo extiende para que, cuando no hay horario perfecto, entregue el
+mejor posible con sus reglas violadas a la vista y mejore su calidad. La aplicación web la hace
+una **Práctica Profesional Supervisada**. Las propuestas están en `propuestas/` y lo que el
+reglamento nos exige, en `marco-reglamentario.md`.
+
 ## Estado de avance
 
 | Fase | Qué permite hacer | Estado |
 |---|---|---|
-| 0 | El equipo trabaja sobre un repositorio con revisión automática y humana obligatoria. | No iniciada |
+| 0 | El equipo trabaja sobre un repositorio con revisión automática y humana obligatoria. | **En curso.** Hoy: nadie puede subir código sin que un revisor automático lo apruebe; el repositorio verifica cada cambio y la rama principal rechaza todo lo que no tenga verificación en verde y aprobación de otra persona. Falta: que el primer cambio pase por esa aprobación, y enlazar el tablero de seguimiento (Jira). |
 | 1 | Subir el Excel del período, ver los errores de carga y los datos cargados en la web. | No iniciada |
 | 2 | Obtener un primer horario del caso de prueba (9 materias) que respeta docentes, aulas, capacidad y bloqueos. | No iniciada |
 | 3 | Obtener un horario que además respeta las reglas del plan de estudios, o saber por qué no existe. | No iniciada |

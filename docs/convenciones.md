@@ -25,16 +25,21 @@
 Corre en la máquina de quien pushea, sobre el diff entre `origin/main` y lo que se va a subir
 (decisión 0016). **Si hay hallazgos bloqueantes, el push no sale.** El hook está en
 `.githooks/pre-push`; se activa una vez por clon con `git config core.hooksPath .githooks` (lo
-dice el README). Revisa el diff con foco en, en este orden:
+dice el README). El agente es el que tenga cada integrante —Claude Code, Codex o Gemini CLI
+(Antigravity)— vía `.githooks/agente.sh` y `AULERO_AGENTE` (decisión 0018); el prompt y el
+criterio son los mismos para todos. Revisa el diff con foco en, en este orden:
 
 1. **Correctitud:** bugs, casos borde sin manejar, condiciones de carrera, errores de tipo.
 2. **Contratos:** cambios en el formato de instancia/solución del solver o en los `schemas` de la
    API sin actualizar su documentación y sus tests.
 3. **Convenciones de este documento:** capas del backend, estructura del frontend, accesibilidad.
 4. **Tests:** cada caso borde nombrado en la historia tiene un test que lo nombra.
+5. **Decisiones:** si el cambio toma una decisión de diseño con alternativa real, existe su
+   registro en `decisiones/` (o el diff lo agrega).
 
-Es **bloqueante** un hallazgo de correctitud o de contrato. Es **no bloqueante** una sugerencia de
-estilo o simplificación. Ante un bloqueante, el autor lo corrige y vuelve a pushear (el hook
+Es **bloqueante** un hallazgo de correctitud o de contrato, y un caso borde nuevo sin test que
+lo nombre. Es **no bloqueante** una sugerencia de estilo, simplificación o nombre. El prompt
+exacto está en `.githooks/revision-prompt.md`; si se cambia el criterio, se cambian los dos. Ante un bloqueante, el autor lo corrige y vuelve a pushear (el hook
 revisa de nuevo), o —si no aplica— lo marca como descartado con el motivo en la salida y ese
 motivo queda en el PR.
 
@@ -57,10 +62,11 @@ No se aprueba un PR "para no trabar": si no hay tiempo de revisarlo, se dice y s
 
 ### 2.3 CI (GitHub Actions, sobre el PR)
 
-Corre lint, formato y tests de cada parte tocada, y la regla de que `solver/` no importa
-`backend/`. Sin agente. Es un check obligatorio para mergear, igual que la aprobación humana. El
-mismo hook de pre-push corre lint y tests antes del agente, para no gastar una revisión sobre
-código que no compila.
+Corre lint, formato y tests de cada parte tocada, la regla de que `solver/` no importa
+`backend/`, y los tests del propio hook cuando cambia `.githooks/`. Sin agente. El check
+obligatorio para mergear es **`CI OK`**, junto con la aprobación humana. El mismo hook de
+pre-push corre lint y tests antes del agente, para no gastar una revisión sobre código que no
+compila.
 
 ## 3. Estilo y linters
 
@@ -75,9 +81,12 @@ Versiones base ([decisión 0017](decisiones/0017-las-versiones-base-son-python-3
 
 | Herramienta | Para qué | Configuración |
 |---|---|---|
-| **Ruff** | lint y formato (reemplaza flake8, isort, black) | `pyproject.toml` de cada paquete; reglas `E, F, W, I, N, UP, B, SIM, RUF` |
-| **mypy** | tipos, modo estricto | `pyproject.toml`; `strict = true` |
-| **pytest** | tests | `tests/` junto a cada paquete |
+| **Ruff** | lint y formato (reemplaza flake8, isort, black) | `pyproject.toml` de la raíz, común a los dos paquetes; reglas `E, F, W, I, N, UP, B, SIM, RUF` |
+| **mypy** | tipos, modo estricto | `pyproject.toml` de cada paquete; `strict = true` |
+| **pytest** | tests | `tests/` junto a cada paquete; se corre desde la raíz |
+| **import-linter** | `solver/` no importa `backend/` ni FastAPI/SQLAlchemy | `pyproject.toml` de la raíz |
+
+Los dos paquetes viven en un *workspace* de `uv` (un solo `uv sync`, un solo `uv.lock`).
 
 Reglas que van más allá del linter:
 
@@ -150,6 +159,9 @@ Lo que se verifica en cada PR de frontend:
 
 ## 6. Herramientas de IA en el código
 
+- Cada integrante usa el agente que tiene (Claude Code, Codex, Antigravity). El contexto del
+  proyecto para todos está en `AGENTS.md` (decisión 0018); nada que un agente necesite saber va
+  en otro lado.
 - El agente revisa; las personas deciden. Un hallazgo del agente se responde, no se obedece sin
   leerlo.
 - Código generado con asistencia se revisa igual que el escrito a mano, con la misma puerta.

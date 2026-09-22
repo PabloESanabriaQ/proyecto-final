@@ -4,8 +4,9 @@
 > Público: quien se suma al proyecto o lo defiende técnicamente. Acá va el modelo, las interfaces,
 > las decisiones enlazadas y la deuda. El estado en lenguaje llano va en `informe-de-gestion.md`.
 >
-> **Última actualización:** 2026-09-16 — Fase 0 no iniciada. Hay decisiones, plan y convenciones;
-> no hay código.
+> **Última actualización:** 2026-09-16 — Fase 0 en curso: esqueleto, linters, hook de pre-push
+> con agente, CI y `main` protegida, hechos y verificados; falta el merge del PR #1 (aprobación
+> de otro integrante) y enlazar Jira.
 
 ## 1. Stack y arquitectura
 
@@ -19,8 +20,9 @@ lint y tests en GitHub Actions.
 
 ```
 proyecto-final/
-├── backend/                 # FastAPI (equipo PPS)
-│   ├── app/
+├── backend/                 # FastAPI (equipo PPS) — paquete aulero_api
+│   ├── aulero_api/
+│   │   ├── main.py          # app FastAPI
 │   │   ├── routers/         # endpoints HTTP, sin lógica
 │   │   ├── schemas/         # Pydantic: contratos de la API
 │   │   ├── services/        # casos de uso; único lugar que llama a solver.solve
@@ -28,7 +30,7 @@ proyecto-final/
 │   │   ├── models/          # tablas
 │   │   ├── importers/       # Excel → validación → BD
 │   │   └── adapters/        # BD ↔ solver.Instancia / solver.Solucion
-│   ├── alembic/             # migraciones
+│   ├── alembic/             # migraciones (Fase 1)
 │   └── tests/
 ├── frontend/                # React + Vite + TS (equipo PPS)
 │   └── src/
@@ -39,7 +41,7 @@ proyecto-final/
 │       │   └── corridas/    # lanzar, estado, comparar
 │       ├── api/             # cliente generado desde OpenAPI
 │       └── components/      # compartidos
-├── solver/                  # paquete Python independiente (equipo CP-SAT)
+├── solver/                  # paquete Python independiente (equipo CP-SAT) — aulero_solver
 │   ├── aulero_solver/
 │   │   ├── instancia.py     # Pydantic: formato de entrada normalizado
 │   │   ├── solucion.py      # Pydantic: formato de salida + violaciones
@@ -51,6 +53,10 @@ proyecto-final/
 │   ├── instancias/          # juguete y otras instancias de referencia (JSON)
 │   └── tests/
 ├── docs/
+├── .githooks/               # pre-push: lint, tests y revisión del agente (0016) + sus tests
+├── .github/workflows/       # CI: lint y tests, sin agente
+├── pyproject.toml           # workspace uv (backend + solver), ruff, pytest, import-linter
+├── mise.toml                # Python 3.14, Node 24, uv (0017)
 └── docker-compose.yml       # PostgreSQL de desarrollo
 ```
 
@@ -131,9 +137,10 @@ el contrato es un cambio para los dos equipos y se anuncia en el PR.
 
 ### 3.2 API (lo define el equipo PPS, Fase 1 en adelante)
 
-Se documenta automáticamente con OpenAPI. Recursos previstos: períodos, importación de Excel,
-entidades de carga (CRUD), corridas (lanzar, consultar estado, resultado, publicar, comparar),
-excepciones de aula, vistas de horario (por aula, docente, carrera/año, semana).
+Se documenta automáticamente con OpenAPI (`/docs`). Hoy expone `GET /salud` (estado, versión de
+la API y del solver enlazado; schema `Salud`). Recursos previstos: períodos, importación de
+Excel, entidades de carga (CRUD), corridas (lanzar, consultar estado, resultado, publicar,
+comparar), excepciones de aula, vistas de horario (por aula, docente, carrera/año, semana).
 
 ## 4. Estrategia de tests
 
@@ -144,13 +151,45 @@ Schema publicado.
 
 ## 5. Cómo correrlo
 
-*(Se completa en la Fase 0, cuando exista qué correr.)*
+Los comandos exactos están en el [`README`](../README.md) de la raíz (arranque en un clon
+nuevo, correr, verificar, subir cambios). Resumen: `mise install` instala Python 3.14, Node 24 y
+uv; `uv sync` arma el entorno Python de los dos paquetes; `npm ci` en `frontend/`;
+`docker compose up -d` levanta PostgreSQL 17; `git config core.hooksPath .githooks` activa la
+puerta de pre-push.
+
+La verificación completa (la misma que corre el hook y CI):
+
+```bash
+uv run ruff check backend solver && uv run ruff format --check backend solver
+(cd solver && uv run mypy .) && (cd backend && uv run mypy .)
+uv run lint-imports && uv run pytest
+cd frontend && npm run lint && npm run format:check && npm run typecheck && npm run test
+bash .githooks/tests/test_pre_push.sh
+```
+
+### 5.1 Las puertas
+
+**En GitHub:** `main` está protegida (activado el 2026-09-16 por API): check `CI OK` obligatorio
+y al día con `main`, 1 aprobación de otra persona, conversaciones resueltas, sin force push ni
+borrado, aplica también a administradores. El repo es público porque la protección de rama no
+existe en repos privados del plan gratuito.
+
+**En la máquina de cada uno:** la puerta de pre-push.
+
+`.githooks/pre-push` corre, por cada rama que se sube: lint y tests de las partes tocadas
+(Python, frontend, el propio hook), y después la revisión del agente sobre el diff acumulado
+contra `origin/main` (sin lockfiles), con un tope de 10 minutos. El agente lo elige cada
+integrante (`AULERO_AGENTE=claude|codex|gemini`, decisión 0018) y lo invoca
+`.githooks/agente.sh` en modo no interactivo y solo lectura. El prompt está en
+`.githooks/revision-prompt.md` y pide un veredicto en la última línea; `BLOQUEADO` corta el
+push. La salida queda en `.review/<sha>.md` y `.review/ultima.md` para pegarla en el PR. Sus
+casos borde tienen test en `.githooks/tests/test_pre_push.sh`, con un agente simulado.
 
 ## 6. Estado por fase
 
 | Fase | Qué entra | Estado |
 |---|---|---|
-| 0 | Repo, estructura, hook de pre-push con agente, CI de lint y tests | No iniciada |
+| 0 | Repo, estructura, hook de pre-push con agente, CI de lint y tests, `main` protegida | **En curso** — hecho: HU-0.1 a 0.4 (CI verde en PR #1, `main` exige `CI OK` + 1 aprobación); falta: merge de #1 con aprobación ajena, enlace desde Jira (0.5) |
 | 1 | Importación Excel, validación, BD, API de consulta, vista de datos cargados, contrato de instancia | No iniciada |
 | 2 | Solver A con restricciones de recursos, validador, CLI, juguete | No iniciada |
 | 3 | Solver A con restricciones curriculares, diagnóstico de infactibilidad | No iniciada |
@@ -164,4 +203,16 @@ El detalle, las historias y las definiciones pendientes por fase están en `plan
 
 ## 7. Deuda técnica anotada
 
-*(Vacía: no hay código todavía. Cada fase agrega la suya con la señal que indicaría pagarla.)*
+- **Las listas de "qué toca cada parte" están duplicadas** entre `.githooks/pre-push`
+  (`PAT_*`) y `.github/workflows/ci.yml` (filtros). Hoy son cuatro patrones y se mantienen a
+  mano. **La señal:** un PR donde el hook y CI corran chequeos distintos para el mismo cambio.
+  La salida es un archivo compartido que los dos lean.
+- **El hook depende de bash y de Python (`python3`, `python` o `py`) en el PATH** para leer el
+  JSON del agente. En Windows se recomienda WSL2 (README). **La señal:** un integrante que no
+  pueda pushear desde su entorno habitual.
+- **El adaptador de Antigravity CLI (`agy`) quedó probado de punta a punta** (2026-09-17).
+  Codex y Gemini CLI quedan a confirmar en el primer push de quien los use. **La señal:** el
+  primer push de quien use uno de los dos. Se corrige en ese PR.
+- **`fastapi.testclient` avisa que `httpx` está deprecado a favor de `httpx2`** (warning en
+  `pytest`). No afecta hoy. **La señal:** que Starlette lo convierta en error en una versión
+  nueva; ahí se migra el cliente de tests.
