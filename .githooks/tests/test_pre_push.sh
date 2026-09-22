@@ -34,16 +34,30 @@ EOF
 chmod +x "$TMP/bin/agente-falso"
 
 # PATH mínimo para los casos "sin agente": todo lo que hay en el PATH real, menos los agentes.
-mkdir -p "$TMP/binmin"
+PATH_MIN=""
 IFS=: read -ra DIRS_PATH <<<"$PATH"
 for d in "${DIRS_PATH[@]}"; do
   [[ -d "$d" ]] || continue
-  for f in "$d"/*; do
-    [[ -x "$f" && ! -d "$f" ]] || continue
-    nombre="$(basename "$f")"
-    case "$nombre" in claude|codex|gemini) continue ;; esac
-    [[ -e "$TMP/binmin/$nombre" ]] || ln -s "$f" "$TMP/binmin/$nombre"
+  tiene_agente=false
+  for a in claude codex gemini; do
+    if [[ -e "$d/$a" || -e "$d/$a.exe" || -e "$d/$a.cmd" ]]; then
+      tiene_agente=true
+      break
+    fi
   done
+  if $tiene_agente; then
+    d_filtrado="$TMP/binmin_$(basename "$d")"
+    mkdir -p "$d_filtrado"
+    for f in "$d"/*; do
+      [[ -x "$f" && ! -d "$f" ]] || continue
+      nombre="${f##*/}"
+      case "$nombre" in claude*|codex*|gemini*) continue ;; esac
+      [[ -e "$d_filtrado/$nombre" ]] || ln -s "$f" "$d_filtrado/$nombre" 2>/dev/null || cp "$f" "$d_filtrado/$nombre"
+    done
+    PATH_MIN="${PATH_MIN:+$PATH_MIN:}$d_filtrado"
+  else
+    PATH_MIN="${PATH_MIN:+$PATH_MIN:}$d"
+  fi
 done
 
 nuevo_repo() {
@@ -105,6 +119,10 @@ esperar() {
   if eval "$2"; then ok "$1"; else fallo "$1" "$3"; fi
 }
 
+# --- Tests unitarios de adaptadores (.githooks/agente.sh) ------------------------------------
+bash "$HOOK_SRC/tests/test_agente.sh"
+echo
+
 # --- Casos borde de la Fase 0 -----------------------------------------------------------------
 
 echo "Caso: push que toca solo docs/ no invoca al agente"
@@ -147,7 +165,7 @@ correr_hook_real_sin_agentes() {
   export LLAMADAS_DIR="$dir/.llamadas"; mkdir -p "$LLAMADAS_DIR"
   set +e
   SALIDA_HOOK="$(cd "$dir" && printf 'refs/heads/rama %s refs/heads/rama 0000000000000000000000000000000000000000\n' "$(git -C "$dir" rev-parse HEAD)" \
-    | env "${LIMPIAR[@]}" AULERO_HOOK_SIN_CHEQUEOS=1 PATH="$TMP/binmin" "$@" bash .githooks/pre-push 2>&1)"
+    | env "${LIMPIAR[@]}" AULERO_HOOK_SIN_CHEQUEOS=1 PATH="$PATH_MIN" "$@" bash .githooks/pre-push 2>&1)"
   CODIGO_HOOK=$?
   set -e
 }

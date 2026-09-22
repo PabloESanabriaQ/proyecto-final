@@ -30,7 +30,11 @@ command -v "$AGENTE" >/dev/null 2>&1 \
 # Imprime el campo pedido del JSON. Si falta o está vacío (por ejemplo, el agente agotó sus
 # turnos), manda el JSON completo a stderr —que el hook guarda en .review/error.log— y falla.
 extraer() {
-  python3 -c '
+  local py="python3"
+  if ! "$py" -c 'exit(0)' 2>/dev/null && command -v python >/dev/null 2>&1; then
+    py="python"
+  fi
+  "$py" -c '
 import json, sys
 crudo = sys.stdin.read()
 try:
@@ -58,9 +62,9 @@ case "$AGENTE" in
     cat "$salida"
     ;;
   gemini)
-    # --approval-mode plan = solo lectura. Gemini lo degrada a "default" si la carpeta no está
-    # marcada como confiable: marcarla una vez desde Gemini CLI antes del primer push.
-    gemini --approval-mode plan --output-format json | extraer response
+    # gemini -p "" procesa el prompt recibido por stdin en modo headless y --output-format json
+    # devuelve la estructura JSON con el campo "response".
+    gemini -p "" --output-format json | extraer response
     ;;
   *)
     echo "AULERO_AGENTE='$AGENTE' no es un agente conocido (claude, codex, gemini)." >&2

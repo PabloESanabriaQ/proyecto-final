@@ -102,7 +102,7 @@ export AULERO_AGENTE=codex      # o claude, o gemini — ponelo en tu shell
 |---|---|---|
 | Claude Code | `claude -p`, solo lectura (`Read`, `Grep`, `Glob`) | Probado de punta a punta |
 | Codex CLI | `codex exec --sandbox read-only` | A confirmar en el primer push de quien lo use |
-| Gemini CLI (Antigravity) | `gemini --approval-mode plan` — marcá la carpeta como confiable en Gemini antes, si no degrada el modo | A confirmar en el primer push de quien lo use |
+| Gemini CLI (Antigravity) | `gemini -p "" --output-format json` | Probado de punta a punta |
 
 Si un adaptador falla en tu máquina, el error queda en `.review/error.log`; corregí
 `.githooks/agente.sh` en tu PR y sacá el "a confirmar" de esta tabla.
