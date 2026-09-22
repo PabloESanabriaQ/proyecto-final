@@ -132,7 +132,25 @@ set -e
 assert_equals "Código de salida es 0" "0" "$CODE"
 assert_equals "Salida desde archivo -o" "CODEX: APROBADO" "$OUT"
 
-# --- 4. Casos borde de configuración de agente -----------------------------------------------
+# --- 4. Adaptador agy (Antigravity CLI) -------------------------------------------------------
+cat >"$MOCK_BIN/agy" <<'EOF'
+#!/usr/bin/env bash
+echo "$*" > "$RECORD_DIR/agy-args.txt"
+printf "AGY: APROBADO\n"
+EOF
+chmod +x "$MOCK_BIN/agy"
+
+echo "Caso: agy CLI invocado con --mode plan"
+set +e
+OUT=$(printf "Revisar diff agy" | env -u AULERO_AGENTE_CMD AULERO_AGENTE=agy RECORD_DIR="$RECORD_DIR" PATH="$MOCK_BIN:$PATH" bash "$AGENTE_SH" 2>"$TMP/err.txt")
+CODE=$?
+set -e
+assert_equals "Código de salida es 0" "0" "$CODE"
+assert_equals "Salida desde agy" "AGY: APROBADO" "$OUT"
+AGY_ARGS=$(cat "$RECORD_DIR/agy-args.txt")
+assert_contains "Flag --mode plan presente" "--mode plan" "$AGY_ARGS"
+
+# --- 5. Casos borde de configuración de agente -----------------------------------------------
 echo "Caso: AULERO_AGENTE no presente en PATH falla con código 2"
 set +e
 OUT=$(printf "prompt" | env -u AULERO_AGENTE_CMD AULERO_AGENTE=agente_inexistente PATH="$PATH" bash "$AGENTE_SH" 2>"$TMP/err.txt")
@@ -148,7 +166,7 @@ OUT=$(printf "prompt" | env -u AULERO_AGENTE_CMD AULERO_AGENTE=desconocido PATH=
 CODE=$?
 set -e
 assert_equals "Código de salida es 2" "2" "$CODE"
-assert_contains "Mensaje nombra agentes válidos" "no es un agente conocido (claude, codex, gemini)" "$(cat "$TMP/err.txt")"
+assert_contains "Mensaje nombra agentes válidos" "no es un agente conocido (claude, codex, agy, gemini)" "$(cat "$TMP/err.txt")"
 
 cat >"$MOCK_BIN/custom_runner" <<'EOF'
 #!/usr/bin/env bash

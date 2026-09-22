@@ -148,7 +148,7 @@ correr_hook_real_sin_agentes() {
   export LLAMADAS_DIR="$dir/.llamadas"; mkdir -p "$LLAMADAS_DIR"
   set +e
   SALIDA_HOOK="$(cd "$dir" && printf 'refs/heads/rama %s refs/heads/rama 0000000000000000000000000000000000000000\n' "$(git -C "$dir" rev-parse HEAD)" \
-    | env "${LIMPIAR[@]}" AULERO_HOOK_SIN_CHEQUEOS=1 PATH="$PATH_MIN" "$@" bash .githooks/pre-push 2>&1)"
+    | env "${LIMPIAR[@]}" AULERO_HOOK_SIN_CHEQUEOS=1 PATH="$TMP/binmin" "$@" bash .githooks/pre-push 2>&1)"
   CODIGO_HOOK=$?
   set -e
 }
