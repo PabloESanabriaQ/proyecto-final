@@ -32,6 +32,12 @@ empezar las historias de la fase; la tarea `cierre` sigue el checklist de
 | AUL-22 | Tarea | Definición: identificación del período |
 | AUL-23 | Tarea | Cierre de la Fase 1 |
 
+## Cargado el 2026-09-17
+
+| Clave | Tipo | Issue |
+|---|---|---|
+| AUL-24 | Tarea | Soporte de Antigravity CLI (agy) y pre-push en Windows (relacionada con AUL-8, epic AUL-5) |
+
 AUL-1 a AUL-4 son los ejemplos de la plantilla de Jira; se borran.
 
 El CSV queda como registro de lo cargado y como formato para las fases siguientes, que se cargan

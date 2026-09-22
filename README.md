@@ -92,17 +92,18 @@ Formatear: `uv run ruff format backend solver` y `cd frontend && npm run format`
 
 ### Qué agente usa el hook
 
-El primero que encuentre instalado, en este orden: `claude`, `codex`, `gemini`. Para elegir:
+El primero que encuentre instalado, en este orden: `claude`, `codex`, `agy`, `gemini`. Para elegir:
 
 ```bash
-export AULERO_AGENTE=codex      # o claude, o gemini — ponelo en tu shell
+export AULERO_AGENTE=agy        # o claude, codex, gemini — ponelo en tu shell
 ```
 
 | Agente | Cómo lo invoca el hook | Estado |
 |---|---|---|
 | Claude Code | `claude -p`, solo lectura (`Read`, `Grep`, `Glob`) | Probado de punta a punta |
+| Antigravity CLI (`agy`) | `agy -p "$prompt" --mode plan`, solo lectura | Probado de punta a punta |
 | Codex CLI | `codex exec --sandbox read-only` | A confirmar en el primer push de quien lo use |
-| Gemini CLI (Antigravity) | `gemini -p "" --output-format json` | Probado de punta a punta |
+| Gemini CLI | `gemini --approval-mode plan` — marcá la carpeta como confiable en Gemini antes, si no degrada el modo | A confirmar en el primer push de quien lo use |
 
 Si un adaptador falla en tu máquina, el error queda en `.review/error.log`; corregí
 `.githooks/agente.sh` en tu PR y sacá el "a confirmar" de esta tabla.

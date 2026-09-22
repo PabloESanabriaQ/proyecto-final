@@ -207,11 +207,12 @@ El detalle, las historias y las definiciones pendientes por fase están en `plan
   (`PAT_*`) y `.github/workflows/ci.yml` (filtros). Hoy son cuatro patrones y se mantienen a
   mano. **La señal:** un PR donde el hook y CI corran chequeos distintos para el mismo cambio.
   La salida es un archivo compartido que los dos lean.
-- **El hook depende de bash y de Python (`python3` o `python`) en el PATH** para leer el JSON del agente.
-  `extraer` soporta ambos intérpretes dinámicamente. En Windows los hooks bash corren vía WSL2 o Git Bash.
-- **El adaptador de Gemini CLI en `.githooks/agente.sh` quedó probado y verificado** (`gemini -p "" --output-format json`
-  con suite unitaria en `.githooks/tests/test_agente.sh`). El adaptador de Codex CLI queda a confirmar en el primer
-  push de quien lo use.
+- **El hook depende de bash y de Python (`python3`, `python` o `py`) en el PATH** para leer el
+  JSON del agente. En Windows se recomienda WSL2 (README). **La señal:** un integrante que no
+  pueda pushear desde su entorno habitual.
+- **El adaptador de Antigravity CLI (`agy`) quedó probado de punta a punta** (2026-09-17).
+  Codex y Gemini CLI quedan a confirmar en el primer push de quien los use. **La señal:** el
+  primer push de quien use uno de los dos. Se corrige en ese PR.
 - **`fastapi.testclient` avisa que `httpx` está deprecado a favor de `httpx2`** (warning en
   `pytest`). No afecta hoy. **La señal:** que Starlette lo convierta en error en una versión
   nueva; ahí se migra el cliente de tests.

@@ -33,31 +33,14 @@ esac
 EOF
 chmod +x "$TMP/bin/agente-falso"
 
-# PATH mínimo para los casos "sin agente": todo lo que hay en el PATH real, menos los agentes.
-PATH_MIN=""
-IFS=: read -ra DIRS_PATH <<<"$PATH"
-for d in "${DIRS_PATH[@]}"; do
-  [[ -d "$d" ]] || continue
-  tiene_agente=false
-  for a in claude codex gemini; do
-    if [[ -e "$d/$a" || -e "$d/$a.exe" || -e "$d/$a.cmd" ]]; then
-      tiene_agente=true
-      break
-    fi
-  done
-  if $tiene_agente; then
-    d_filtrado="$TMP/binmin_$(basename "$d")"
-    mkdir -p "$d_filtrado"
-    for f in "$d"/*; do
-      [[ -x "$f" && ! -d "$f" ]] || continue
-      nombre="${f##*/}"
-      case "$nombre" in claude*|codex*|gemini*) continue ;; esac
-      [[ -e "$d_filtrado/$nombre" ]] || ln -s "$f" "$d_filtrado/$nombre" 2>/dev/null || cp "$f" "$d_filtrado/$nombre"
-    done
-    PATH_MIN="${PATH_MIN:+$PATH_MIN:}$d_filtrado"
-  else
-    PATH_MIN="${PATH_MIN:+$PATH_MIN:}$d"
-  fi
+# PATH mínimo para los casos "sin agente": solo los comandos que necesita el hook. Se usan
+# wrappers en vez de symlinks para que la suite funcione en Windows sin permisos especiales.
+mkdir -p "$TMP/binmin"
+for nombre in bash cat cp date env find git grep head mkdir mktemp rm rmdir sleep timeout gtimeout tr wc; do
+  ruta="$(command -v "$nombre" || true)"
+  [[ -n "$ruta" ]] || continue
+  printf '#!/bin/sh\nexec %q "$@"\n' "$ruta" >"$TMP/binmin/$nombre"
+  chmod +x "$TMP/binmin/$nombre"
 done
 
 nuevo_repo() {

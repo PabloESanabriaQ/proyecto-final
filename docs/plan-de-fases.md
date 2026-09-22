@@ -99,6 +99,10 @@ test: no hay forma barata de correr GitHub Actions localmente.
 - Borrar una rama remota (`git push --delete`): no se revisa nada.
 - Push de varias ramas a la vez: se revisa cada una, con una salida por commit.
 - Sin red: se usa la última `origin/main` conocida, con aviso.
+- Push en Windows nativo con agentes CLI (como Antigravity `agy`): el paso de diff y prompt por
+  stdin bufferizado en archivo temporal evita el desborde de longitud de comando (`E2BIG`), y la
+  extracción del veredicto funciona con `python3`, `python` o `py` (tarea AUL-24, relacionada
+  con HU-0.2).
 
 ### Definiciones pendientes a tomar al llegar
 
@@ -654,5 +658,6 @@ anotado y cierro" (anotarlo en la deuda es válido; cerrar sin anotarlo, no).
 - Las **definiciones pendientes** de cada fase como tareas del epic, etiquetadas `definicion`,
   que se cierran registrando la decisión en `docs/decisiones/` antes de empezar las historias de
   la fase.
-- El **cierre** de cada fase como una tarea `cierre` con el checklist de `cierre-de-fase.md` de la
-  skill `avanzar-por-fases`.
+- El **cierre** de cada fase como una tarea `cierre` con el checklist de la sección
+  ["Cierre de una fase"](#cierre-de-una-fase) de este documento (también disponible en
+  `.agents/skills/avanzar-por-fases/cierre-de-fase.md`).

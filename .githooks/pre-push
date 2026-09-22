@@ -52,7 +52,7 @@ fallo() { printf '\033[1;31m[pre-push]\033[0m %s\n' "$*" >&2; exit 1; }
 PAT_PYTHON='^(backend|solver)/|^pyproject\.toml$|^uv\.lock$|^mise\.toml$'
 PAT_FRONTEND='^frontend/|^mise\.toml$'
 PAT_HOOK='^\.githooks/'
-PAT_INFRA='^\.github/|^docker-compose\.yml$|^\.editorconfig$|^\.gitignore$'
+PAT_INFRA='^\.github/|^docker-compose\.yml$|^\.editorconfig$|^\.gitignore$|^\.gitattributes$'
 # Archivos que no vale la pena mandar al agente: generados, enormes, sin decisiones adentro.
 EXCLUIR_DEL_DIFF=(':!uv.lock' ':!**/package-lock.json' ':!*.tsbuildinfo')
 

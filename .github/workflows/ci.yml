@@ -47,6 +47,7 @@ jobs:
               - '.github/workflows/ci.yml'
             hook:
               - '.githooks/**'
+              - '.gitattributes'
               - '.github/workflows/ci.yml'
 
   python:
