@@ -102,6 +102,10 @@ esperar() {
   if eval "$2"; then ok "$1"; else fallo "$1" "$3"; fi
 }
 
+# --- Tests unitarios de adaptadores (.githooks/agente.sh) ------------------------------------
+bash "$HOOK_SRC/tests/test_agente.sh"
+echo
+
 # --- Casos borde de la Fase 0 -----------------------------------------------------------------
 
 echo "Caso: push que toca solo docs/ no invoca al agente"
