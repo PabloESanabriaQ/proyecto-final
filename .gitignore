@@ -23,6 +23,5 @@ dist/
 .vscode/
 .DS_Store
 
-# Skills y configuración local de agentes
-.agents/
+# Configuración local de agentes
 skills-proyectos/
