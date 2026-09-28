@@ -65,7 +65,8 @@ entiende el criterio) y consecuencias solo favorables (sin costo ni señal es pu
 | [0015](0015-una-comision-puede-venir-prefijada-a-dia-horario-y-aula.md) | Una comisión puede venir pre-fijada a día, horario y/o aula como dato de entrada | Aceptada |
 | [0016](0016-la-revision-del-agente-corre-en-un-hook-local-antes-del-push.md) | La revisión del agente corre en un hook local antes del push, no en CI | Aceptada — modifica 0014 |
 | [0017](0017-las-versiones-base-son-python-3-14-y-node-24-lts.md) | Las versiones base son Python 3.14 y Node 24 LTS | Aceptada |
-| [0018](0018-el-proyecto-funciona-con-cualquier-agente-de-codigo-del-equipo.md) | El proyecto funciona con cualquier agente de código del equipo: Claude Code, Codex o Antigravity/Gemini | Aceptada |
+| [0018](0018-el-proyecto-funciona-con-cualquier-agente-de-codigo-del-equipo.md) | El proyecto funciona con cualquier agente de código del equipo: Claude Code, Codex o Antigravity/Gemini | Aceptada — modificada por 0022 |
 | [0019](0019-backend-y-solver-comparten-un-workspace-de-uv.md) | `backend/` y `solver/` comparten un workspace de uv con un solo entorno y un solo lock | Aceptada |
 | [0020](0020-el-trabajo-se-presenta-como-dos-proyectos-finales-en-paralelo-sobre-una-base-comun.md) | El trabajo se presenta como dos Proyectos Finales (A: 1 persona, B: 2 personas) que avanzan en paralelo sobre una base común | Aceptada — modifica 0002 |
 | [0021](0021-el-codigo-no-lleva-licencia-hasta-acordarla-con-el-profesor-guia.md) | El código no lleva licencia hasta acordarla con el Profesor Guía | Aceptada |
+| [0022](0022-antigravity-se-integra-tanto-con-agy-como-con-gemini-cli.md) | Antigravity se integra tanto con `agy` como con Gemini CLI | Aceptada — modifica 0018 |

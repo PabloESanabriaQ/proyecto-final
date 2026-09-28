@@ -179,7 +179,9 @@ existe en repos privados del plan gratuito.
 `.githooks/pre-push` corre, por cada rama que se sube: lint y tests de las partes tocadas
 (Python, frontend, el propio hook), y después la revisión del agente sobre el diff acumulado
 contra `origin/main` (sin lockfiles), con un tope de 10 minutos. El agente lo elige cada
-integrante (`AULERO_AGENTE=claude|codex|agy|gemini`, decisión 0018) y lo invoca
+integrante (`AULERO_AGENTE=claude|codex|agy|gemini`, decisiones
+[0018](decisiones/0018-el-proyecto-funciona-con-cualquier-agente-de-codigo-del-equipo.md) y
+[0022](decisiones/0022-antigravity-se-integra-tanto-con-agy-como-con-gemini-cli.md)) y lo invoca
 `.githooks/agente.sh` en modo no interactivo y solo lectura. El prompt está en
 `.githooks/revision-prompt.md` y pide un veredicto en la última línea; `BLOQUEADO` corta el
 push. La salida queda en `.review/<sha>.md` y `.review/ultima.md` para pegarla en el PR. Sus
