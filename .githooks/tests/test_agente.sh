@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Tests unitarios de los adaptadores de agente (.githooks/agente.sh).
 #
-# Verifica cómo .githooks/agente.sh invoca a cada agente soportado (gemini, claude, codex),
+# Verifica cómo .githooks/agente.sh invoca a cada agente soportado (gemini, claude, codex, agy),
 # el pasaje de prompt por stdin, el formato de salida esperado y el manejo de errores.
 #
 # Correr:  bash .githooks/tests/test_agente.sh
@@ -20,7 +20,13 @@ mkdir -p "$RECORD_DIR"
 # Simula el comportamiento de algunos shims de Python en Windows: `-c` funciona con una línea,
 # pero corrompe los argumentos multilínea. El extractor debe pasarle un archivo, no código
 # multilínea por la línea de comandos.
-PYTHON_REAL="$(command -v python3 || command -v python || command -v py || true)"
+PYTHON_REAL=""
+for candidato in python3 python py; do
+  if command -v "$candidato" >/dev/null 2>&1 && "$candidato" -c 'import sys' >/dev/null 2>&1; then
+    PYTHON_REAL="$(command -v "$candidato")"
+    break
+  fi
+done
 if [[ -z "$PYTHON_REAL" ]]; then
   echo "No se encontró Python para ejecutar los tests del adaptador." >&2
   exit 1

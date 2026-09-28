@@ -1,7 +1,8 @@
 # 0022 — Antigravity se integra tanto con `agy` como con Gemini CLI
 
 **Estado:** Aceptada — 2026-09-28
-**Modifica:** 0018 — agrega `agy` como adaptador directo sin retirar el adaptador de Gemini CLI.
+**Implementa de otro modo:** 0018 — agrega `agy` como adaptador directo sin retirar el
+adaptador de Gemini CLI.
 
 ## Contexto
 
