@@ -22,3 +22,7 @@ dist/
 .idea/
 .vscode/
 .DS_Store
+
+# Skills y configuración local de agentes
+.agents/
+skills-proyectos/
