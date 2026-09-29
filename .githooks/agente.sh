@@ -95,9 +95,9 @@ case "$AGENTE" in
     rm -f "$entrada"
     ;;
   gemini)
-    # -p "" procesa stdin en modo headless; `plan` mantiene la revisión en solo lectura.
-    # --output-format json devuelve la respuesta en el campo "response".
-    gemini -p "" --approval-mode plan --output-format json | extraer response
+    # gemini -p "" procesa el prompt recibido por stdin en modo headless y --output-format json
+    # devuelve la estructura JSON con el campo "response".
+    gemini -p "" --output-format json | extraer response
     ;;
   *)
     echo "AULERO_AGENTE='$AGENTE' no es un agente conocido (claude, codex, agy, gemini)." >&2

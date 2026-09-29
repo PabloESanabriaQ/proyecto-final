@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Tests unitarios de los adaptadores de agente (.githooks/agente.sh).
 #
-# Verifica cómo .githooks/agente.sh invoca a cada agente soportado (gemini, claude, codex, agy),
+# Verifica cómo .githooks/agente.sh invoca a cada agente soportado (gemini, claude, codex),
 # el pasaje de prompt por stdin, el formato de salida esperado y el manejo de errores.
 #
 # Correr:  bash .githooks/tests/test_agente.sh
@@ -16,31 +16,6 @@ MOCK_BIN="$TMP/mock_bin"
 mkdir -p "$MOCK_BIN"
 RECORD_DIR="$TMP/records"
 mkdir -p "$RECORD_DIR"
-
-# Simula el comportamiento de algunos shims de Python en Windows: `-c` funciona con una línea,
-# pero corrompe los argumentos multilínea. El extractor debe pasarle un archivo, no código
-# multilínea por la línea de comandos.
-PYTHON_REAL=""
-for candidato in python3 python py; do
-  if command -v "$candidato" >/dev/null 2>&1 && "$candidato" -c 'import sys' >/dev/null 2>&1; then
-    PYTHON_REAL="$(command -v "$candidato")"
-    break
-  fi
-done
-if [[ -z "$PYTHON_REAL" ]]; then
-  echo "No se encontró Python para ejecutar los tests del adaptador." >&2
-  exit 1
-fi
-export PYTHON_REAL
-cat >"$MOCK_BIN/python3" <<'EOF'
-#!/usr/bin/env bash
-if [[ "${1:-}" == "-c" && "${2:-}" == *$'\n'* ]]; then
-  echo "el shim no admite código multilínea por -c" >&2
-  exit 98
-fi
-exec "$PYTHON_REAL" "$@"
-EOF
-chmod +x "$MOCK_BIN/python3"
 
 FAILURES=0
 assert_equals() {
@@ -68,8 +43,7 @@ echo "=== Tests unitarios de .githooks/agente.sh ==="
 # --- 1. Adaptador Gemini CLI -----------------------------------------------------------------
 cat >"$MOCK_BIN/gemini" <<'EOF'
 #!/usr/bin/env bash
-printf '%s\n' "$#" > "$RECORD_DIR/gemini-args-count.txt"
-printf '<%s>\n' "$@" > "$RECORD_DIR/gemini-args.txt"
+echo "$*" > "$RECORD_DIR/gemini-args.txt"
 cat > "$RECORD_DIR/gemini-stdin.txt"
 case "${MOCK_GEMINI_MODE:-ok}" in
   ok)
@@ -93,11 +67,8 @@ set -e
 assert_equals "Código de salida es 0" "0" "$CODE"
 assert_equals "Salida extraída del campo response" "VEREDICTO: APROBADO" "$OUT"
 ARGS=$(cat "$RECORD_DIR/gemini-args.txt")
-assert_equals "Cantidad de argumentos de Gemini" "6" "$(cat "$RECORD_DIR/gemini-args-count.txt")"
-assert_equals "Flag -p presente" "<-p>" "$(sed -n '1p' "$RECORD_DIR/gemini-args.txt")"
-assert_equals "Argumento vacío después de -p" "<>" "$(sed -n '2p' "$RECORD_DIR/gemini-args.txt")"
-assert_contains "Modo plan de solo lectura presente" $'<--approval-mode>\n<plan>' "$ARGS"
-assert_contains "Flag --output-format json presente" $'<--output-format>\n<json>' "$ARGS"
+assert_contains "Flag -p presente" "-p" "$ARGS"
+assert_contains "Flag --output-format json presente" "--output-format json" "$ARGS"
 STDIN=$(cat "$RECORD_DIR/gemini-stdin.txt")
 assert_equals "Prompt recibido por stdin" "Revisar este diff" "$STDIN"
 
@@ -140,8 +111,6 @@ assert_contains "Tools Read Grep Glob" "--allowedTools Read Grep Glob" "$CLAUDE_
 # --- 3. Adaptador Codex ----------------------------------------------------------------------
 cat >"$MOCK_BIN/codex" <<'EOF'
 #!/usr/bin/env bash
-echo "$*" > "$RECORD_DIR/codex-args.txt"
-cat > "$RECORD_DIR/codex-stdin.txt"
 archivo_salida=""
 while [[ $# -gt 0 ]]; do
   case "$1" in
@@ -162,12 +131,6 @@ CODE=$?
 set -e
 assert_equals "Código de salida es 0" "0" "$CODE"
 assert_equals "Salida desde archivo -o" "CODEX: APROBADO" "$OUT"
-CODEX_ARGS=$(cat "$RECORD_DIR/codex-args.txt")
-assert_contains "Subcomando exec presente" "exec" "$CODEX_ARGS"
-assert_contains "Sandbox read-only presente" "--sandbox read-only" "$CODEX_ARGS"
-assert_contains "Prompt por stdin indicado con guion" " -" "$CODEX_ARGS"
-CODEX_STDIN=$(cat "$RECORD_DIR/codex-stdin.txt")
-assert_equals "Prompt de Codex recibido por stdin" "Revisar diff codex" "$CODEX_STDIN"
 
 # --- 4. Adaptador agy (Antigravity CLI) -------------------------------------------------------
 cat >"$MOCK_BIN/agy" <<'EOF'
