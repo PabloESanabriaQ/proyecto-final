@@ -8,8 +8,7 @@
 #   AULERO_AGENTE=claude | codex | agy | gemini   (si no se define: el primero instalado, en ese orden)
 #   AULERO_AGENTE_CMD=<ejecutable>          (reemplaza todo; para tests: recibe stdin, imprime texto)
 #
-# Verificado contra --help de cada CLI el 2026-09-16; claude probado de punta a punta. codex y
-# gemini quedan a confirmar en el primer push de quien los use (ver README).
+# Claude, Codex, agy y Gemini quedaron probados de punta a punta (ver README).
 set -euo pipefail
 
 if [[ -n "${AULERO_AGENTE_CMD:-}" ]]; then
@@ -30,7 +29,7 @@ command -v "$AGENTE" >/dev/null 2>&1 \
 # Imprime el campo pedido del JSON. Si falta o está vacío (por ejemplo, el agente agotó sus
 # turnos), manda el JSON completo a stderr —que el hook guarda en .review/error.log— y falla.
 extraer() {
-  local py=""
+  local py="" extractor estado
   for c in python3 python py; do
     if command -v "$c" >/dev/null 2>&1 && "$c" -c 'import sys' >/dev/null 2>&1; then
       py="$c"
@@ -41,7 +40,11 @@ extraer() {
     echo "No se encontró un intérprete de Python funcional (python3, python o py) en el PATH." >&2
     exit 3
   fi
-  "$py" -c '
+
+  # Un archivo temporal evita pasar código multilínea por `-c`: algunos shims de Python para
+  # Windows aceptan el chequeo simple de arriba pero corrompen un argumento con saltos de línea.
+  extractor="$(mktemp)"
+  cat >"$extractor" <<'PY'
 import json, sys
 crudo = sys.stdin.read()
 try:
@@ -52,7 +55,14 @@ if not valor:
     sys.stderr.write("El agente no devolvió el campo %r. Respuesta completa:\n%s\n" % (sys.argv[1], crudo))
     sys.exit(3)
 print(valor)
-' "$1"
+PY
+  if "$py" "$extractor" "$1"; then
+    estado=0
+  else
+    estado=$?
+  fi
+  rm -f "$extractor"
+  return "$estado"
 }
 
 case "$AGENTE" in

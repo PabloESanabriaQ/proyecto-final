@@ -46,8 +46,17 @@ Si `mise` no está activado en tu shell, anteponé `mise x --` a cualquier coman
 
 ### Windows
 
-Trabajar dentro de **WSL2** (Ubuntu) con Docker Desktop en modo WSL2. Todo lo de arriba corre
-igual ahí; los hooks de git son scripts bash y necesitan ese entorno.
+Se puede trabajar dentro de **WSL2** (Ubuntu) con Docker Desktop en modo WSL2, o en Windows
+nativo con PowerShell y Git Bash. En Windows nativo, anteponer `mise x --` a `uv`, `node` y
+`npm`, y ejecutar los comandos bash desde Git Bash. Si `bash` en PowerShell abre WSL pero no hay
+una distribución instalada, usar explícitamente el incluido en Git for Windows:
+
+```powershell
+& 'C:\Program Files\Git\bin\bash.exe' .githooks/tests/test_pre_push.sh
+```
+
+Los hooks invocados por Git usan ese entorno automáticamente. `.gitattributes` conserva sus
+saltos de línea LF al clonar en Windows.
 
 ## Correr
 
@@ -102,11 +111,11 @@ export AULERO_AGENTE=agy        # o claude, codex, gemini — ponelo en tu shell
 |---|---|---|
 | Claude Code | `claude -p`, solo lectura (`Read`, `Grep`, `Glob`) | Probado de punta a punta |
 | Antigravity CLI (`agy`) | `agy -p "$prompt" --mode plan`, solo lectura | Probado de punta a punta |
-| Codex CLI | `codex exec --sandbox read-only` | A confirmar en el primer push de quien lo use |
-| Gemini CLI | `gemini --approval-mode plan` — marcá la carpeta como confiable en Gemini antes, si no degrada el modo | A confirmar en el primer push de quien lo use |
+| Codex CLI | `codex exec --sandbox read-only` | Probado de punta a punta (2026-09-28) |
+| Gemini CLI | `gemini -p "" --approval-mode plan --output-format json` | Probado de punta a punta |
 
 Si un adaptador falla en tu máquina, el error queda en `.review/error.log`; corregí
-`.githooks/agente.sh` en tu PR y sacá el "a confirmar" de esta tabla.
+`.githooks/agente.sh` en tu PR y agregá el caso a `.githooks/tests/test_agente.sh`.
 
 ### Contexto para el agente
 

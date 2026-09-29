@@ -1,6 +1,8 @@
 # 0018 — El proyecto funciona con cualquier agente de código del equipo: Claude Code, Codex o Antigravity/Gemini
 
 **Estado:** Aceptada — 2026-09-16
+**Implementada de otro modo por:** 0022 — agrega `agy` como adaptador directo de Antigravity y
+conserva Gemini CLI como alternativa.
 
 ## Contexto
 

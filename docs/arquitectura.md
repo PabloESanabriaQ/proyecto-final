@@ -4,9 +4,9 @@
 > Público: quien se suma al proyecto o lo defiende técnicamente. Acá va el modelo, las interfaces,
 > las decisiones enlazadas y la deuda. El estado en lenguaje llano va en `informe-de-gestion.md`.
 >
-> **Última actualización:** 2026-09-16 — Fase 0 en curso: esqueleto, linters, hook de pre-push
-> con agente, CI y `main` protegida, hechos y verificados; falta el merge del PR #1 (aprobación
-> de otro integrante) y enlazar Jira.
+> **Última actualización:** 2026-09-28 — Fase 0 en curso: PR #1 aprobado y mergeado con CI
+> verde; los adaptadores Claude, Codex, agy y Gemini están probados. Falta integrar esta
+> compatibilidad en `main`, restaurarla como rama predeterminada y enlazar Jira.
 
 ## 1. Stack y arquitectura
 
@@ -179,7 +179,9 @@ existe en repos privados del plan gratuito.
 `.githooks/pre-push` corre, por cada rama que se sube: lint y tests de las partes tocadas
 (Python, frontend, el propio hook), y después la revisión del agente sobre el diff acumulado
 contra `origin/main` (sin lockfiles), con un tope de 10 minutos. El agente lo elige cada
-integrante (`AULERO_AGENTE=claude|codex|gemini`, decisión 0018) y lo invoca
+integrante (`AULERO_AGENTE=claude|codex|agy|gemini`, decisiones
+[0018](decisiones/0018-el-proyecto-funciona-con-cualquier-agente-de-codigo-del-equipo.md) y
+[0022](decisiones/0022-antigravity-se-integra-tanto-con-agy-como-con-gemini-cli.md)) y lo invoca
 `.githooks/agente.sh` en modo no interactivo y solo lectura. El prompt está en
 `.githooks/revision-prompt.md` y pide un veredicto en la última línea; `BLOQUEADO` corta el
 push. La salida queda en `.review/<sha>.md` y `.review/ultima.md` para pegarla en el PR. Sus
@@ -189,7 +191,7 @@ casos borde tienen test en `.githooks/tests/test_pre_push.sh`, con un agente sim
 
 | Fase | Qué entra | Estado |
 |---|---|---|
-| 0 | Repo, estructura, hook de pre-push con agente, CI de lint y tests, `main` protegida | **En curso** — hecho: HU-0.1 a 0.4 (CI verde en PR #1, `main` exige `CI OK` + 1 aprobación); falta: merge de #1 con aprobación ajena, enlace desde Jira (0.5) |
+| 0 | Repo, estructura, hook de pre-push con agente, CI de lint y tests, `main` protegida | **En curso** — hecho: PR #1 aprobado y mergeado con CI verde; adaptadores de los cuatro agentes probados. Falta: integrar la corrección en `main`, restaurarla como rama predeterminada y enlazar Jira (0.5) |
 | 1 | Importación Excel, validación, BD, API de consulta, vista de datos cargados, contrato de instancia | No iniciada |
 | 2 | Solver A con restricciones de recursos, validador, CLI, juguete | No iniciada |
 | 3 | Solver A con restricciones curriculares, diagnóstico de infactibilidad | No iniciada |
@@ -208,11 +210,12 @@ El detalle, las historias y las definiciones pendientes por fase están en `plan
   mano. **La señal:** un PR donde el hook y CI corran chequeos distintos para el mismo cambio.
   La salida es un archivo compartido que los dos lean.
 - **El hook depende de bash y de Python (`python3`, `python` o `py`) en el PATH** para leer el
-  JSON del agente. En Windows se recomienda WSL2 (README). **La señal:** un integrante que no
+  JSON del agente. Funciona en WSL2 y Git Bash; el extractor usa un archivo temporal para no
+  depender de que un shim de Windows acepte `-c` multilínea. **La señal:** un integrante que no
   pueda pushear desde su entorno habitual.
-- **El adaptador de Antigravity CLI (`agy`) quedó probado de punta a punta** (2026-09-17).
-  Codex y Gemini CLI quedan a confirmar en el primer push de quien los use. **La señal:** el
-  primer push de quien use uno de los dos. Se corrige en ese PR.
+- ~~**Los adaptadores Codex y Gemini estaban sin confirmar en uso real.**~~ Resuelto el
+  2026-09-28: Claude, Codex, agy y Gemini tienen prueba unitaria; los cuatro quedaron probados
+  de punta a punta. El caso del shim de Python en Windows quedó como regresión nombrada.
 - **`fastapi.testclient` avisa que `httpx` está deprecado a favor de `httpx2`** (warning en
   `pytest`). No afecta hoy. **La señal:** que Starlette lo convierta en error en una versión
   nueva; ahí se migra el cliente de tests.

@@ -101,8 +101,8 @@ test: no hay forma barata de correr GitHub Actions localmente.
 - Sin red: se usa la última `origin/main` conocida, con aviso.
 - Push en Windows nativo con agentes CLI (como Antigravity `agy`): el paso de diff y prompt por
   stdin bufferizado en archivo temporal evita el desborde de longitud de comando (`E2BIG`), y la
-  extracción del veredicto funciona con `python3`, `python` o `py` (tarea AUL-24, relacionada
-  con HU-0.2).
+  extracción del veredicto funciona con `python3`, `python` o `py`, incluso si un shim acepta
+  `-c` simple pero no argumentos multilínea (tarea AUL-24, relacionada con HU-0.2).
 
 ### Definiciones pendientes a tomar al llegar
 
@@ -121,9 +121,10 @@ lado de CI no se prueba con un PR real: exigiría saltear el hook con `--no-veri
 que `CI OK` sea check obligatorio de `main` (API de GitHub) y que el hook bloquee localmente
 (tests del hook).
 
-**Estado al 2026-09-16:** todo hecho y verificado salvo el merge del PR #1, que espera la
-aprobación de otro integrante, y el enlace del repo desde Jira (HU-0.5), que se hace al crear
-el proyecto `AUL`.
+**Estado al 2026-09-28:** el PR #1 fue aprobado por otro integrante y mergeado con CI verde.
+Los cuatro adaptadores de agente están probados y la verificación local pasa en Windows con Git
+Bash. Falta integrar esta corrección en `main`, restaurar `main` como rama predeterminada y
+enlazar el repo desde Jira (HU-0.5).
 
 ---
 
