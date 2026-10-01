@@ -3,7 +3,7 @@
 > Borrador para presentar según el §5.a del Reglamento de Proyecto Final (Resol. 12/2023).
 > Los corchetes son datos que faltan. El cronograma está en meses relativos a la aprobación.
 >
-> **Última actualización:** 2026-09-16 — borrador inicial.
+> **Última actualización:** 2026-09-28 — alcance corregido: toda la UNViMe, no sólo ISI (decisión 0023).
 
 ## Tema
 
@@ -33,8 +33,8 @@ que cumpla todas las reglas a la vez**. Un sistema que en ese caso solo responde
 no le sirve a quien tiene que publicar un horario el lunes.
 
 Este proyecto extiende el modelo exacto de programación por restricciones del Proyecto A
-—que determina si existe un horario válido para la carrera de Ingeniería en Sistemas de
-Información de la UNViMe— con dos capacidades:
+—que determina si existe un horario válido para las carreras de la UNViMe (decisión 0023)— con
+dos capacidades:
 
 1. **Relajación controlada:** una lista cerrada de restricciones obligatorias (choques
    curriculares entre materias del mismo año, sobrecupo del aula dentro de un tope, uso de un
@@ -54,8 +54,8 @@ la aplicación web desarrollada en una Práctica Profesional Supervisada.
 
 ## Objetivo general
 
-Obtener horarios de mayor calidad para la carrera de Ingeniería en Sistemas de Información de
-la UNViMe cuando el problema es infactible bajo el modelo de restricciones obligatorias,
+Obtener horarios de mayor calidad para la Universidad Nacional de Villa Mercedes —todas sus
+carreras— cuando el problema es infactible bajo el modelo de restricciones obligatorias,
 mediante la relajación controlada de un conjunto acotado de restricciones con holguras
 ponderadas y un segundo nivel de optimización de restricciones deseables, evaluando
 comparativamente el resultado frente al modelo estricto sobre instancias reales.
@@ -76,8 +76,8 @@ comparativamente el resultado frente al modelo estricto sobre instancias reales.
    comparación lado a lado y diferencias entre corridas, y publicación de una como horario
    oficial (en conjunto con la aplicación web).
 6. Realizar la experimentación comparativa A vs B sobre las instancias de referencia (caso de
-   prueba, ISI completa, multi-carrera): estado, tiempo, violaciones por regla, valor de cada
-   criterio de calidad.
+   prueba, ISI completa, universidad completa): estado, tiempo, violaciones por regla, valor de
+   cada criterio de calidad.
 7. Elaborar una recomendación para la institución sobre pesos y tope de sobrecupo a partir de
    los resultados, y el informe final.
 
@@ -133,7 +133,7 @@ niveles) y `docs/convenciones.md` del repositorio.
 | M1–M3 | Base común con el Proyecto A: formato de instancia y solución, modelo de recursos, validador, CLI. En paralelo, diseño del marco de holguras (qué se relaja, cómo se mide, dos niveles) y de los formatos de violaciones y métricas. | 1.5, 2 | Base común funcionando sobre el juguete; decisión 0010 refinada con las medidas de cada holgura |
 | M3–M6 | Modelo B sobre la base de recursos: holguras de R7 (sobrecupo con tope) y R8 (tipo no declarado), primer nivel; blandas B1–B3 y preferencias docentes, segundo nivel; validador extendido. | 7 (parcial), 8 (parcial) | Juguete con un aula menos: horario con violaciones listadas y confirmadas; instancia factible: holguras en cero |
 | M6–M8 | Integración de la formulación curricular del Proyecto A: holguras de R1/R3 sobre combinaciones cursables; corridas múltiples y comparación (formatos para la aplicación web). | 7, 8 | Modelo B completo; comparación de corridas |
-| M8–M10 | Experimentación comparativa A vs B sobre ISI completa y multi-carrera; ajuste de pesos; recomendación para la institución. | 7.4, 8 | Tabla comparativa; capítulo de resultados |
+| M8–M10 | Experimentación comparativa A vs B sobre ISI completa y la universidad completa; ajuste de pesos; recomendación para la institución. | 7.4, 8 | Tabla comparativa; capítulo de resultados |
 | M10–M12 | Redacción del informe final; correcciones del Profesor Guía; preparación de la defensa. | — | Informe según §9 del reglamento |
 
 Riesgos y márgenes: el plazo reglamentario de 18 meses deja seis de margen. El riesgo principal

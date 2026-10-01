@@ -44,3 +44,10 @@ validación tienen que trabajar en medias horas.
 **Riesgo abierto:** que alguna carrera del escenario de múltiples carreras use una jornada o
 estructura de turnos que no encaje en esta grilla. **La señal:** una carrera cuyos datos reales no
 se puedan cargar sin redondear horarios. Ahí se revisa si la grilla es por período o por carrera.
+
+> **Señal activada — 2026-09-28 ([[0023]]).** Al fijarse el alcance en toda la UNViMe, el equipo
+> confirmó que hay carreras con materias anuales y/o jornada distinta. El riesgo dejó de ser
+> hipotético. La grilla de esta decisión **sigue vigente** como valor por defecto del período; lo
+> que queda abierto es si grilla y turnos pasan a ser por carrera y cómo se representa una materia
+> anual, y es definición pendiente de la Fase 6. No se revisa hasta tener los datos de secretaría
+> académica.

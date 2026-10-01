@@ -10,8 +10,8 @@ app = FastAPI(
     title="Aulero UNViMe",
     version=__version__,
     description=(
-        "Asignación de horarios y aulas para la carrera de Ingeniería en Sistemas de "
-        f"Información. Motor: aulero-solver {aulero_solver.__version__}."
+        "Asignación de horarios y aulas para todas las carreras de la UNViMe. "
+        f"Motor: aulero-solver {aulero_solver.__version__}."
     ),
 )
 

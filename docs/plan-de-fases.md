@@ -21,7 +21,8 @@
 > Donde dice "CP-SAT" son A y B juntos (base común). Cada Proyecto Final tiene su propuesta con
 > cronograma en `propuestas/`; el marco reglamentario está en `marco-reglamentario.md`.
 >
-> **Última actualización:** 2026-09-16.
+> **Última actualización:** 2026-09-28 — Fase 6 reencuadrada: la instancia objetivo es la
+> universidad completa, con dos definiciones pendientes nuevas (decisión 0023).
 
 ## Orden y paralelismo
 
@@ -446,25 +447,28 @@ aula posible y ver el aviso; cada caso borde con test nombrado.
 
 ## Fase 6 — Escalar a la instancia real
 
-**Permite:** resolver la carrera ISI completa (todos los años y comisiones de un cuatrimestre) y
-luego un escenario con varias carreras que comparten aulas y docentes, dentro de un tiempo
-acotado, con los tiempos medidos y comparables entre corridas.
+**Permite:** resolver la instancia real de la universidad. Primero la carrera ISI completa (todos
+los años y comisiones de un cuatrimestre) como escalón de validación, y después **la UNViMe con
+todas sus carreras compartiendo edificios, aulas y docentes** —que es la instancia objetivo del
+sistema, no un escenario opcional (0023)—, dentro de un tiempo acotado y con los tiempos medidos y
+comparables entre corridas.
 
 **Equipo:** A (rendimiento y descomposición) + PPS (datos y visualización a escala). Si A queda
-sobrecargado, B absorbe el escenario multi-carrera (señal de 0020).
-**Decisiones que aplica:** 0002, 0003, 0006, 0020.
+sobrecargado, B absorbe la instancia universitaria (señal de 0020).
+**Decisiones que aplica:** 0002, 0003, 0006, 0020, 0023.
 
 ### Historias
 
 - **HU-6.1** Como planificador, quiero cargar la carrera ISI completa y obtener un horario, o su
   diagnóstico, dentro del tiempo acordado.
-- **HU-6.2** Como planificador, quiero cargar varias carreras con docentes y aulas compartidos y
-  obtener un horario que respete el grupo de conflicto de cada carrera.
+- **HU-6.2** Como planificador, quiero cargar todas las carreras de la universidad con sus
+  docentes y aulas compartidos y obtener un horario que respete el grupo de conflicto de cada
+  carrera.
 - **HU-6.3** Como integrante CP-SAT, quiero que cada corrida registre tamaño de la instancia
   (comisiones, dictados, aulas, combinaciones cursables), tiempo de resolución y tiempo hasta la
   primera solución, para comparar formulaciones.
 - **HU-6.4** Como integrante CP-SAT, quiero un conjunto de instancias de referencia versionadas
-  (juguete, ISI completa, multi-carrera sintética) con su resultado esperado, para detectar
+  (juguete, ISI completa, universidad completa) con su resultado esperado, para detectar
   regresiones del modelo.
 - **HU-6.5** Como planificador, quiero que la grilla siga siendo usable con cientos de comisiones
   (filtros, búsqueda), para revisar la instancia real.
@@ -481,18 +485,30 @@ sobrecargado, B absorbe el escenario multi-carrera (señal de 0020).
 ### Definiciones pendientes a tomar al llegar
 
 - **Tiempo objetivo** de resolución para la instancia real (número y procedencia).
-- **Disponibilidad de los datos reales** de ISI y de las otras carreras (quién los entrega, en
-  qué formato, con qué permiso).
-- Si la instancia multi-carrera se valida con datos reales o sintéticos.
-- **Estrategia de descomposición** si el solver no escala (riesgo abierto de 0003): resolver por
-  carrera y reparar recursos compartidos. Se decide con los tiempos medidos, no antes.
-- Cota de combinaciones cursables (medida en Fase 3) y si obliga a reformular R1/R3.
+- **Disponibilidad de los datos reales** de ISI y de las demás carreras (quién los entrega, en
+  qué formato, con qué permiso). A escala de universidad ya no alcanza con la secretaría de una
+  sola carrera (0023).
+- Si la instancia universitaria se valida con datos reales o sintéticos.
+- **Cuántos edificios** (0023). Si las carreras se reparten en más de un edificio o sede, hace
+  falta una restricción que hoy no existe en R1–R11: **un docente no puede tener dictados
+  consecutivos en edificios distintos sin tiempo de traslado**. Hay que confirmarlo con la
+  institución antes de modelar la instancia universitaria, y si aplica se escribe su decisión y su
+  caso borde con test.
+- **Calendario y jornada por carrera** (0023, señal activada de 0004). Hay carreras con **materias
+  anuales** y/o **jornada distinta**. Falta decidir si la grilla y los turnos pasan a ser por
+  carrera y no por período (0011), y cómo se representa una materia anual en un período
+  cuatrimestral. Se decide con los datos de secretaría académica, no antes.
+- **Estrategia de descomposición** si el solver no escala (riesgo abierto de 0003 y de 0023):
+  resolver por subconjuntos de carreras y reparar recursos compartidos. Se decide con los tiempos
+  medidos, no antes; el alcance declarado no se recorta (0023).
 
 ### Cierre
 
 ISI completa resuelta o diagnosticada dentro del tiempo objetivo, con la tabla de tiempos pegada;
-instancia multi-carrera con al menos un docente y un aula compartidos resuelta; instancias de
-referencia en el repo con test de regresión.
+instancia de la universidad completa resuelta o diagnosticada, con al menos un docente y un aula
+compartidos entre carreras; las dos definiciones pendientes de alcance (edificios, calendario por
+carrera) resueltas con su decisión escrita o declaradas no aplicables; instancias de referencia en
+el repo con test de regresión.
 
 ---
 
