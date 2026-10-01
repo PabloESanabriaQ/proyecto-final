@@ -44,3 +44,33 @@ El CSV queda como registro de lo cargado y como formato para las fases siguiente
 al llegar, después de tomar sus definiciones pendientes. Para importarlo a mano: Jira →
 Configuración → Sistema → Importación externa → CSV, mapeando `Issue ID` / `Parent ID` para la
 jerarquía.
+
+## Quién mantiene esto
+
+Desde el 2026-09-30, **la tabla de arriba la actualiza el agente al crear una issue**, y el estado
+de cada issue se mueve desde hechos de git: rama con clave, PR abierto, PR mergeado. El contrato
+está en [`../convenciones.md`](../convenciones.md) §7 y la decisión que lo funda, en
+[`../decisiones/0024-el-estado-de-jira-lo-mueve-el-agente-desde-hechos-de-git.md`](../decisiones/0024-el-estado-de-jira-lo-mueve-el-agente-desde-hechos-de-git.md).
+
+**El agente no puede borrar issues:** el MCP de Atlassian expone crear, editar, comentar y
+transicionar, nada más. Una issue creada por error se corrige a mano desde la interfaz.
+
+## Creado después de la importación
+
+| Clave | Tipo | Issue |
+|---|---|---|
+| AUL-25 | Tarea | Flujo de Jira operado por el agente desde hechos de git (epic AUL-5, etiqueta `no-planificado`) |
+| AUL-26 | Subtask | Escenarios de verificación y baseline (RED) |
+| AUL-27 | Subtask | Decisión 0024 |
+| AUL-28 | Subtask | `convenciones.md` §7 "Jira" |
+| AUL-29 | Subtask | La skill `trabajar-con-jira` (GREEN) |
+| AUL-30 | Subtask | Cerrar agujeros (REFACTOR) — cerrada sin cambios, no hubo agujeros |
+| AUL-31 | Subtask | Enganches y pull request |
+
+| AUL-32 | Tarea | Corregir el alcance a toda la UNViMe en los documentos (decisión 0023) |
+
+**`AUL-24` no se borra.** Se llama "Test" y quedó de la plantilla de Jira, sin epic ni etiqueta,
+pero **un commit que ya está en `main` la cita** (`0edd9b8 AUL-24: registrar ticket de soporte agy y
+compatibilidad de pre-push`). Borrarla rompe ese enlace en el panel de desarrollo. Conviene
+renombrarla con lo que ese commit entregó, o dejarla y anotar que la clave se usó por error. Lo que
+no se hace es eliminarla — y ningún agente podría: el MCP no expone borrado.
