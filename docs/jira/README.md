@@ -68,6 +68,7 @@ transicionar, nada más. Una issue creada por error se corrige a mano desde la i
 | AUL-31 | Subtask | Enganches y pull request |
 
 | AUL-32 | Tarea | Corregir el alcance a toda la UNViMe en los documentos (decisión 0023) |
+| AUL-33 | Tarea | El adaptador de Gemini perdió el modo de solo lectura, y el caso borde del shim de Python no tiene test |
 
 **`AUL-24` no se borra.** Se llama "Test" y quedó de la plantilla de Jira, sin epic ni etiqueta,
 pero **un commit que ya está en `main` la cita** (`0edd9b8 AUL-24: registrar ticket de soporte agy y
