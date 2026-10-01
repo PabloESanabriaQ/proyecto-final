@@ -5,7 +5,7 @@
 > y cómo lo cumplimos. El reglamento manda; este documento es nuestra lectura de él. Si algo acá
 > contradice al PDF, está mal acá.
 >
-> **Última actualización:** 2026-09-16.
+> **Última actualización:** 2026-09-28 — alcance corregido a toda la UNViMe (decisión 0023).
 
 ## 1. Modalidad y equipos
 
@@ -113,3 +113,6 @@ sin licencia, todos los derechos quedan reservados.
 | Fecha de presentación de las propuestas (fija M1 de cada cronograma) | Mesa de Entrada / Comisión |
 | Confirmar el margen izquierdo del formato (ilegible en la copia) | Escuela |
 | Rangos reales de turnos, tope de sobrecupo, pesos (datos de secretaría académica, decisiones 0010 y 0011) | Secretaría académica |
+| **Cuántos edificios o sedes** usan las carreras; si hay más de uno, hace falta una restricción de tiempo de traslado docente que hoy no existe (decisión 0023) | Secretaría académica |
+| **Qué carreras tienen materias anuales o jornada distinta** de la grilla por defecto, y sus datos (decisión 0023, señal activada de 0004) | Secretaría académica |
+| Datos del cuatrimestre de **todas** las carreras, no sólo de ISI (decisión 0023) | Secretaría académica |

@@ -1,7 +1,7 @@
 # Aulero UNViMe
 
-Asignación de horarios y aulas (UCTP) para la carrera de Ingeniería en Sistemas de Información
-de la UNViMe. Proyecto Final + PPS. OR-Tools CP-SAT · FastAPI · React · PostgreSQL.
+Asignación de horarios y aulas (UCTP) para la UNViMe, todas sus carreras en una sola asignación
+(decisión 0023). Proyecto Final + PPS. OR-Tools CP-SAT · FastAPI · React · PostgreSQL.
 
 - **Qué hace y en qué estado está:** [`docs/informe-de-gestion.md`](docs/informe-de-gestion.md)
 - **Cómo está hecho:** [`docs/arquitectura.md`](docs/arquitectura.md)
