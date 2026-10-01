@@ -18,6 +18,8 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 - **Decisiones de diseño:** `docs/decisiones/` — cuando contradice a otro documento, manda el
   registro. Antes de codificar una decisión nueva, se escribe ahí con la plantilla del índice.
 - **Convenciones (ramas, revisión, linters, accesibilidad, tests):** `docs/convenciones.md`.
+- **Flujo de Jira** (estado, asignación, subtareas, trabajo no planificado): `docs/convenciones.md`
+  §7. Las skills del proyecto viven en `.agents/skills/`, que leen los tres agentes.
 - **Reglamento de Proyecto Final y lo que nos impone; propuestas de los dos proyectos (A: 1
   persona, B: 2):** `docs/marco-reglamentario.md`, `docs/propuestas/`. El alcance de las
   propuestas aprobadas no se cambia sin registrar la decisión **y** avisar a la Comisión.
@@ -37,6 +39,9 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 - Una fase se cierra con el checklist de `docs/plan-de-fases.md` ("Cierre de una fase") y los dos
   documentos vivos actualizados. Sin la salida de la verificación pegada, no hay cierre.
 - Python 3.14 y Node 24 (decisión 0017).
+- El trabajo que el plan de fases no contempla se escribe en `docs/plan-de-fases.md` **antes** de
+  entrar a Jira, y el estado de una issue sale de un hecho de git, no de la conversación
+  (`convenciones.md` §7, decisión 0024).
 
 ## Cómo trabajar acá
 

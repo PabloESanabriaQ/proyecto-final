@@ -5,8 +5,11 @@
 | [`informe-de-gestion.md`](informe-de-gestion.md) | Quien evalúa o usa el sistema | Documento vivo, nivel gestión: problema, qué hace, decisiones en lenguaje llano, **estado de avance**, fuera de alcance. |
 | [`arquitectura.md`](arquitectura.md) | Quien se suma o defiende el proyecto | Documento vivo, nivel técnico: stack, modelo, interfaces, tests, cómo correrlo, deuda. |
 | [`plan-de-fases.md`](plan-de-fases.md) | El equipo | Fases, historias de usuario para Jira, casos borde, **definiciones pendientes por fase**, fuera de alcance. |
-| [`decisiones/`](decisiones/README.md) | El equipo | Registro de decisiones de diseño, una por archivo (17 al 2026-09-16). **Cuando contradice a cualquier otro documento, manda el registro.** |
-| [`convenciones.md`](convenciones.md) | El equipo | Ramas, las dos puertas de revisión, linters por parte, accesibilidad, tests. |
+| [`decisiones/`](decisiones/README.md) | El equipo | Registro de decisiones de diseño, una por archivo. **Cuando contradice a cualquier otro documento, manda el registro.** |
+| [`convenciones.md`](convenciones.md) | El equipo | Ramas, las dos puertas de revisión, linters por parte, accesibilidad, tests, **y el flujo de Jira (§7)**. |
+| [`jira/`](jira/README.md) | El equipo | Correspondencia HU ↔ clave de AUL y el CSV de lo que se importó. La mantiene el agente al crear una issue (convenciones §7). |
+| [`../.agents/skills/`](../.agents/skills/) | El equipo | Skills del proyecto, versionadas y compartidas por los tres agentes: `avanzar-por-fases`, `registrar-decisiones`, `trabajar-con-jira`. |
+| [`superpowers/`](superpowers/) | Quien retoma una tarea | Diseños (`specs/`) y planes de implementación (`plans/`) de la metodología *superpowers*. **No son documentos vivos**: son el registro de cómo se decidió e implementó una tarea puntual, y no se actualizan después de cerrarla. |
 | [`marco-reglamentario.md`](marco-reglamentario.md) | El equipo y los Profesores Guía | Qué nos aplica del reglamento de Proyecto Final y cómo lo cumplimos; de dónde sale cada capítulo del informe. |
 | [`propuestas/proyecto-a.md`](propuestas/proyecto-a.md), [`propuestas/proyecto-b.md`](propuestas/proyecto-b.md) | Comisión de Carrera | Borradores de las propuestas de los dos Proyectos Finales (§5.a del reglamento): definición del problema, objetivos, alcance y cronograma de 12 meses. |
 
