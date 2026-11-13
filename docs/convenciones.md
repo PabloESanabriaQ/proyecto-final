@@ -263,8 +263,10 @@ Dónde cuelga:
 El andamio pertenece a la fase en la que apareció: así el epic cuenta lo que la fase realmente
 costó, y no hace falta un epic huérfano permanente.
 
-**Crear una Historia o una Tarea siempre se pregunta.** Mover un estado no. La razón es que una
-issue mal creada no se puede borrar desde un agente: se corrige a mano desde la interfaz.
+**Crear una Historia o una Tarea no se pregunta** (decisión 0025, que modifica la 0024): el agente
+la crea y dice en una línea qué creó. Lo que no hace es crear una Historia que todavía no está
+escrita en `plan-de-fases.md`, porque una issue mal creada no se puede borrar desde un agente: se
+corrige a mano desde la interfaz.
 
 Las **subtareas no se preguntan una por una**: son la partición de un trabajo que ya se aprobó,
 viven dentro de su issue padre y no cambian el alcance de nada. Lo que se dice, en una línea, es qué

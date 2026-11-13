@@ -56,8 +56,10 @@ modelo de recursos (AUL-45) y caen en la semana de las fiestas.
 
 ## Quién hace qué
 
-Tres personas: **A** (Proyecto A, una persona) y **B1** y **B2** (Proyecto B). La base común se
-reparte entre las tres. Cada uno anota su nombre al lado de su rol la primera vez que toma una
+Las tres personas del Proyecto Final: **A** (Proyecto A, una persona) y **B1** y **B2** (Proyecto
+B). La base común se reparte entre las tres. La cuarta persona del equipo trabaja en la PPS (Fase
+1) y sigue su propia línea; lo único que comparte con este plan es el esquema de instancia
+(AUL-41, que cubre la parte del solver de AUL-17). Cada uno anota su nombre al lado de su rol la primera vez que toma una
 issue, asignándosela en Jira.
 
 | Rol | Issues | Semanas |
