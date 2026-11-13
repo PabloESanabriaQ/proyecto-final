@@ -95,9 +95,11 @@ case "$AGENTE" in
     rm -f "$entrada"
     ;;
   gemini)
-    # gemini -p "" procesa el prompt recibido por stdin en modo headless y --output-format json
-    # devuelve la estructura JSON con el campo "response".
-    gemini -p "" --output-format json | extraer response
+    # -p "" procesa el prompt recibido por stdin en modo headless; --output-format json devuelve
+    # la respuesta en el campo "response". --approval-mode plan es el modo de solo lectura que
+    # exige la decisión 0016: Gemini lo degrada a "default" si la carpeta no está marcada como
+    # confiable, así que hay que marcarla una vez desde Gemini CLI antes del primer push.
+    gemini -p "" --approval-mode plan --output-format json | extraer response
     ;;
   *)
     echo "AULERO_AGENTE='$AGENTE' no es un agente conocido (claude, codex, agy, gemini)." >&2
