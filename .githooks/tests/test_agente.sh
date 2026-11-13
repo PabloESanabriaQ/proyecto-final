@@ -59,7 +59,7 @@ esac
 EOF
 chmod +x "$MOCK_BIN/gemini"
 
-echo "Caso: Gemini CLI llamado correctamente con -p \"\" --output-format json"
+echo "Caso: Gemini CLI llamado con -p \"\" --approval-mode plan --output-format json (solo lectura)"
 set +e
 OUT=$(printf "Revisar este diff" | env -u AULERO_AGENTE_CMD AULERO_AGENTE=gemini RECORD_DIR="$RECORD_DIR" PATH="$MOCK_BIN:$PATH" bash "$AGENTE_SH" 2>"$TMP/err.txt")
 CODE=$?
@@ -68,6 +68,7 @@ assert_equals "Código de salida es 0" "0" "$CODE"
 assert_equals "Salida extraída del campo response" "VEREDICTO: APROBADO" "$OUT"
 ARGS=$(cat "$RECORD_DIR/gemini-args.txt")
 assert_contains "Flag -p presente" "-p" "$ARGS"
+assert_contains "Flag --approval-mode plan presente (solo lectura, decisión 0016)" "--approval-mode plan" "$ARGS"
 assert_contains "Flag --output-format json presente" "--output-format json" "$ARGS"
 STDIN=$(cat "$RECORD_DIR/gemini-stdin.txt")
 assert_equals "Prompt recibido por stdin" "Revisar este diff" "$STDIN"
@@ -87,6 +88,33 @@ CODE=$?
 set -e
 assert_equals "Código de salida es 3" "3" "$CODE"
 assert_contains "Mensaje de error en stderr" "el campo 'response'" "$(cat "$TMP/err.txt")"
+
+# Caso borde de la Fase 0 (plan-de-fases.md, "Push en Windows nativo"): un shim de Python que
+# acepta `-c` simple pero no argumentos multilínea. El shim simulado pasa el chequeo
+# `-c 'import sys'` y falla si recibe cualquier argumento con salto de línea; si no, delega en el
+# Python real. Si `extraer` volviera a pasar el extractor por `-c`, este caso falla.
+PYTHON_REAL="$(command -v python3 || command -v python)"
+SHIM_BIN="$TMP/shim_bin"
+mkdir -p "$SHIM_BIN"
+cat >"$SHIM_BIN/python3" <<EOF
+#!/usr/bin/env bash
+for arg in "\$@"; do
+  if [[ "\$arg" == *\$'\n'* ]]; then
+    echo "shim: argumento multilínea corrompido" >&2
+    exit 9
+  fi
+done
+exec "$PYTHON_REAL" "\$@"
+EOF
+chmod +x "$SHIM_BIN/python3"
+
+echo "Caso: shim de Python que acepta -c simple pero no argumentos multilínea"
+set +e
+OUT=$(printf "Revisar este diff" | env -u AULERO_AGENTE_CMD AULERO_AGENTE=gemini RECORD_DIR="$RECORD_DIR" PATH="$SHIM_BIN:$MOCK_BIN:$PATH" bash "$AGENTE_SH" 2>"$TMP/err.txt")
+CODE=$?
+set -e
+assert_equals "Código de salida es 0 con el shim" "0" "$CODE"
+assert_equals "El veredicto se extrae igual a través del shim" "VEREDICTO: APROBADO" "$OUT"
 
 # --- 2. Adaptador Claude Code ----------------------------------------------------------------
 cat >"$MOCK_BIN/claude" <<'EOF'

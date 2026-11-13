@@ -106,6 +106,8 @@ jobs:
       - uses: actions/checkout@v5
       - name: Tests del hook (con agente simulado)
         run: bash .githooks/tests/test_pre_push.sh
+      - name: Tests de los adaptadores de agente
+        run: bash .githooks/tests/test_agente.sh
 
   ci-ok:
     name: CI OK

@@ -123,6 +123,8 @@ revisar_ref() {
     if [[ -z "${AULERO_HOOK_SIN_CHEQUEOS:-}" ]]; then
       log "Hook: tests del pre-push"
       bash .githooks/tests/test_pre_push.sh </dev/null
+      log "Hook: tests de los adaptadores de agente"
+      bash .githooks/tests/test_agente.sh </dev/null
     fi
   fi
 

@@ -83,6 +83,7 @@ uv run pytest
 cd frontend && npm run lint && npm run format:check && npm run typecheck && npm run test
 
 bash .githooks/tests/test_pre_push.sh       # el hook de pre-push, con un agente simulado
+bash .githooks/tests/test_agente.sh         # los adaptadores de agente (flags de solo lectura)
 ```
 
 Formatear: `uv run ruff format backend solver` y `cd frontend && npm run format`.
