@@ -179,7 +179,11 @@ Lo que se verifica en cada PR de frontend:
 
 Proyecto **AUL** en https://aulero.atlassian.net. El estado de las issues no se mantiene a mano:
 lo mueve el agente de cada integrante desde hechos verificables de git
-([decisión 0024](decisiones/0024-el-estado-de-jira-lo-mueve-el-agente-desde-hechos-de-git.md)).
+([decisión 0024](decisiones/0024-el-estado-de-jira-lo-mueve-el-agente-desde-hechos-de-git.md)),
+que también crea las issues, **y solo con las herramientas del MCP que funcionan en el plan
+gratuito de Jira**: nada de búsqueda Rovo, Teamwork Graph ni Compass. Lo que no se puede hacer
+gratis —hoy, borrar una issue— lo hace el equipo a mano
+([decisión 0025](decisiones/0025-el-agente-crea-y-mueve-issues-de-jira-solo-con-funciones-gratuitas.md)).
 Esta sección es el contrato, igual para los tres agentes. El procedimiento —qué llamada, qué id de
 transición— es de cada herramienta y vive en su skill: para Claude Code, en
 [`.agents/skills/trabajar-con-jira/`](../.agents/skills/trabajar-con-jira/SKILL.md) (§6).

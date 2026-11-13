@@ -70,8 +70,37 @@ transicionar, nada más. Una issue creada por error se corrige a mano desde la i
 | AUL-32 | Tarea | Corregir el alcance a toda la UNViMe en los documentos (decisión 0023) |
 | AUL-33 | Tarea | El adaptador de Gemini perdió el modo de solo lectura, y el caso borde del shim de Python no tiene test |
 
-**`AUL-24` no se borra.** Se llama "Test" y quedó de la plantilla de Jira, sin epic ni etiqueta,
-pero **un commit que ya está en `main` la cita** (`0edd9b8 AUL-24: registrar ticket de soporte agy y
-compatibilidad de pre-push`). Borrarla rompe ese enlace en el panel de desarrollo. Conviene
-renombrarla con lo que ese commit entregó, o dejarla y anotar que la clave se usó por error. Lo que
-no se hace es eliminarla — y ningún agente podría: el MCP no expone borrado.
+**`AUL-24` no se borró.** Se llamaba "Test" (una prueba de integración), pero **un commit que ya
+está en `main` la cita** (`0edd9b8 AUL-24: registrar ticket de soporte agy y compatibilidad de
+pre-push`). El 2026-11-13 se renombró con lo que ese commit entregó —"Soporte de Antigravity CLI
+(agy) y pre-push en Windows"—, se colgó del epic AUL-5 con etiqueta `no-planificado` y pasó a
+*Finalizada*, porque el PR #1 que la trae está mergeado.
+
+## Creado el 2026-11-13 (plan de puesta al día, decisión 0025)
+
+| Clave | Tipo | Issue |
+|---|---|---|
+| AUL-34 | Epic | Fase 2 — Primer horario del caso de prueba |
+| AUL-36 | Tarea | Definición: criterios de simulación y contenido del caso acotado |
+| AUL-37 | Tarea | Definición: límite de tiempo por defecto de una corrida |
+| AUL-38 | Tarea | Definición: objetivo del Proyecto A |
+| AUL-39 | Tarea | Definición: tipos de aula alternativos en la instancia |
+| AUL-40 | Tarea | Formalización final de R1–R11 y de la grilla (etiqueta `informe`) |
+| AUL-41 | Tarea | Publicar el esquema de instancia y de solución en aulero-solver |
+| AUL-42 | Historia | HU-2.6 El paquete se instala y sus tests corren solos |
+| AUL-43 | Historia | HU-2.5 Caso de prueba acotado en formato de instancia |
+| AUL-44 | Historia | HU-2.1 Correr aulero-solver solve |
+| AUL-45 | Historia | HU-2.2 Restricciones de recursos |
+| AUL-46 | Historia | HU-2.4 Límite de tiempo e INFACTIBLE frente a TIEMPO_AGOTADO |
+| AUL-47 | Historia | HU-2.3 Validador independiente de recursos |
+| AUL-48 | Tarea | Cierre de la Fase 2 |
+| AUL-35 | Epic | Fase 7 — Proyecto B: horario con violaciones acotadas |
+| AUL-49 | Tarea | Definición: lista cerrada de atenuables, unidad de infracción y orden de niveles |
+| AUL-50 | Tarea | Definición: formatos de infracciones y de métricas de calidad |
+| AUL-51 | Tarea | Definición: pesos por defecto y tope de sobrecupo |
+| AUL-52 | Historia | HU-7.1 Holguras por instancia de restricción (primero R7 y R8) |
+| AUL-53 | Historia | HU-7.2 Primer nivel: minimizar la suma ponderada de holguras |
+| AUL-54 | Tarea | Registrar la decisión 0025 (epic AUL-5, etiqueta `no-planificado`) |
+
+El tipo de issue de las historias se llama **Historia** en el proyecto (no Feature, como decía la
+tabla de 2026-09-16).
