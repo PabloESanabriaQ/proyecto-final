@@ -32,77 +32,133 @@ gantt
     title Puesta al día, noviembre y diciembre de 2026
     dateFormat YYYY-MM-DD
     axisFormat %d/%m
-    section Fase 0
-    Cierre de Fase 0 y PRs abiertos        :f0, 2026-11-16, 5d
-    section Común
-    Definiciones de la Fase 2              :def, 2026-11-16, 5d
-    Esquema publicado y paquete            :esq, 2026-11-23, 5d
-    Caso acotado y solve                   :caso, 2026-11-30, 5d
-    Etapa 1 cerrada                        :milestone, m1, 2026-12-04, 0d
-    Modelo de recursos y validador         :rec, 2026-12-07, 12d
-    Cierre de la Fase 2                    :cierre, 2026-12-21, 10d
-    Etapa 2 cerrada                        :milestone, m2, 2026-12-30, 0d
-    section A
-    Formalización de R1–R11                :form, 2026-11-16, 12d
-    Límite de tiempo                       :lim, 2026-12-07, 5d
-    section B
-    Definiciones de B                      :defb, 2026-11-16, 12d
-    Holguras y primer nivel                :holg, 2026-12-14, 17d
+    section Hugo (A)
+    Objetivo de A y límite de tiempo (AUL-38, AUL-37)  :2026-11-16, 5d
+    Formalización de R1–R11 (AUL-40)                   :2026-11-16, 12d
+    Modelo de recursos (AUL-45)                        :crit, 2026-11-30, 19d
+    Límite de tiempo y estados (AUL-46)                :2026-12-07, 5d
+    Cierre de la Fase 2 (AUL-48)                       :2026-12-21, 10d
+    section Pablo (B1)
+    Borrador del esquema (AUL-20, AUL-39)              :2026-11-16, 5d
+    Atenuables (AUL-49)                                :2026-11-16, 12d
+    Esquema publicado (AUL-41)                         :crit, 2026-11-23, 3d
+    solve (AUL-44)                                     :2026-11-30, 5d
+    Holguras R7 y R8 (AUL-52)                          :crit, 2026-12-09, 15d
+    section Nico (B2)
+    Criterios de simulación (AUL-36)                   :2026-11-16, 5d
+    Paquete instalable (AUL-42)                        :2026-11-16, 12d
+    Formatos, pesos y tope (AUL-50, AUL-51)            :2026-11-23, 5d
+    Caso acotado (AUL-43)                              :2026-11-30, 4d
+    Validador (AUL-47)                                 :2026-11-30, 19d
+    Primer nivel, con Pablo (AUL-53)                   :crit, 2026-12-14, 17d
+    section Hitos
+    Etapa 1 cerrada                                    :milestone, 2026-12-04, 0d
+    Etapa 2 cerrada                                    :milestone, 2026-12-30, 0d
 ```
 
-La semana del 16 de noviembre cierra lo que quedó abierto y toma las definiciones, porque sin
-ellas no se puede escribir el esquema. El mayor riesgo es la línea de B: las holguras dependen del
-modelo de recursos (AUL-45) y caen en la semana de las fiestas.
+Las barras marcadas como críticas son el camino que no tiene margen: esquema (Pablo) → modelo de
+recursos (Hugo) → holguras (Pablo) → primer nivel (Nico y Pablo) → cierre (Hugo). Cada paso es de
+una persona distinta y espera al anterior.
 
 ## Quién hace qué
 
-Las tres personas del Proyecto Final: **A** (Proyecto A, una persona) y **B1** y **B2** (Proyecto
-B). La base común se reparte entre las tres. **A es Hugo, B1 es Pablo y B2 es Nico**; las issues ya están asignadas así en Jira (2026-11-13). La cuarta persona del equipo trabaja en la PPS (Fase
-1) y sigue su propia línea; lo único que comparte con este plan es el esquema de instancia
+Las tres personas del Proyecto Final: **A es Hugo** (Proyecto A) y **B1 es Pablo** y **B2 es
+Nico** (Proyecto B). La base común se reparte entre los tres, y cada issue ya está asignada a su
+persona en Jira, con su fecha de vencimiento. La cuarta persona del equipo trabaja en la PPS
+(Fase 1) y sigue su propia línea; lo único que comparte con este plan es el esquema de instancia
 (AUL-41, que cubre la parte del solver de AUL-17).
 
-| Rol | Issues | Semanas |
-|---|---|---|
-| **A** (Hugo) | AUL-38 objetivo del Proyecto A · AUL-37 límite de tiempo · AUL-40 formalización de R1–R11 | 16–27 nov. |
-| | AUL-45 HU-2.2 restricciones de recursos · AUL-46 HU-2.4 límite de tiempo y estados | 7–18 dic. |
-| | AUL-48 cierre de la Fase 2 (lo coordina A; firman los tres) | 21–30 dic. |
-| **B1** (Pablo) | AUL-12 cierre de Fase 0 · AUL-33 adaptador de Gemini · AUL-20 esquema JSON · AUL-39 tipos alternativos | 16–20 nov. |
-| | AUL-49 atenuables y unidad de infracción · AUL-41 publicar el esquema | 16–27 nov. |
-| | AUL-44 HU-2.1 `aulero-solver solve` | 30 nov. – 4 dic. |
-| | AUL-52 HU-7.1 holguras de R7 y R8 | 14–23 dic. |
-| **B2** (Nico) | AUL-36 criterios de simulación · AUL-42 HU-2.6 paquete instalable | 16–27 nov. |
-| | AUL-50 formatos de infracciones · AUL-51 pesos y tope de sobrecupo | 23–27 nov. |
-| | AUL-43 HU-2.5 caso de prueba acotado | 30 nov. – 4 dic. |
-| | AUL-47 HU-2.3 validador independiente | 7–18 dic. |
-| | AUL-53 HU-7.2 primer nivel | 21–30 dic. |
+Lo que va en negrita en **Entrega** es lo que destraba a otra persona: si se va a correr, se
+avisa ese mismo día.
 
-Por qué así:
+### Semana 1 — 16 al 20 de noviembre: definiciones, todos en paralelo
 
-- **A se queda con el modelo** (recursos, límite de tiempo, formalización): es el núcleo de su
-  propuesta y lo que va a defender.
-- **B1 se queda con el contrato de datos** (esquema y CLI) y con las holguras: las holguras se
-  escriben sobre el esquema que B1 conoce mejor.
-- **B2 se queda con los datos y la verificación** (simulación, caso acotado, validador) y con el
-  primer nivel: el validador es el que después confirma las infracciones del primer nivel.
-- La revisión humana de cada PR la hace alguien que no lo escribió (decisión 0014). Los PR #4 y #5
-  y el de la decisión 0025 esperan esa aprobación desde ya.
+- **Hugo:** AUL-38 (objetivo del Proyecto A) y AUL-37 (límite de tiempo), cada una con su
+  decisión registrada. Arranca AUL-40 (formalización).
+- **Pablo:** AUL-20 y AUL-39, hasta un borrador del esquema acordado entre los tres. Arranca
+  AUL-49 (atenuables). Propone la división del paquete `solver/` por persona (regla 3, abajo).
+- **Nico:** AUL-36 (criterios de simulación) con su decisión. AUL-42 (paquete instalable).
+- **Los tres:** revisar y mergear los PR #5, #6 y #7. Con eso, Pablo cierra AUL-12 (Fase 0).
+- **Entrega, viernes 20:** el borrador del esquema, de Pablo a Hugo y a Nico.
+
+### Semana 2 — 23 al 27 de noviembre: el esquema
+
+- **Pablo:** AUL-41 (esquema publicado), idealmente el miércoles 25. Cierra AUL-49.
+- **Hugo:** termina AUL-40. Arma el esqueleto del modelo contra el borrador (grilla, variables).
+- **Nico:** cierra AUL-42. AUL-50 (formatos de infracciones, que extienden el esquema: se acuerdan
+  con Pablo) y AUL-51 (pesos y tope). Junta los datos del caso acotado en una planilla, sin
+  esperar al esquema.
+- **Entrega, miércoles 25:** el esquema publicado, de Pablo a Hugo y a Nico.
+
+### Semana 3 — 30 de noviembre al 4 de diciembre: cierre de la etapa 1
+
+- **Nico:** AUL-43 (caso acotado en formato de instancia) para el jueves 3. Arranca AUL-47
+  (validador): solo necesita el esquema de solución, no el solver.
+- **Pablo:** AUL-44 (`solve`) sobre el paquete de Nico y el esquema.
+- **Hugo:** AUL-45 (modelo de recursos): grilla, R5, R6 y exclusividad de aula. Necesita los
+  modelos de datos del esquema, no la línea de comandos.
+- **Entrega, jueves 3:** el caso acotado, de Nico a Hugo y a Pablo.
+- **Hito, viernes 4: etapa 1 cerrada.**
+
+### Semana 4 — 7 al 11 de diciembre: el modelo
+
+- **Hugo:** AUL-45 suma R7, R8 con alternativos y R11. AUL-46 (límite de tiempo y estados).
+- **Pablo:** conecta el `solve` al modelo de Hugo. Arranca AUL-52 (holguras) en una rama encima
+  de la de Hugo.
+- **Nico:** AUL-47, validador completo de recursos.
+- **Entrega, miércoles 9:** la exclusividad de aula y R7, en la rama de Hugo, para Pablo.
+
+### Semana 5 — 14 al 18 de diciembre: cerrar el modelo y el validador
+
+- **Hugo:** AUL-45 con los tests de sus casos borde. PR y merge el viernes 18.
+- **Nico:** PR de AUL-47, y el validador probado sobre soluciones reales del solver. Se suma con
+  Pablo a AUL-53 (primer nivel).
+- **Pablo:** AUL-52, holguras de R7 y R8.
+- **Entrega, viernes 18:** el modelo de recursos mergeado; todo lo que sigue se apoya en él.
+
+### Semana 6 — 21 al 23 y 28 al 30 de diciembre: cierre de la Fase 2
+
+- **Pablo y Nico:** merge de AUL-52. AUL-53, primer nivel resolviendo el caso acotado.
+- **Hugo:** AUL-48 (cierre de la Fase 2): `solve` en `FACTIBLE`, `validar` con cero violaciones,
+  `informe-de-gestion.md` y `arquitectura.md` al día.
+- **Hito, miércoles 30: etapa 2 cerrada.**
+
+**Riesgo:** las semanas 5 y 6 caen en las fiestas, justo sobre el camino crítico. Si el 18 de
+diciembre AUL-45 no está mergeado, AUL-53 pasa a la primera semana de enero en vez de forzarlo.
+
+### Reglas para no frenar al otro
+
+1. **Revisión en 48 horas, en ronda:** los PRs de Hugo los revisa Nico, los de Nico los revisa
+   Pablo y los de Pablo los revisa Hugo (la aprobación de otra persona la exige la decisión 0014).
+2. **Ramas apiladas:** si dependés de algo sin mergear, ramá encima de esa rama en vez de esperar.
+3. **Cada uno con su parte de `solver/`:** el esquema y la línea de comandos Pablo, el modelo
+   Hugo, el validador y las instancias Nico. La división exacta se registra como decisión en la
+   semana 1, antes de AUL-41.
+4. **Entrega en riesgo, aviso el mismo día:** cada una tiene a otra persona esperando.
 
 ## Dependencias que ordenan el trabajo
+
+Están cargadas en Jira como vínculos "bloquea a".
 
 | Antes | Después |
 |---|---|
 | AUL-20 esquema JSON + AUL-39 tipos alternativos | AUL-41 publicar el esquema |
 | AUL-36 criterios de simulación + AUL-41 esquema | AUL-43 caso acotado |
 | AUL-41 esquema + AUL-42 paquete | AUL-44 `solve` |
-| AUL-38 objetivo del Proyecto A + AUL-44 `solve` | AUL-45 restricciones de recursos |
+| AUL-38 objetivo del Proyecto A + AUL-41 esquema | AUL-45 restricciones de recursos |
+| AUL-41 esquema | AUL-47 validador |
 | AUL-37 límite de tiempo | AUL-46 estados |
 | AUL-45 recursos + AUL-49 atenuables | AUL-52 holguras |
 | AUL-51 pesos + AUL-52 holguras | AUL-53 primer nivel |
 | AUL-43 caso acotado + AUL-45 + AUL-47 | AUL-48 cierre de la Fase 2 |
 
+AUL-45 depende del esquema y no del `solve`: el modelo usa los modelos de datos, y la línea de
+comandos es una capa fina que se le pone encima. Eso deja correr AUL-44 y AUL-45 en paralelo.
+
 ## Cómo se trabaja con este plan, con cualquier agente
 
-1. Tomá la próxima issue tuya (ya están asignadas en Jira) cuyas dependencias estén cerradas.
+1. Tomá la próxima issue tuya (ya están asignadas en Jira, con fecha) cuyas dependencias estén
+   cerradas. Jira las muestra como "bloqueada por".
 2. Rama con la clave: `feat/AUL-45-restricciones-de-recursos`, `docs/AUL-40-formalizacion`. Las
    definiciones (`definicion`) se cierran con una decisión en `docs/decisiones/` antes de las
    historias que dependen de ellas.
