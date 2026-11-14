@@ -13,6 +13,8 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 
 - **Estado de avance y qué hace el sistema:** `docs/informe-de-gestion.md`.
 - **Modelo, interfaces, estructura, deuda:** `docs/arquitectura.md`.
+- **Qué hace cada persona del Proyecto Final hasta el 2026-12-30 (plan de puesta al día, con
+  issues de Jira por rol y por semana):** `docs/plan-de-puesta-al-dia.md`.
 - **Fases, historias, definiciones pendientes por fase, checklist de cierre:**
   `docs/plan-de-fases.md`.
 - **Decisiones de diseño:** `docs/decisiones/` — cuando contradice a otro documento, manda el
@@ -60,3 +62,7 @@ predeterminada de GitHub y enlazar el repo desde Jira (`AUL`, HU-0.5). Después,
 con el checklist de `docs/plan-de-fases.md` y el commit
 `Fase 0 — Base del proyecto y puerta de calidad`; siguen Fase 1 (PPS) y Fase 2 (CP-SAT) en
 paralelo, tomando antes sus definiciones pendientes.
+
+Desde el 2026-11-13 el Proyecto Final sigue `docs/plan-de-puesta-al-dia.md`: el cronograma de las
+propuestas se corrió a agosto de 2026 y hay que cerrar la etapa 1 el 4 de diciembre y la Fase 2
+(etapa 2) el 30 de diciembre. Las issues ya están en Jira (AUL-34 a AUL-54).
