@@ -57,21 +57,20 @@ modelo de recursos (AUL-45) y caen en la semana de las fiestas.
 ## Quién hace qué
 
 Las tres personas del Proyecto Final: **A** (Proyecto A, una persona) y **B1** y **B2** (Proyecto
-B). La base común se reparte entre las tres. La cuarta persona del equipo trabaja en la PPS (Fase
+B). La base común se reparte entre las tres. **A es Hugo, B1 es Pablo y B2 es Nico**; las issues ya están asignadas así en Jira (2026-11-13). La cuarta persona del equipo trabaja en la PPS (Fase
 1) y sigue su propia línea; lo único que comparte con este plan es el esquema de instancia
-(AUL-41, que cubre la parte del solver de AUL-17). Cada uno anota su nombre al lado de su rol la primera vez que toma una
-issue, asignándosela en Jira.
+(AUL-41, que cubre la parte del solver de AUL-17).
 
 | Rol | Issues | Semanas |
 |---|---|---|
-| **A** | AUL-38 objetivo del Proyecto A · AUL-37 límite de tiempo · AUL-40 formalización de R1–R11 | 16–27 nov. |
+| **A** (Hugo) | AUL-38 objetivo del Proyecto A · AUL-37 límite de tiempo · AUL-40 formalización de R1–R11 | 16–27 nov. |
 | | AUL-45 HU-2.2 restricciones de recursos · AUL-46 HU-2.4 límite de tiempo y estados | 7–18 dic. |
 | | AUL-48 cierre de la Fase 2 (lo coordina A; firman los tres) | 21–30 dic. |
-| **B1** | AUL-12 cierre de Fase 0 · AUL-33 adaptador de Gemini · AUL-20 esquema JSON · AUL-39 tipos alternativos | 16–20 nov. |
+| **B1** (Pablo) | AUL-12 cierre de Fase 0 · AUL-33 adaptador de Gemini · AUL-20 esquema JSON · AUL-39 tipos alternativos | 16–20 nov. |
 | | AUL-49 atenuables y unidad de infracción · AUL-41 publicar el esquema | 16–27 nov. |
 | | AUL-44 HU-2.1 `aulero-solver solve` | 30 nov. – 4 dic. |
 | | AUL-52 HU-7.1 holguras de R7 y R8 | 14–23 dic. |
-| **B2** | AUL-36 criterios de simulación · AUL-42 HU-2.6 paquete instalable | 16–27 nov. |
+| **B2** (Nico) | AUL-36 criterios de simulación · AUL-42 HU-2.6 paquete instalable | 16–27 nov. |
 | | AUL-50 formatos de infracciones · AUL-51 pesos y tope de sobrecupo | 23–27 nov. |
 | | AUL-43 HU-2.5 caso de prueba acotado | 30 nov. – 4 dic. |
 | | AUL-47 HU-2.3 validador independiente | 7–18 dic. |
@@ -103,7 +102,7 @@ Por qué así:
 
 ## Cómo se trabaja con este plan, con cualquier agente
 
-1. Tomá la próxima issue de tu rol cuyas dependencias estén cerradas. Asignátela en Jira.
+1. Tomá la próxima issue tuya (ya están asignadas en Jira) cuyas dependencias estén cerradas.
 2. Rama con la clave: `feat/AUL-45-restricciones-de-recursos`, `docs/AUL-40-formalizacion`. Las
    definiciones (`definicion`) se cierran con una decisión en `docs/decisiones/` antes de las
    historias que dependen de ellas.
