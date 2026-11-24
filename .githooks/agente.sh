@@ -95,9 +95,17 @@ case "$AGENTE" in
     rm -f "$entrada"
     ;;
   gemini)
-    # gemini -p "" procesa el prompt recibido por stdin en modo headless y --output-format json
-    # devuelve la estructura JSON con el campo "response".
-    gemini -p "" --output-format json | extraer response
+    # -p "" procesa el prompt recibido por stdin en modo headless; --output-format json devuelve
+    # la respuesta en el campo "response". --approval-mode plan es el modo de solo lectura que
+    # exige la decisión 0016. Si la carpeta no está marcada como confiable, Gemini lo degrada a
+    # "default" y solo lo avisa en su log de depuración. Igual queda en solo lectura: sin
+    # interacción, la política por defecto es denegar, y escribir, editar o usar la shell piden
+    # confirmación, así que fallan ("requires user confirmation, which is not supported in
+    # non-interactive mode"; verificado en Gemini CLI 0.60). Lo único que lo rompería es
+    # autorizar esas herramientas en la configuración personal de Gemini (tools.allowed o una
+    # política propia), y eso rompería también el modo plan. Marcar la carpeta como confiable
+    # desde Gemini CLI sigue siendo lo recomendado.
+    gemini -p "" --approval-mode plan --output-format json | extraer response
     ;;
   *)
     echo "AULERO_AGENTE='$AGENTE' no es un agente conocido (claude, codex, agy, gemini)." >&2

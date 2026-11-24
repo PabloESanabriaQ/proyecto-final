@@ -13,11 +13,15 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 
 - **Estado de avance y qué hace el sistema:** `docs/informe-de-gestion.md`.
 - **Modelo, interfaces, estructura, deuda:** `docs/arquitectura.md`.
+- **Qué hace cada persona del Proyecto Final hasta el 2026-12-30 (plan de puesta al día, con
+  issues de Jira por rol y por semana):** `docs/plan-de-puesta-al-dia.md`.
 - **Fases, historias, definiciones pendientes por fase, checklist de cierre:**
   `docs/plan-de-fases.md`.
 - **Decisiones de diseño:** `docs/decisiones/` — cuando contradice a otro documento, manda el
   registro. Antes de codificar una decisión nueva, se escribe ahí con la plantilla del índice.
 - **Convenciones (ramas, revisión, linters, accesibilidad, tests):** `docs/convenciones.md`.
+- **Flujo de Jira** (estado, asignación, subtareas, trabajo no planificado): `docs/convenciones.md`
+  §7. Las skills del proyecto viven en `.agents/skills/`, que leen los tres agentes.
 - **Reglamento de Proyecto Final y lo que nos impone; propuestas de los dos proyectos (A: 1
   persona, B: 2):** `docs/marco-reglamentario.md`, `docs/propuestas/`. El alcance de las
   propuestas aprobadas no se cambia sin registrar la decisión **y** avisar a la Comisión.
@@ -37,6 +41,9 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 - Una fase se cierra con el checklist de `docs/plan-de-fases.md` ("Cierre de una fase") y los dos
   documentos vivos actualizados. Sin la salida de la verificación pegada, no hay cierre.
 - Python 3.14 y Node 24 (decisión 0017).
+- Una Historia que el plan de fases no contempla se escribe en `docs/plan-de-fases.md` **antes**
+  de entrar a Jira; las Tareas de andamio no van al plan (`convenciones.md` §7.3). El estado de
+  una issue sale de un hecho de git, no de la conversación (`convenciones.md` §7, decisión 0024).
 
 ## Cómo trabajar acá
 
@@ -55,3 +62,7 @@ predeterminada de GitHub y enlazar el repo desde Jira (`AUL`, HU-0.5). Después,
 con el checklist de `docs/plan-de-fases.md` y el commit
 `Fase 0 — Base del proyecto y puerta de calidad`; siguen Fase 1 (PPS) y Fase 2 (CP-SAT) en
 paralelo, tomando antes sus definiciones pendientes.
+
+Desde el 2026-11-13 el Proyecto Final sigue `docs/plan-de-puesta-al-dia.md`: el cronograma de las
+propuestas se corrió a agosto de 2026 y hay que cerrar la etapa 1 el 4 de diciembre y la Fase 2
+(etapa 2) el 30 de diciembre. Las issues ya están en Jira (AUL-34 a AUL-54).

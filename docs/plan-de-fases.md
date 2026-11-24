@@ -103,7 +103,8 @@ test: no hay forma barata de correr GitHub Actions localmente.
 - Push en Windows nativo con agentes CLI (como Antigravity `agy`): el paso de diff y prompt por
   stdin bufferizado en archivo temporal evita el desborde de longitud de comando (`E2BIG`), y la
   extracción del veredicto funciona con `python3`, `python` o `py`, incluso si un shim acepta
-  `-c` simple pero no argumentos multilínea (tarea AUL-24, relacionada con HU-0.2).
+  `-c` simple pero no argumentos multilínea (tarea AUL-24, relacionada con HU-0.2; el caso del
+  shim tiene test en `.githooks/tests/test_agente.sh`).
 
 ### Definiciones pendientes a tomar al llegar
 
