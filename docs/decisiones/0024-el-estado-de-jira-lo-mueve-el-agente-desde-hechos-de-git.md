@@ -1,6 +1,7 @@
 # 0024 — El estado de Jira lo mueve el agente desde hechos de git, y el trabajo no planificado entra al plan antes que a Jira
 
 **Estado:** Aceptada — 2026-09-30
+**Modificada por:** 0025 — el agente también crea las issues, y solo con funciones del plan gratuito de Jira.
 
 ## Contexto
 

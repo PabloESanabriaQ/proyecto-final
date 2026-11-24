@@ -44,6 +44,11 @@ MCP de Atlassian, `cloudId: aulero.atlassian.net`.
 | Mover | `transitionJiraIssue` — `21` *En curso*, `31` *En revisión*, `41` *Finalizada*, `11` *Tareas por hacer* |
 | Asignar | `editJiraIssue` — **llamada aparte**: `assignee` junto a la transición devuelve 400 ("not on the appropriate screen") |
 | Subtarea | `createJiraIssue` con `issueTypeName: "Subtask"` y `parent` |
+| Epic, Historia o Tarea | `createJiraIssue` con `issueTypeName` `"Epic"`, `"Historia"` o `"Tarea"`, `parent` = el epic, etiqueta en `additional_fields.labels`; después, la fila en `docs/jira/README.md` |
+
+**Solo herramientas del plan gratuito** (decisión 0025): las de esta tabla, `searchJiraIssuesUsingJql`,
+`addCommentToJiraIssue`, `createIssueLink` y los metadatos. Nunca `search`, `fetch`, Teamwork Graph
+ni Compass.
 
 **No hay borrado:** el MCP no lo expone. Una issue creada por error se corrige a mano.
 
