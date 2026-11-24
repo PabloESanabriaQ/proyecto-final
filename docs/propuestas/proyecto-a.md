@@ -3,12 +3,12 @@
 > Borrador para presentar según el §5.a del Reglamento de Proyecto Final (Resol. 12/2023).
 > Los corchetes son datos que faltan. El cronograma está en meses relativos a la aprobación.
 >
-> **Última actualización:** 2026-09-16 — borrador inicial.
+> **Última actualización:** 2026-09-28 — alcance corregido: toda la UNViMe, no sólo ISI (decisión 0023).
 
 ## Tema
 
-**Aulero UNViMe: factibilidad de la asignación de horarios y aulas de la carrera de Ingeniería
-en Sistemas de Información mediante programación por restricciones (CP-SAT).**
+**Aulero UNViMe: factibilidad de la asignación de horarios y aulas de la Universidad Nacional de
+Villa Mercedes mediante programación por restricciones (CP-SAT).**
 
 ## Alumno
 
@@ -25,12 +25,13 @@ de origen, CV resumido, nota de aceptación]
 
 ## Descripción del proyecto
 
-Cada cuatrimestre, la carrera de Ingeniería en Sistemas de Información de la UNViMe asigna a
-cada comisión de cada materia un día, un horario y un aula. Hoy se hace a mano: cuesta días de
-trabajo y aun así aparecen choques entre materias del mismo año, docentes en dos lugares a la
-vez, comisiones en aulas donde no entran sus alumnos, o laboratorios ocupados por clases que no
-los necesitan. Cuando otras carreras comparten edificio, docentes y aulas, el problema deja de
-ser manejable a mano.
+Cada cuatrimestre, la UNViMe asigna un día, un horario y un aula a cada comisión de cada materia
+de todas sus carreras. Es una sola asignación y no una por carrera: las carreras comparten
+edificios, aulas y docentes, de modo que el aula que se le asigna a una comisión es la misma que
+otra carrera necesita a la misma hora (decisión 0023). Hoy se hace a mano: cuesta días de trabajo
+y aun así aparecen choques entre materias del mismo año, docentes en dos lugares a la vez,
+comisiones en aulas donde no entran sus alumnos, o laboratorios ocupados por clases que no los
+necesitan. A la escala de la universidad entera el problema deja de ser manejable a mano.
 
 Este problema es, en la bibliografía, el *University Course Timetabling Problem* (UCTP),
 NP-hard, con una tendencia reciente y documentada hacia los métodos exactos (programación
@@ -49,10 +50,12 @@ restricciones cuando el problema es infactible.
 
 ## Objetivo general
 
-Determinar la factibilidad de la asignación de horarios y aulas de la carrera de Ingeniería en
-Sistemas de Información de la UNViMe bajo un conjunto formalizado de restricciones obligatorias,
-mediante un modelo de programación por restricciones (CP-SAT) que produzca un horario válido o
-un diagnóstico de infactibilidad, validado sobre instancias reales.
+Determinar la factibilidad de la asignación de horarios y aulas de la Universidad Nacional de
+Villa Mercedes —todas sus carreras, compartiendo edificios, aulas y docentes— bajo un conjunto
+formalizado de restricciones obligatorias, mediante un modelo de programación por restricciones
+(CP-SAT) que produzca un horario válido o un diagnóstico de infactibilidad, validado sobre
+instancias reales. La carrera de Ingeniería en Sistemas de Información es el escalón de validación
+incremental, no el alcance (decisión 0023).
 
 ## Objetivos específicos
 
@@ -71,9 +74,10 @@ un diagnóstico de infactibilidad, validado sobre instancias reales.
    espíritu de los validadores oficiales de las competencias ITC.
 6. Implementar el diagnóstico de infactibilidad: ante un problema sin solución, informar un
    conjunto mínimo de restricciones en conflicto con las entidades involucradas.
-7. Escalar a la carrera completa y a un escenario de varias carreras que comparten docentes y
-   aulas; medir tamaño de instancia, tiempo de resolución y tiempo hasta la primera solución;
-   documentar el límite práctico del modelo y, si hace falta, una estrategia de descomposición.
+7. Escalar primero a una carrera completa y después a la universidad completa, con todas sus
+   carreras compartiendo docentes y aulas; medir tamaño de instancia, tiempo de resolución y tiempo
+   hasta la primera solución; documentar el límite práctico del modelo y, si hace falta, una
+   estrategia de descomposición.
 8. Analizar los resultados de factibilidad sobre las instancias reales y elaborar el informe
    final.
 
@@ -113,7 +117,7 @@ por pares antes de integrar. Detalle en `docs/plan-de-fases.md`, `docs/decisione
 
 - Paquete `aulero-solver` con el modelo A, validador y CLI, instalable y probado.
 - Esquema publicado de instancia y solución.
-- Conjunto de instancias de referencia (caso de prueba, ISI completa, multi-carrera) con su
+- Conjunto de instancias de referencia (caso de prueba, ISI completa, universidad completa) con su
   resultado y tiempos.
 - Informe final con la formalización del problema, el diseño del modelo, los resultados de
   factibilidad y el análisis de escalabilidad.
@@ -125,7 +129,7 @@ por pares antes de integrar. Detalle en `docs/plan-de-fases.md`, `docs/decisione
 | M1–M2 | Formalización final del problema; formato de instancia y solución; datos del caso de prueba. Base común con el Proyecto B. | 1.5, 2.5 | Esquema JSON publicado; instancia del juguete |
 | M2–M4 | Modelo de recursos (grilla, R5–R8, R11, un aula por bloque); validador de recursos; CLI. | 2 | `solve` y `validar` sobre el juguete: factible, cero violaciones |
 | M4–M7 | Restricciones curriculares R1–R4 con lectura existencial; dictados múltiples; pre-fijados; validador completo; diagnóstico de infactibilidad. | 3 | Juguete completo resuelto o diagnosticado; casos borde con test |
-| M7–M9 | Instancia real de ISI completa; escenario multi-carrera; métricas de tamaño y tiempo; estrategia de descomposición si hace falta. | 6 | Tabla de tiempos; instancias de referencia con regresión |
+| M7–M9 | Instancia real de ISI completa; instancia de la universidad completa; métricas de tamaño y tiempo; estrategia de descomposición si hace falta. | 6 | Tabla de tiempos; instancias de referencia con regresión |
 | M9–M10 | Experimentación y análisis de factibilidad; soporte al Proyecto B para la comparación A vs B. | 6 | Capítulo de resultados |
 | M10–M12 | Redacción del informe final; correcciones del Profesor Guía; preparación de la defensa. | — | Informe según §9 del reglamento |
 

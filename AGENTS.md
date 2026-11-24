@@ -1,8 +1,9 @@
 # Aulero UNViMe
 
-Sistema de asignación de horarios y aulas (UCTP) para la carrera de Ingeniería en Sistemas de
-Información de la UNViMe. Proyecto Final + PPS, cuatro personas. OR-Tools CP-SAT, FastAPI,
-React, PostgreSQL.
+Sistema de asignación de horarios y aulas (UCTP) para la UNViMe: **todas sus carreras**, en una
+sola asignación, porque comparten edificios, aulas y docentes (decisión 0023). La carrera de
+Ingeniería en Sistemas de Información es el escalón de validación incremental, no el alcance.
+Proyecto Final + PPS, cuatro personas. OR-Tools CP-SAT, FastAPI, React, PostgreSQL.
 
 Este es el archivo de contexto canónico del proyecto. `CLAUDE.md` y `GEMINI.md` lo importan;
 Codex y Antigravity lo leen directamente (decisión 0018). Es un puntero: el estado de avance

@@ -36,6 +36,13 @@ reales de la institución cuando se definan. Un dictado pertenece al turno en el
 **En contra:** un dictado que cruza el límite (por ejemplo, 12:00–14:00) queda en el turno de
 inicio, lo que puede no coincidir con el criterio de la institución.
 
+> **Señal activada — 2026-09-28 ([[0023]]).** Al fijarse el alcance en toda la UNViMe, el equipo
+> confirmó que hay carreras con **jornada distinta**. La mitad de la señal de abajo —"o no sean
+> iguales para todas las carreras"— dejó de ser hipotética. Los tres rangos **siguen vigentes**
+> como valor por defecto del período; lo que queda abierto es si los turnos pasan a ser por carrera
+> en vez de por período, y es definición pendiente de la Fase 6. No se modifica esta decisión hasta
+> tener los datos de secretaría académica.
+
 **Riesgo abierto:** que los rangos reales no sean tres, o no sean iguales para todas las carreras.
 **La señal:** que al definirlos aparezca un cuarto turno o un rango por carrera. Ahí se modifica
 esta decisión.

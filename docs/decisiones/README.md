@@ -70,3 +70,4 @@ entiende el criterio) y consecuencias solo favorables (sin costo ni señal es pu
 | [0020](0020-el-trabajo-se-presenta-como-dos-proyectos-finales-en-paralelo-sobre-una-base-comun.md) | El trabajo se presenta como dos Proyectos Finales (A: 1 persona, B: 2 personas) que avanzan en paralelo sobre una base común | Aceptada — modifica 0002 |
 | [0021](0021-el-codigo-no-lleva-licencia-hasta-acordarla-con-el-profesor-guia.md) | El código no lleva licencia hasta acordarla con el Profesor Guía | Aceptada |
 | [0022](0022-antigravity-se-integra-tanto-con-agy-como-con-gemini-cli.md) | Antigravity se integra tanto con `agy` como con Gemini CLI | Aceptada — implementa de otro modo 0018 |
+| [0023](0023-el-alcance-es-toda-la-unvime-no-solo-una-carrera.md) | El alcance es toda la UNViMe, no una sola carrera; ISI es el escalón de validación | Aceptada |

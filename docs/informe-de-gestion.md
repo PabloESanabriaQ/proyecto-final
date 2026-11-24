@@ -4,19 +4,24 @@
 > Público: quien evalúa el trabajo (tribunal, tutores, secretaría académica) o va a usar el
 > sistema. Sin código ni jerga técnica; eso va en `arquitectura.md`.
 >
-> **Última actualización:** 2026-09-28 — Fase 0 en curso: el primer cambio ya pasó la
-> revisión automática, el control del repositorio y la aprobación de otra persona. Falta ordenar
-> la rama inicial del repositorio y enlazar el tablero de seguimiento.
+> **Última actualización:** 2026-09-30 — el sistema es para toda la UNViMe, todas sus carreras
+> (decisión 0023). Fase 0 en curso: el primer cambio ya pasó la revisión automática, el control del
+> repositorio y la aprobación de otra persona. Falta ordenar la rama inicial del repositorio y
+> enlazar el tablero de seguimiento.
 
 ## El problema
 
-Cada cuatrimestre, la carrera de Ingeniería en Sistemas de Información de la UNViMe tiene que
-asignar a cada comisión de cada materia un día, un horario y un aula. Hoy eso se hace a mano.
-Cuesta días de trabajo, y aun así aparecen choques: dos materias del mismo año a la misma hora,
-un docente en dos lugares, una comisión en un aula donde no entran sus alumnos, o un laboratorio
-ocupado por una clase que no lo necesita mientras otra que sí lo necesita se queda sin él. Cuando
-se suman otras carreras que comparten el edificio, los docentes y las aulas, el problema deja de
-ser manejable a mano.
+Cada cuatrimestre, la UNViMe tiene que asignar un día, un horario y un aula a cada comisión de
+cada materia de todas sus carreras. Y es **una sola** asignación, no una por carrera: las
+carreras comparten edificios, aulas y docentes, así que el aula que le toca a una comisión es la
+misma que otra carrera necesita a la misma hora (decisión 0023).
+
+Hoy eso se hace a mano. Cuesta días de trabajo, y aun así aparecen choques: dos materias del
+mismo año a la misma hora, un docente en dos lugares, una comisión en un aula donde no entran sus
+alumnos, o un laboratorio ocupado por una clase que no lo necesita mientras otra que sí lo
+necesita se queda sin él. A la escala de la universidad entera —todas las carreras compitiendo
+por las aulas del edificio y por los mismos docentes— el problema deja de ser manejable a mano:
+nadie puede sostener todas las reglas a la vez sobre una instancia de ese tamaño.
 
 ## Qué hace
 
@@ -90,7 +95,7 @@ reglamento nos exige, en `marco-reglamentario.md`.
 | 3 | Obtener un horario que además respeta las reglas del plan de estudios, o saber por qué no existe. | No iniciada |
 | 4 | Lanzar la optimización desde la web y ver el horario por aula, docente y carrera/año. | No iniciada |
 | 5 | Cargar y corregir datos por formulario; registrar excepciones de aula por semana y ver la semana. | No iniciada |
-| 6 | Resolver la carrera completa y un escenario con varias carreras que comparten recursos. | No iniciada |
+| 6 | Resolver la instancia real: primero una carrera completa, después la universidad con todas sus carreras compartiendo aulas y docentes. | No iniciada |
 | 7 | Cuando no hay horario perfecto, obtener el mejor posible con la lista de reglas violadas. | No iniciada |
 | 8 | Mejorar la calidad del horario, tener en cuenta preferencias docentes, comparar corridas y publicar una. | No iniciada |
 

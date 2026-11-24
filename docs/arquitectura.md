@@ -4,9 +4,11 @@
 > Público: quien se suma al proyecto o lo defiende técnicamente. Acá va el modelo, las interfaces,
 > las decisiones enlazadas y la deuda. El estado en lenguaje llano va en `informe-de-gestion.md`.
 >
-> **Última actualización:** 2026-09-28 — Fase 0 en curso: PR #1 aprobado y mergeado con CI
-> verde; los adaptadores Claude, Codex, agy y Gemini están probados. Falta integrar esta
-> compatibilidad en `main`, restaurarla como rama predeterminada y enlazar Jira.
+> **Última actualización:** 2026-09-30 — alcance corregido a toda la UNViMe (decisión 0023); el
+> modelo de datos no cambia, porque el grupo de conflicto ya era (carrera, año, cuatrimestre).
+> Fase 0 en curso: PR #1 aprobado y mergeado con CI verde; los adaptadores Claude, Codex, agy y
+> Gemini están probados. Falta integrar esta compatibilidad en `main`, restaurarla como rama
+> predeterminada y enlazar Jira.
 
 ## 1. Stack y arquitectura
 
@@ -197,7 +199,7 @@ casos borde tienen test en `.githooks/tests/test_pre_push.sh`, con un agente sim
 | 3 | Solver A con restricciones curriculares, diagnóstico de infactibilidad | No iniciada |
 | 4 | Corrida desde la web, persistencia de la solución, grilla de horario | No iniciada |
 | 5 | Carga por formulario, excepciones por semana, vista semanal | No iniciada |
-| 6 | Instancia real ISI y multi-carrera, tiempos | No iniciada |
+| 6 | Instancia real: ISI completa y después la universidad completa (0023), tiempos | No iniciada |
 | 7 | Solver B: relajación con holguras y reporte de violaciones | No iniciada |
 | 8 | Solver B: blandas, preferencias, corridas múltiples, comparación, publicación | No iniciada |
 
