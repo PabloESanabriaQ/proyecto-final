@@ -36,8 +36,8 @@ Las Fases 1 y 2 corren en paralelo, unidas por el contrato de instancia (histori
 la Fase 2 se abren tres líneas: PPS sigue con 4 y 5; A hace la 3 y después la 6; B arranca la 7
 sobre las restricciones de recursos sin esperar a la 3, e integra la relajación curricular
 cuando la 3 cierra. El Proyecto A queda completo a nivel modelo al cerrar la 3 y a nivel
-sistema al cerrar la 4; la 6 es su validación sobre datos reales. Las Fases 7 y 8 son el
-Proyecto B. Los meses de cada línea están en los cronogramas de `propuestas/`.
+sistema al cerrar la 4; la 6 es su validación a escala, con datos simulados (ver Fase 6). Las
+Fases 7 y 8 son el Proyecto B. Los meses de cada línea están en los cronogramas de `propuestas/`.
 
 ---
 
@@ -485,10 +485,13 @@ sobrecargado, B absorbe la instancia universitaria (señal de 0020).
 ### Definiciones pendientes a tomar al llegar
 
 - **Tiempo objetivo** de resolución para la instancia real (número y procedencia).
-- **Disponibilidad de los datos reales** de ISI y de las demás carreras (quién los entrega, en
-  qué formato, con qué permiso). A escala de universidad ya no alcanza con la secretaría de una
-  sola carrera (0023).
-- Si la instancia universitaria se valida con datos reales o sintéticos.
+- **Datos reales o simulados: simulados** (acordado el 2026-10-10, falta registrarlo). No se
+  piden datos a secretaría académica; se construye una simulación lo más cercana posible a la
+  realidad. Como las propuestas aprobadas comprometen validación y experimentación sobre
+  instancias reales, es un cambio de alcance: se registra como decisión con los criterios de
+  simulación (AUL-36) y se avisa a la Comisión por el Profesor Guía antes del caso acotado
+  (AUL-43). Esa decisión dice también cómo se cumple el compromiso de las propuestas y con qué
+  criterio se cierra esta fase sobre datos simulados.
 - **Cuántos edificios** (0023). Si las carreras se reparten en más de un edificio o sede, hace
   falta una restricción que hoy no existe en R1–R11: **un docente no puede tener dictados
   consecutivos en edificios distintos sin tiempo de traslado**. Hay que confirmarlo con la
