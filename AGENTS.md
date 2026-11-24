@@ -41,9 +41,9 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 - Una fase se cierra con el checklist de `docs/plan-de-fases.md` ("Cierre de una fase") y los dos
   documentos vivos actualizados. Sin la salida de la verificación pegada, no hay cierre.
 - Python 3.14 y Node 24 (decisión 0017).
-- El trabajo que el plan de fases no contempla se escribe en `docs/plan-de-fases.md` **antes** de
-  entrar a Jira, y el estado de una issue sale de un hecho de git, no de la conversación
-  (`convenciones.md` §7, decisión 0024).
+- Una Historia que el plan de fases no contempla se escribe en `docs/plan-de-fases.md` **antes**
+  de entrar a Jira; las Tareas de andamio no van al plan (`convenciones.md` §7.3). El estado de
+  una issue sale de un hecho de git, no de la conversación (`convenciones.md` §7, decisión 0024).
 
 ## Cómo trabajar acá
 
