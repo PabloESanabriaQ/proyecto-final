@@ -71,3 +71,4 @@ entiende el criterio) y consecuencias solo favorables (sin costo ni señal es pu
 | [0021](0021-el-codigo-no-lleva-licencia-hasta-acordarla-con-el-profesor-guia.md) | El código no lleva licencia hasta acordarla con el Profesor Guía | Aceptada |
 | [0022](0022-antigravity-se-integra-tanto-con-agy-como-con-gemini-cli.md) | Antigravity se integra tanto con `agy` como con Gemini CLI | Aceptada — implementa de otro modo 0018 |
 | [0023](0023-el-alcance-es-toda-la-unvime-no-solo-una-carrera.md) | El alcance es toda la UNViMe, no una sola carrera; ISI es el escalón de validación | Aceptada |
+| [0024](0024-el-estado-de-jira-lo-mueve-el-agente-desde-hechos-de-git.md) | El estado de Jira lo mueve el agente desde hechos verificables de git, y el trabajo no planificado entra al plan antes que a Jira | Aceptada |
