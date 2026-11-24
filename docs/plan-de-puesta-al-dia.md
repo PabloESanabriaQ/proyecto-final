@@ -43,14 +43,15 @@ gantt
     Atenuables (AUL-49)                                :2026-11-16, 12d
     Esquema publicado (AUL-41)                         :crit, 2026-11-23, 3d
     solve (AUL-44)                                     :2026-11-30, 5d
-    Holguras R7 y R8 (AUL-52)                          :crit, 2026-12-09, 15d
+    Holguras R7 y R8 (AUL-52)                          :crit, 2026-12-09, 12d
     section Nico (B2)
     Criterios de simulación (AUL-36)                   :2026-11-16, 5d
     Paquete instalable (AUL-42)                        :2026-11-16, 12d
     Formatos, pesos y tope (AUL-50, AUL-51)            :2026-11-23, 5d
     Caso acotado (AUL-43)                              :2026-11-30, 4d
     Validador (AUL-47)                                 :2026-11-30, 19d
-    Primer nivel, con Pablo (AUL-53)                   :crit, 2026-12-14, 17d
+    Primer nivel, armado (AUL-53)                      :2026-12-14, 7d
+    Primer nivel, con Pablo (AUL-53)                   :crit, 2026-12-21, 10d
     section Hitos
     Etapa 1 cerrada                                    :milestone, 2026-12-04, 0d
     Etapa 2 cerrada                                    :milestone, 2026-12-30, 0d
@@ -58,7 +59,9 @@ gantt
 
 Las barras marcadas como críticas son el camino que no tiene margen: esquema (Pablo) → modelo de
 recursos (Hugo) → holguras (Pablo) → primer nivel (Nico y Pablo) → cierre (Hugo). Cada paso es de
-una persona distinta y espera al anterior.
+una persona distinta y espera al anterior. El primer nivel tiene una parte que no espera a las
+holguras: el armado (ver semana 5) corre en paralelo con AUL-52, y lo que queda en el camino
+crítico es la integración, que arranca con AUL-52 mergeada.
 
 ## Quién hace qué
 
@@ -111,14 +114,17 @@ avisa ese mismo día.
 ### Semana 5 — 14 al 18 de diciembre: cerrar el modelo y el validador
 
 - **Hugo:** AUL-45 con los tests de sus casos borde. PR y merge el viernes 18.
-- **Nico:** PR de AUL-47, y el validador probado sobre soluciones reales del solver. Se suma con
-  Pablo a AUL-53 (primer nivel).
-- **Pablo:** AUL-52, holguras de R7 y R8.
+- **Nico:** PR de AUL-47, y el validador probado sobre soluciones reales del solver. Arranca el
+  armado de AUL-53 (primer nivel) en una rama encima de la de AUL-52: la función objetivo sobre
+  las holguras que AUL-52 ya expone, la lectura de los pesos y el tope de AUL-51 y los tests
+  contra el caso acotado. Nada de eso necesita las holguras terminadas, solo su forma.
+- **Pablo:** AUL-52, holguras de R7 y R8, con el PR abierto el viernes 18.
 - **Entrega, viernes 18:** el modelo de recursos mergeado; todo lo que sigue se apoya en él.
 
 ### Semana 6 — 21 al 23 y 28 al 30 de diciembre: cierre de la Fase 2
 
-- **Pablo y Nico:** merge de AUL-52. AUL-53, primer nivel resolviendo el caso acotado.
+- **Pablo y Nico:** merge de AUL-52 el lunes 21. AUL-53 integra el armado con las holguras ya
+  mergeadas: primer nivel resolviendo el caso acotado.
 - **Hugo:** AUL-48 (cierre de la Fase 2): `solve` en `FACTIBLE`, `validar` con cero violaciones,
   `informe-de-gestion.md` y `arquitectura.md` al día.
 - **Hito, miércoles 30: etapa 2 cerrada.**
@@ -149,7 +155,7 @@ Están cargadas en Jira como vínculos "bloquea a".
 | AUL-41 esquema | AUL-47 validador |
 | AUL-37 límite de tiempo | AUL-46 estados |
 | AUL-45 recursos + AUL-49 atenuables | AUL-52 holguras |
-| AUL-51 pesos + AUL-52 holguras | AUL-53 primer nivel |
+| AUL-51 pesos + AUL-52 holguras | AUL-53 primer nivel (la integración; el armado arranca antes, semana 5) |
 | AUL-43 caso acotado + AUL-45 + AUL-47 | AUL-48 cierre de la Fase 2 |
 
 AUL-45 depende del esquema y no del `solve`: el modelo usa los modelos de datos, y la línea de
