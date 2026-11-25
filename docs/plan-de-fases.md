@@ -304,6 +304,14 @@ Proyecto A queda completo a nivel modelo.
 - Materia en dos carreras, grupos que se cruzan por docente compartido.
 - Comisión con 2 dictados y docente disponible solo 2 días: los dos días quedan fijados.
 - Comisión con 2 dictados y docente disponible 1 día: infactible, diagnóstico nombra R6 y 0007.
+
+  > **EN CONFLICTO con la decisión 0007:** sus consecuencias exigen rechazar esa entrada antes
+  > de resolver. Sin resolver; no implementar esa clasificación hasta que se decida. Detectado
+  > al revisar el contrato de AUL-41 (borrador 0027).
+
+  > La [propuesta 0029](decisiones/0029-los-dias-docentes-insuficientes-producen-infactibilidad-con-diagnostico.md)
+  > compara ambas opciones y recomienda conservar este caso como `INFACTIBLE` con diagnóstico.
+  > Pendiente de revisión del equipo; no resuelve todavía el conflicto.
 - Combinación cursable que existe pero es única para dos materias y ambas exigen el mismo bloque:
   infactible, diagnóstico nombra R1.
 - Juguete completo factible; juguete con un aula menos: factible o infactible con diagnóstico,
