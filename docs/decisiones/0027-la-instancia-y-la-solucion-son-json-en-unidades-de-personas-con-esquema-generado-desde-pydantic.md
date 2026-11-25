@@ -80,8 +80,9 @@ Alternativas evaluadas:
    sábado, 08:00–22:00 y bloques de 30 minutos, con la procedencia de [[0004]]. Admitir otros
    valores explícitos no resuelve la grilla por carrera pendiente de la Fase 6.
 
-   Los turnos tienen nombre único y rangos dentro de la jornada. Se propone que la cubran sin
-   huecos ni solapamientos, para que todo inicio pertenezca a un único turno ([[0011]]).
+   Los turnos tienen nombre único y rangos dentro de la jornada. Como regla de este contrato
+   propuesto, la carga rechaza una grilla cuyos turnos dejan huecos o se solapan. Así, cada
+   inicio admisible pertenece a un único turno para evaluar B3 ([[0011]]).
    Los valores por defecto son mañana 08:00–13:00, tarde 13:00–18:00 y noche 18:00–22:00,
    con la procedencia de [[0011]]. La conversión de horas a bloques es una utilidad de los
    modelos de datos, compartible sin compartir la comprobación de restricciones ([[0026]]).
@@ -129,9 +130,12 @@ Alternativas evaluadas:
    Lo que fija cada decisión: `planes` es la tabla Materia_Carrera, y la materia no tiene carrera
    propia ([[0006]]); `actividad` es `teoria`, `practica` o `teorico_practica`, y solo una
    práctica lleva `teoria`, que apunta a una comisión de teoría de la misma materia ([[0006]], R4);
-   `docentes` tiene al menos uno ([[0007]]); `dictados_por_semana` vale 1 por defecto y no puede
-   superar los días habilitados ([[0007]]); `alumnos` es una sola cifra ([[0005]]). Se propone
-   exigir alumnos y capacidades enteros mayores que cero, como criterio de este contrato;
+   `docentes` tiene al menos uno ([[0007]]) y `dictados_por_semana` vale 1 por defecto.
+   La carga rechaza más dictados semanales que días habilitados en el período: el límite se
+   deduce de exigir días distintos para los dictados de una misma comisión ([[0007]]).
+   La disponibilidad real de cada docente es otra comprobación, cuyo tratamiento se discute
+   en 0029. `alumnos` es una sola cifra ([[0005]]).
+   Se propone exigir alumnos y capacidades enteros mayores que cero como criterio del contrato;
    [[0005]] no fija por sí misma ese límite inferior.
    `preferencias` es solo del Proyecto B, y el A la ignora ([[0010]]); `prefijados` es opcional y
    sus campos `dia`, `desde` y `aula` pueden omitirse o ser nulos ([[0015]]).
@@ -159,8 +163,9 @@ Alternativas evaluadas:
    valores permitidos y patrón de horas `HH:MM` de 00:00 a 23:59. Las comprobaciones entre
    entidades y contra una grilla configurable las realiza Pydantic al cargar la instancia:
    ids únicos, referencias existentes, horas y duraciones dentro de la grilla, rangos no vacíos,
-   teoría de la misma materia para una práctica, dictados contra días habilitados y prefijados
-   con número válido y aula existente del tipo requerido o alternativo.
+   turnos que cubren la jornada sin huecos ni solapamientos, teoría de la misma materia para
+   una práctica, dictados contra días habilitados del período y prefijados con número válido
+   y aula existente del tipo requerido o alternativo.
 
    Según [[0015]], los prefijados se validan **antes de resolver**, sin invocar CP-SAT: capacidad
    si se fija aula; no-disponibilidades de todos los docentes si se fijan día e inicio; bloqueos
