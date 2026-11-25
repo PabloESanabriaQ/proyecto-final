@@ -1,6 +1,24 @@
 # 0027 — La instancia y la solución son JSON en unidades de personas, con esquema generado desde Pydantic
 
-**Estado:** Propuesta — 2026-11-24 (borrador; se acepta al mergear el PR de AUL-41)
+**Estado:** Propuesta — 2026-11-24; pendiente de revisión y acuerdo explícito del equipo.
+
+## Alcance de esta propuesta
+
+Los puntos 1–7, 9 y 10 describen la propuesta del contrato de instancia y los criterios
+compartidos de formato, versión y validación. El punto 8 es un inventario preliminar de
+solución y configuración: no define sus contratos completos ni autoriza a implementarlos.
+Las menciones a esos documentos en los demás puntos expresan criterios propuestos, no
+completan sus campos, tipos ni validaciones pendientes.
+
+La parte de instancia también conserva dos definiciones abiertas: el tratamiento de la
+capacidad del aula prefijada en B (0028) y la clasificación de los días docentes insuficientes
+(0029). Hasta que se acuerden, siguen vigentes 0015 y 0007, con el conflicto de esta última
+frente al plan señalado más abajo. No se presenta el contrato de instancia como cerrado.
+
+El merge de este PR publica el borrador para continuar la revisión; no acepta automáticamente
+esta decisión ni publica los modelos Pydantic o los JSON Schema de AUL-41. La aceptación
+requiere resolver o excluir explícitamente del alcance las definiciones abiertas y actualizar
+el estado de este archivo y del índice de decisiones de forma coherente.
 
 ## Contexto
 
@@ -159,7 +177,8 @@ Alternativas evaluadas:
    del validador previstos en las Fases 2 y 3. Compartir formatos no implica compartir lógica
    de verificación con el modelo.
 
-8. **Configuración y solución.** La configuración de una corrida es un documento aparte de la
+8. **Configuración y solución — inventario preliminar, pendiente de definición.**
+   La configuración de una corrida es un documento aparte de la
    instancia, como en `arquitectura.md` §3.1: `modelo` (`A` o `B`), `limite_tiempo_segundos`,
    `semilla`, y los pesos y el tope de sobrecupo del Proyecto B. Ninguno lleva valor por defecto
    en el código hasta que su decisión lo fije con procedencia ([[0010]]; AUL-37 para el límite,
