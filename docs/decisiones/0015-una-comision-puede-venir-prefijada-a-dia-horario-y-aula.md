@@ -2,6 +2,11 @@
 
 **Estado:** Aceptada — 2026-09-16
 
+> **Propuesta de modificación pendiente:**
+> [0028](0028-el-modelo-b-admite-sobrecupo-acotado-en-aulas-prefijadas.md) plantea admitir
+> sobrecupo acotado en el aula prefijada bajo B, y compara mantener el rechazo en A y B.
+> No está aceptada: esta decisión conserva su regla vigente.
+
 ## Contexto
 
 En la práctica es habitual que algunas comisiones tengan el horario o el aula decididos de

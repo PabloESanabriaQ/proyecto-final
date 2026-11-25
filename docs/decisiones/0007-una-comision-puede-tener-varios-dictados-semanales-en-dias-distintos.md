@@ -2,6 +2,16 @@
 
 **Estado:** Aceptada — 2026-09-16
 
+> **EN CONFLICTO con `plan-de-fases.md`, Fase 3:** las consecuencias de esta decisión piden
+> rechazar una entrada con más dictados que días disponibles del docente; el plan pide
+> `INFACTIBLE` con diagnóstico para ese caso. Sin resolver; no implementar esa clasificación
+> hasta que se decida. Revisión de AUL-41, borrador [[0027]].
+
+> **Propuesta de resolución pendiente:**
+> [0029](0029-los-dias-docentes-insuficientes-producen-infactibilidad-con-diagnostico.md)
+> recomienda `INFACTIBLE` con diagnóstico y compara mantener el error de entrada.
+> No está aceptada: esta decisión todavía no fue modificada.
+
 ## Contexto
 
 El Excel de ejemplo traía `Duracion_Horas` por comisión pero no cuántas veces por semana se dicta.

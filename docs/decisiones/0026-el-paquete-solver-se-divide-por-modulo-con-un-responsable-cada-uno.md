@@ -10,6 +10,10 @@ para Hugo (A), el validador y las instancias para Pablo (B2). Pide registrar la 
 antes de publicar el esquema (AUL-41), porque desde ahí los tres escriben en el mismo paquete a la
 vez y en ramas apiladas.
 
+El reparto corresponde al cambio de roles del 2026-11-24, registrado en el commit `4e82443`
+de `docs/AUL-54-cambio-de-roles`: Nico es B1 y Pablo es B2. La base de esta rama todavía tiene
+la versión anterior del plan; ese texto no cambia el reparto propuesto aquí.
+
 Alternativas evaluadas:
 
 - **Por restricción** (cada persona implementa unas R en el modelo y en el validador). Reparte
@@ -30,7 +34,7 @@ Alternativas evaluadas:
 | `aulero_solver/esquema.py`, `solver/esquema/` | La generación del JSON Schema y los esquemas versionados | Nico |
 | `aulero_solver/cli.py` y `solve` en `__init__.py` | La línea de comandos y el punto de entrada `solve` (AUL-44) | Nico |
 | `aulero_solver/modelo/` | El modelo CP-SAT: grilla, variables y restricciones duras (AUL-45, AUL-46) | Hugo |
-| `aulero_solver/relajacion/` | Holguras y niveles del Proyecto B (AUL-52, AUL-53) | Nico y Pablo |
+| `aulero_solver/relajacion/` | Holguras (AUL-52), Nico; función objetivo y niveles (AUL-53), Pablo | Nico y Pablo, cada uno en su parte |
 | `aulero_solver/validador.py` y `validar` en `__init__.py` | El validador independiente (AUL-47) | Pablo |
 | `solver/instancias/` | Instancias de referencia: caso acotado y simuladas (AUL-36, AUL-43) | Pablo |
 | `solver/tests/` | Cada test con el módulo que prueba, y del mismo responsable | El del módulo |
@@ -39,11 +43,19 @@ Alternativas evaluadas:
    rama, lo dice en el PR y suma al responsable como revisor, además de la ronda de revisión del
    plan. Esto no reemplaza la aprobación de otra persona que pide la [[0014]].
 2. **El contrato es de los tres.** Un cambio en `instancia.py`, `solucion.py` o
-   `configuracion.py` que altere el JSON Schema cambia la versión del esquema ([[0027]]) y se
-   anuncia en el PR, como ya pedía `arquitectura.md` §3.1.
-3. **`modelo/` no importa `validador.py`, ni al revés.** Los dos leen solo los modelos de datos.
-   Así el validador comprueba la solución sin compartir código con quien la produjo. Se verifica
-   con un contrato de `import-linter`, como la frontera de la [[0012]].
+   `configuracion.py` que altere los documentos admitidos cambia la versión del esquema
+   ([[0027]]) y se anuncia en el PR, como ya pedía `arquitectura.md` §3.1. Un cambio solo de
+   descripción o formato del JSON Schema no cambia por sí mismo el contrato.
+3. **El validador es independiente de ambos modelos.** `modelo/` y `relajacion/` no importan
+   `validador.py`; el validador no importa esos módulos ni OR-Tools, tampoco a través de otros
+   módulos. Comparte con ellos los modelos de datos y conversiones de unidades, pero no el
+   cálculo que decide si una restricción se cumple. Las holguras sí pueden apoyarse en el modelo
+   de recursos de Hugo. Se verifica con contratos de `import-linter`, como la frontera de la
+   [[0012]], cuando existan los módulos correspondientes.
+4. **Rutas respecto de la arquitectura.** `modelo/` y `relajacion/` son la organización propuesta
+   para los futuros archivos `modelo_a.py`, `modelo_b.py` y `restricciones/` del árbol de
+   `arquitectura.md` §1. No hay implementación que migrar todavía. Al publicar AUL-41 se
+   actualizará ese árbol y se enlazará esta decisión; hasta su aceptación sigue siendo propuesta.
 
 ## Consecuencias
 
@@ -57,4 +69,5 @@ no con herramientas.
 **Riesgo abierto:** que la regla 3 de arriba se rompa en la práctica, porque el modelo y el
 validador terminan necesitando el mismo cálculo (por ejemplo, convertir horas a bloques). **La
 señal:** un PR que haga fallar el contrato de `import-linter` o que pida relajarlo. Ahí ese
-cálculo sube a los modelos de datos, que son de los tres, y no se cruza la frontera.
+cálculo de unidades sube a los modelos de datos, que son de los tres, y no se cruza la frontera.
+La lógica de comprobación de las restricciones se mantiene independiente.

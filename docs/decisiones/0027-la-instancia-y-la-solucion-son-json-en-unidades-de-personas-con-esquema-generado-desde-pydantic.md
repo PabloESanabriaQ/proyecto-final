@@ -10,7 +10,8 @@ las instancias simuladas (Pablo), la línea de comandos (Nico) y, del lado de la
 desde la base (HU-1.5, AUL-17). Las entidades ya están fijadas por las decisiones [[0004]] a
 [[0011]] y [[0015]], y resumidas en `arquitectura.md` §2; lo que falta es la forma concreta, cómo
 se escriben los horarios, cómo se referencian las entidades entre sí, qué valida el esquema y cómo
-se versiona. La referencia de diseño que pide AUL-41 es la formulación de instancias de la ITC2019.
+se versiona. La referencia de diseño que pide AUL-41 es el
+[formato oficial de la ITC2019](https://www.itc2019.org/format).
 
 Alternativas evaluadas:
 
@@ -21,7 +22,7 @@ Alternativas evaluadas:
   sale directo de la planilla y de la base, y no cambia si cambia la grilla. Cuesta una conversión
   a bloques y una validación de alineación. **Se elige.**
 - **El formato XML de la ITC2019 tal cual.** Tiene herramientas y validadores, pero representa el
-  tiempo como cadenas de bits de semanas y días, y sus restricciones son un catálogo genérico de
+  días y semanas como cadenas de bits, y sus restricciones son un catálogo genérico de
   distribución con penalidades por opción. Nuestras reglas ya están fijadas por las decisiones y no
   entran en ese catálogo sin forzarlas. Se toma su estructura (ver Decisión, punto 9), no su
   formato.
@@ -38,19 +39,40 @@ Alternativas evaluadas:
    coincide con el generado.
 
 2. **Versión.** Cada documento lleva `version_esquema`, con la forma `MAYOR.MENOR`. Arranca en
-   `1.0`. Un cambio que hace inválido un documento que antes era válido sube la mayor; uno que solo
-   agrega campos opcionales sube la menor. El paquete rechaza una mayor distinta de la suya. La
-   versión del esquema es independiente de la del paquete.
+   `1.0`, por criterio de esta propuesta: primera publicación del contrato. Un cambio que hace
+   inválido un documento que antes era válido sube la mayor; una ampliación que conserva los
+   documentos anteriores sube la menor. Esto también incluye las validaciones de Pydantic que
+   no aparecen en el JSON Schema. Cada versión publicada conserva sus esquemas; los nombres del
+   punto 1 se guardan bajo `solver/esquema/1.0/` para la primera publicación.
+
+   El paquete declara las versiones que admite y rechaza las que no conoce, incluso una menor
+   futura: compartir la mayor no garantiza que un lector antiguo entienda campos nuevos.
+   Inicialmente admite `1.0`. La versión del esquema es independiente de la del paquete. Los
+   campos desconocidos se rechazan para detectar errores de escritura, sin convertirlos en
+   campos ignorados. Esta política es una elección técnica de la propuesta.
 
 3. **Horarios en unidades de personas.** Los días son `lunes`, `martes`, `miercoles`, `jueves`,
    `viernes`, `sabado` y `domingo`; el período dice cuáles están habilitados. Las horas son texto
    `HH:MM`, de 24 horas. Las duraciones van en minutos. La validación exige que toda hora y toda
-   duración caigan en múltiplos del bloque del período ([[0004]]) y dentro de la jornada. Los
-   rangos son semiabiertos: `desde` incluido, `hasta` excluido.
+   duración se alineen con la grilla del período ([[0004]]): los inicios se cuentan desde el
+   inicio de la jornada, y las duraciones son cantidades enteras positivas de bloques. La
+   jornada contiene una cantidad entera de bloques y no cruza medianoche. Los rangos son
+   semiabiertos: `desde` incluido, `hasta` excluido; una clase puede terminar justo al cierre.
+   `dias` es una lista no vacía y sin repetidos. Se conservan como valores por defecto lunes a
+   sábado, 08:00–22:00 y bloques de 30 minutos, con la procedencia de [[0004]]. Admitir otros
+   valores explícitos no resuelve la grilla por carrera pendiente de la Fase 6.
+
+   Los turnos tienen nombre único y rangos dentro de la jornada. Se propone que la cubran sin
+   huecos ni solapamientos, para que todo inicio pertenezca a un único turno ([[0011]]).
+   Los valores por defecto son mañana 08:00–13:00, tarde 13:00–18:00 y noche 18:00–22:00,
+   con la procedencia de [[0011]]. La conversión de horas a bloques es una utilidad de los
+   modelos de datos, compartible sin compartir la comprobación de restricciones ([[0026]]).
 
 4. **Identificadores.** Cada entidad lleva un `id` de texto que pone quien arma la instancia (la
    base, la planilla o el simulador). Las entidades se referencian por `id`. Los ids son únicos
    dentro de su tipo de entidad, y toda referencia tiene que apuntar a una entidad existente.
+   Los ids no son vacíos. Una referencia de salida se interpreta junto con la instancia que
+   se entrega al validador; no se consulta la base de datos para resolverla ([[0012]]).
 
 5. **Forma de la instancia.** Las claves van en español, en `snake_case` y sin tildes (`anio`).
 
@@ -62,7 +84,9 @@ Alternativas evaluadas:
        "dias": ["lunes", "martes", "miercoles", "jueves", "viernes", "sabado"],
        "jornada": {"desde": "08:00", "hasta": "22:00"},
        "bloque_minutos": 30,
-       "turnos": [{"nombre": "manana", "desde": "08:00", "hasta": "13:00"}]
+       "turnos": [{"nombre": "manana", "desde": "08:00", "hasta": "13:00"},
+                  {"nombre": "tarde", "desde": "13:00", "hasta": "18:00"},
+                  {"nombre": "noche", "desde": "18:00", "hasta": "22:00"}]
      },
      "carreras": [{"id": "ISI", "nombre": "Ingeniería en Sistemas de Información"}],
      "materias": [{"id": "PROG1", "nombre": "Programación I",
@@ -88,9 +112,24 @@ Alternativas evaluadas:
    propia ([[0006]]); `actividad` es `teoria`, `practica` o `teorico_practica`, y solo una
    práctica lleva `teoria`, que apunta a una comisión de teoría de la misma materia ([[0006]], R4);
    `docentes` tiene al menos uno ([[0007]]); `dictados_por_semana` vale 1 por defecto y no puede
-   superar los días habilitados ([[0007]]); `alumnos` es una sola cifra, mayor que cero ([[0005]]);
+   superar los días habilitados ([[0007]]); `alumnos` es una sola cifra ([[0005]]). Se propone
+   exigir alumnos y capacidades enteros mayores que cero, como criterio de este contrato;
+   [[0005]] no fija por sí misma ese límite inferior.
    `preferencias` es solo del Proyecto B, y el A la ignora ([[0010]]); `prefijados` es opcional y
-   cada campo de un prefijado también ([[0015]]).
+   sus campos `dia`, `desde` y `aula` pueden omitirse o ser nulos ([[0015]]).
+   `dictado` es obligatorio y usa los números de 1 a `dictados_por_semana`, por criterio de
+   presentación de esta propuesta. Hay a lo sumo un prefijado por número de dictado y cada
+   prefijado fija al menos uno de los tres campos. Sin fijaciones se usa la lista vacía.
+
+   Cada materia declara al menos un grupo en `planes`, sin ternas repetidas; cada práctica
+   requiere su referencia `teoria` y las otras actividades llevan `teoria` nula u omitida.
+   La lista de docentes no repite ids. `no_disponible`, `preferencias`, `bloqueos`,
+   `tipos_aula_alternativos` y `prefijados` tienen lista vacía por defecto. Una preferencia
+   tiene la misma forma temporal que una no-disponibilidad: `dia`, `desde` y `hasta`; su
+   penalización pertenece al Proyecto B y no se define aquí ([[0010]]).
+
+   Las colecciones de entidades existen aunque estén vacías. En particular, cero comisiones
+   es una entrada válida y puede producir una solución factible vacía, como exige la Fase 2.
 
 6. **Tipos de aula alternativos (AUL-39).** Cada comisión lleva `tipos_aula_alternativos`: una
    lista de ids de tipos de aula, vacía por defecto. No tiene orden ni repetidos, y no incluye el
@@ -99,13 +138,26 @@ Alternativas evaluadas:
    pide ninguna decisión.
 
 7. **Qué valida cada capa.** El JSON Schema valida la estructura: tipos, campos obligatorios,
-   valores permitidos y formato de las horas. No puede validar referencias ni la grilla. Eso lo
-   valida el modelo Pydantic al cargar la instancia: ids únicos, referencias existentes, horas y
-   duraciones alineadas a la grilla y dentro de la jornada, `desde` antes que `hasta`, la teoría de
-   una práctica, los dictados contra los días habilitados, y que un prefijado apunte a un dictado
-   que exista y a un aula del tipo requerido o alternativo. La coherencia de un prefijado con la
-   capacidad, la no disponibilidad del docente y los bloqueos del aula ([[0015]]) se agrega con
-   `solve` (AUL-44), porque cruza más de una entidad y no cambia el esquema.
+   valores permitidos y patrón de horas `HH:MM` de 00:00 a 23:59. Las comprobaciones entre
+   entidades y contra una grilla configurable las realiza Pydantic al cargar la instancia:
+   ids únicos, referencias existentes, horas y duraciones dentro de la grilla, rangos no vacíos,
+   teoría de la misma materia para una práctica, dictados contra días habilitados y prefijados
+   con número válido y aula existente del tipo requerido o alternativo.
+
+   Según [[0015]], los prefijados se validan **antes de resolver**, sin invocar CP-SAT: capacidad
+   si se fija aula; no-disponibilidades de todos los docentes si se fijan día e inicio; bloqueos
+   del aula si además se fija aula. Una fijación parcial no inventa los valores libres para
+   comprobar un choque concreto. La compatibilidad conjunta entre prefijados y el resto de la
+   planificación se resuelve en el modelo; sus conflictos no se convierten automáticamente en
+   errores estructurales. Los dos conflictos documentales abiertos se detallan más abajo.
+
+   Cargar una solución valida su forma y los tipos de sus campos. La comprobación de referencias,
+   asignaciones completas y únicas por dictado, duración, grilla, días distintos y restricciones
+   frente a la instancia corresponde a `validar(instancia, solucion)`. Debe poder recibir una
+   asignación con hora bien formada pero fuera de jornada, con referencia inexistente o con
+   superposición, y reportar el error: rechazarla al deserializar impediría los casos de prueba
+   del validador previstos en las Fases 2 y 3. Compartir formatos no implica compartir lógica
+   de verificación con el modelo.
 
 8. **Configuración y solución.** La configuración de una corrida es un documento aparte de la
    instancia, como en `arquitectura.md` §3.1: `modelo` (`A` o `B`), `limite_tiempo_segundos`,
@@ -117,26 +169,51 @@ Alternativas evaluadas:
    y valor objetivo por nivel). La forma de cada violación la fija AUL-50 y la del diagnóstico la
    Fase 3. Hasta entonces quedan con una forma mínima (restricción, entidades y magnitud, para la
    violación; lista de restricciones, para el diagnóstico), que esas tareas pueden cambiar con una
-   versión menor si solo agregan campos.
+   versión menor si solo agregan campos opcionales. Antes de codificar se escribirá la forma
+   exacta de cada campo de configuración y salida: este párrafo todavía es un inventario, no
+   un contrato completo. No se inventan pesos, topes, semilla ni límite de tiempo por defecto.
 
-9. **Lo que se toma de la ITC2019.** Instancia y solución en documentos separados; entidades con
-   id y referencias por id; las aulas con sus bloqueos como entidad propia; la solución como lista
-   plana de asignaciones de un dictado a un horario y un aula. Lo que no se toma: el formato XML,
-   el tiempo como cadenas de bits, las penalidades por opción de horario o aula y el catálogo de
-   restricciones de distribución.
+9. **Lo que se toma de la ITC2019.** Del [formato oficial](https://www.itc2019.org/format)
+   se toman las entidades identificadas y sus referencias, los bloqueos en las aulas y una
+   solución que enumera asignaciones. Nuestra separación por dictado es una adaptación de
+   Aulero ([[0007]]): ITC2019 asigna a cada clase un patrón de días y semanas, un inicio y un
+   aula compartidos por sus encuentros. Su solución puede estar en un documento separado o
+   incluida en el problema. Aulero elige documentos separados ([[0012]]) y un aula e inicio por
+   dictado. Tampoco adopta XML, inscripciones de alumnos, días y semanas binarios, penalidades
+   por opción ni el catálogo de restricciones de distribución.
 
 10. **Fuera del esquema.** Las excepciones de aula por semana, la cantidad de semanas y la fecha
     de inicio del período ([[0008]]) no entran al solver: las resuelve la API después de la
     corrida. La corrida y su historia son de la base (PPS).
 
+## Puntos abiertos antes de implementar
+
+- **Prefijado con capacidad insuficiente en B.** [[0015]] exige error de entrada por capacidad
+  insuficiente del aula prefijada, mientras [[0010]] permite relajar R7 con un tope.
+  [Propuesta 0028](0028-el-modelo-b-admite-sobrecupo-acotado-en-aulas-prefijadas.md): se recomienda
+  admitirlo dentro del tope en B y mantener el rechazo en A. La alternativa más viable es
+  conservar el rechazo en ambos. Pendiente de revisión del equipo; 0015 no cambia todavía.
+- **Más dictados que días disponibles del docente.** [[0007]], en sus consecuencias, exige
+  rechazar esa entrada; el caso borde de Fase 3 pide `INFACTIBLE` con diagnóstico de R6 y 0007.
+  [Propuesta 0029](0029-los-dias-docentes-insuficientes-producen-infactibilidad-con-diagnostico.md):
+  se recomienda `INFACTIBLE` con diagnóstico en A y B. La alternativa más viable es mantener el
+  error de entrada y ajustar el plan. Pendiente de revisión del equipo; el conflicto sigue
+  abierto. El límite estructural contra la cantidad de días del período sí queda definido.
+- **Contrato exacto de salida y configuración.** Falta detallar tipos, obligatoriedad y ejemplos
+  JSON; en particular, qué contiene `TIEMPO_AGOTADO` si se encontró una solución, cómo se distingue
+  de no haberla encontrado y qué métricas indican el progreso de los niveles de B. También falta
+  acordar con AUL-50 la forma inicial de violaciones y con AUL-37/AUL-51 sus parámetros. Los
+  formatos mínimos del punto 8 siguen siendo propuestas; no cierran esas tareas.
+
 ## Consecuencias
 
 **A favor:** el caso acotado y las instancias simuladas se escriben y se revisan a mano; la PPS
 exporta sin convertir horarios; el esquema publicado y el código no se pueden desalinear; los
-huecos de AUL-50, AUL-51 y la Fase 3 están marcados y no frenan a nadie.
+huecos de AUL-37, AUL-50, AUL-51 y la Fase 3 están identificados para acordarlos antes de
+implementar los campos afectados.
 
-**En contra:** el modelo y el validador convierten horas a bloques cada uno, y la conversión tiene
-que vivir en los modelos de datos para no romper la regla 3 de la [[0026]]. La validación que no
+**En contra:** el modelo y el validador necesitan convertir horas a bloques; la conversión vive
+en los modelos de datos para no romper la regla 3 de la [[0026]]. La validación que no
 expresa el JSON Schema solo la tiene quien usa el paquete de Python: un consumidor en otro lenguaje
 puede armar un documento que pasa el esquema y falla al cargarse.
 
