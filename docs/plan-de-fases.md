@@ -204,7 +204,8 @@ prueba un horario que respeta docentes, aulas, capacidad, tipo de aula, bloqueos
 verifique con un validador que no depende del solver.
 
 **Equipo:** A + B (base común, decisión 0020). **Decisiones que aplica:** 0003, 0004, 0005,
-0007 (parcial: un dictado), 0009, 0012.
+0007 (parcial: un dictado), 0009, 0012. **Definición formal:** `modelo-formal.md` (grilla, R5–R8,
+R11 y exclusividad de aula, §5).
 
 ### Historias
 
@@ -272,7 +273,8 @@ varios dictados por semana, una materia compartida— se resuelva respetando R1�
 existencial, o que el solver diga qué grupo de restricciones impide resolverlo. Con esto el
 Proyecto A queda completo a nivel modelo.
 
-**Equipo:** A. **Decisiones que aplica:** 0001, 0006, 0007, 0015.
+**Equipo:** A. **Decisiones que aplica:** 0001, 0006, 0007, 0015, 0032. **Definición formal:**
+`modelo-formal.md` (R1–R4, días distintos y prefijados, §5).
 
 ### Historias
 
@@ -311,6 +313,11 @@ Proyecto A queda completo a nivel modelo.
 - Comisión con 2 dictados y docente disponible 1 día: infactible, diagnóstico nombra R6 y 0007.
 - Combinación cursable que existe pero es única para dos materias y ambas exigen el mismo bloque:
   infactible, diagnóstico nombra R1.
+- Tres materias de un grupo compatibles de a pares pero sin una elección conjunta de
+  combinaciones: infactible, y el validador reporta R1 sobre una solución así (decisión 0032).
+- Materia con una teoría con práctica y otra teoría sin práctica: la teoría sola es una
+  combinación válida (0032).
+- Materia de un plan sin comisiones en la instancia: no restringe a su grupo (0032).
 - Juguete completo factible; juguete con un aula menos: factible o infactible con diagnóstico,
   según los datos (el resultado se registra como referencia).
 - Dictado con solo el día pre-fijado: el solver elige bloque y aula; con solo el aula: elige día
@@ -324,6 +331,8 @@ Proyecto A queda completo a nivel modelo.
 ### Definiciones pendientes a tomar al llegar
 
 - ~~Comisiones pre-fijadas~~ — entrada opcional por dictado, decisión 0015 (2026-09-16).
+- ~~Lectura de R1–R3: par a par o global~~ — global, una combinación por materia elegida en
+  conjunto para el grupo, decisión 0032 (2026-11-27).
 - **Optativas:** confirmar que participan de R1 como cualquier materia de su grupo (0005 las
   trata como entrada; falta decir si chocan con las obligatorias del año).
 - Si el **diagnóstico de infactibilidad** (3.7) es parte obligatoria del Proyecto A o se difiere a

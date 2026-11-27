@@ -4,6 +4,7 @@
 |---|---|---|
 | [`informe-de-gestion.md`](informe-de-gestion.md) | Quien evalúa o usa el sistema | Documento vivo, nivel gestión: problema, qué hace, decisiones en lenguaje llano, **estado de avance**, fuera de alcance. |
 | [`arquitectura.md`](arquitectura.md) | Quien se suma o defiende el proyecto | Documento vivo, nivel técnico: stack, modelo, interfaces, tests, cómo correrlo, deuda. |
+| [`modelo-formal.md`](modelo-formal.md) | Quien implementa o valida el modelo, y el informe final | Definición formal del Proyecto A: grilla, conjuntos, parámetros, variables y R1–R11 como fórmulas, con la decisión de la que sale cada una. |
 | [`plan-de-fases.md`](plan-de-fases.md) | El equipo | Fases, historias de usuario para Jira, casos borde, **definiciones pendientes por fase**, fuera de alcance. |
 | [`decisiones/`](decisiones/README.md) | El equipo | Registro de decisiones de diseño, una por archivo. **Cuando contradice a cualquier otro documento, manda el registro.** |
 | [`convenciones.md`](convenciones.md) | El equipo | Ramas, las dos puertas de revisión, linters por parte, accesibilidad, tests, **y el flujo de Jira (§7)**. |

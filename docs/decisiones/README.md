@@ -53,7 +53,7 @@ entiende el criterio) y consecuencias solo favorables (sin costo ni señal es pu
 | [0003](0003-cp-sat-es-el-unico-motor-de-resolucion.md) | CP-SAT es el único motor de resolución; se descartan el algoritmo genético y el aprendizaje por refuerzo | Aceptada |
 | [0004](0004-la-grilla-temporal-es-lunes-a-sabado-de-8-a-22-en-bloques-de-30-minutos.md) | La grilla temporal es lunes a sábado, 08:00 a 22:00, en bloques de 30 minutos | Aceptada |
 | [0005](0005-la-cantidad-de-alumnos-de-una-comision-es-entrada-y-el-solver-elige-el-aula.md) | La cantidad de alumnos de una comisión es dato de entrada y el solver elige un aula que la contenga | Aceptada |
-| [0006](0006-el-conflicto-curricular-se-define-por-carrera-anio-y-cuatrimestre-con-lectura-existencial.md) | El conflicto curricular se define por (carrera, año, cuatrimestre), con lectura existencial y materias compartidas en varios grupos | Aceptada |
+| [0006](0006-el-conflicto-curricular-se-define-por-carrera-anio-y-cuatrimestre-con-lectura-existencial.md) | El conflicto curricular se define por (carrera, año, cuatrimestre), con lectura existencial y materias compartidas en varios grupos | Aceptada — modificada por 0032 |
 | [0007](0007-una-comision-puede-tener-varios-dictados-semanales-en-dias-distintos.md) | Una comisión puede tener varios dictados semanales, de igual duración y en días distintos | Aceptada |
 | [0008](0008-el-horario-es-semanal-y-las-excepciones-de-aula-se-resuelven-fuera-del-modelo.md) | El horario es semanal y repetitivo; las excepciones de aula por semana se resuelven fuera del modelo de optimización | Aceptada |
 | [0009](0009-el-tipo-de-aula-requerido-es-exacto-salvo-alternativas-declaradas-por-la-comision.md) | El tipo de aula requerido es exacto, salvo alternativas declaradas explícitamente por la comisión | Aceptada |
@@ -75,3 +75,4 @@ entiende el criterio) y consecuencias solo favorables (sin costo ni señal es pu
 | [0025](0025-el-agente-crea-y-mueve-issues-de-jira-solo-con-funciones-gratuitas.md) | El agente crea y mueve las issues de Jira, y solo con funciones del plan gratuito | Aceptada — modifica 0024 |
 | [0030](0030-el-proyecto-a-es-factibilidad-pura-con-resultado-reproducible.md) | El Proyecto A es factibilidad pura, sin función objetivo, con resultado reproducible | Aceptada |
 | [0031](0031-el-limite-de-tiempo-por-defecto-es-de-60-segundos-de-reloj.md) | El límite de tiempo por defecto es de 60 segundos de reloj, con búsqueda reproducible | Aceptada |
+| [0032](0032-la-lectura-existencial-de-r1-r3-exige-una-eleccion-global-de-combinaciones-por-grupo.md) | La lectura existencial de R1–R3 exige una elección global de una combinación por materia en cada grupo | Aceptada — modifica 0006 |

@@ -81,7 +81,8 @@ Excel / formulario ──► importers (validación) ──► BD
 ## 2. Modelo
 
 Las reglas de dominio están en el registro de decisiones; acá va la estructura que las
-implementa. El esquema se detalla al implementarlo en la Fase 1; esta es la forma que las
+implementa. La definición formal (conjuntos, variables y cada restricción como fórmula) está en
+[`modelo-formal.md`](modelo-formal.md). El esquema se detalla al implementarlo en la Fase 1; esta es la forma que las
 decisiones ya fijan.
 
 | Entidad | Atributos clave | Decisiones |

@@ -13,6 +13,7 @@ vive en `docs/informe-de-gestion.md` y solo ahí.
 
 - **Estado de avance y qué hace el sistema:** `docs/informe-de-gestion.md`.
 - **Modelo, interfaces, estructura, deuda:** `docs/arquitectura.md`.
+- **Definición formal del problema (grilla y R1–R11 como fórmulas):** `docs/modelo-formal.md`.
 - **Qué hace cada persona del Proyecto Final hasta el 2026-12-30 (plan de puesta al día, con
   issues de Jira por rol y por semana):** `docs/plan-de-puesta-al-dia.md`.
 - **Fases, historias, definiciones pendientes por fase, checklist de cierre:**

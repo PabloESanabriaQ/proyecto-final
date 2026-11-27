@@ -57,7 +57,9 @@ en el [registro de decisiones](decisiones/README.md).
   histórico; el sistema busca un aula donde entren (0005). No decide cupos.
 - **Cuando una materia tiene varias comisiones, alcanza con que exista una combinación
   cursable** (una teoría con su práctica) que no choque con las demás materias del año (0006). No
-  hace falta que todas las combinaciones estén libres de choques.
+  hace falta que todas las combinaciones estén libres de choques, pero sí que se pueda elegir una
+  por materia y cursar todas juntas: que cada par de materias sea compatible por separado no
+  alcanza (0032).
 - **Una materia compartida por varias carreras** respeta las reglas de cada carrera en la que se
   dicta (0006).
 - **Una comisión puede dictarse más de una vez por semana**, siempre en días distintos (0007).
