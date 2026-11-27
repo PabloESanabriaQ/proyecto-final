@@ -241,7 +241,7 @@ verifique con un validador que no depende del solver.
 - Validador sobre una solución con una asignación fuera de grilla, con superposición de docente,
   con superposición de aula, con sobrecupo, con tipo no declarado: reporta cada una por su nombre.
 - Dos corridas de `solve` sobre la misma instancia y la misma configuración (misma semilla):
-  asignaciones idénticas (decisión 0026).
+  asignaciones idénticas (decisión 0030).
 
 ### Definiciones pendientes a tomar al llegar
 
@@ -250,7 +250,7 @@ verifique con un validador que no depende del solver.
   del caso de prueba.
 - **Límite de tiempo por defecto** de una corrida (y de dónde sale el número).
 - ~~Objetivo del Proyecto A~~ — factibilidad pura, sin función objetivo, con resultado
-  reproducible, decisión 0026 (2026-11-24).
+  reproducible, decisión 0030 (2026-11-24).
 - **Mecanismo de tipos alternativos** en la instancia (lista por comisión, según 0009).
 
 ### Cierre

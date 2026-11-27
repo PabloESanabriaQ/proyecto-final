@@ -73,4 +73,4 @@ entiende el criterio) y consecuencias solo favorables (sin costo ni señal es pu
 | [0023](0023-el-alcance-es-toda-la-unvime-no-solo-una-carrera.md) | El alcance es toda la UNViMe, no una sola carrera; ISI es el escalón de validación | Aceptada |
 | [0024](0024-el-estado-de-jira-lo-mueve-el-agente-desde-hechos-de-git.md) | El estado de Jira lo mueve el agente desde hechos verificables de git, y el trabajo no planificado entra al plan antes que a Jira | Aceptada — modificada por 0025 |
 | [0025](0025-el-agente-crea-y-mueve-issues-de-jira-solo-con-funciones-gratuitas.md) | El agente crea y mueve las issues de Jira, y solo con funciones del plan gratuito | Aceptada — modifica 0024 |
-| [0026](0026-el-proyecto-a-es-factibilidad-pura-con-resultado-reproducible.md) | El Proyecto A es factibilidad pura, sin función objetivo, con resultado reproducible | Aceptada |
+| [0030](0030-el-proyecto-a-es-factibilidad-pura-con-resultado-reproducible.md) | El Proyecto A es factibilidad pura, sin función objetivo, con resultado reproducible | Aceptada |

@@ -1,4 +1,4 @@
-# 0026 — El Proyecto A es factibilidad pura, sin función objetivo, con resultado reproducible
+# 0030 — El Proyecto A es factibilidad pura, sin función objetivo, con resultado reproducible
 
 **Estado:** Aceptada — 2026-11-24
 
