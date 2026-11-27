@@ -240,6 +240,8 @@ verifique con un validador que no depende del solver.
 - Docente con dos comisiones que solo caben en el mismo bloque: infactible.
 - Validador sobre una solución con una asignación fuera de grilla, con superposición de docente,
   con superposición de aula, con sobrecupo, con tipo no declarado: reporta cada una por su nombre.
+- Dos corridas de `solve` sobre la misma instancia y la misma configuración (misma semilla):
+  asignaciones idénticas (decisión 0030).
 
 ### Definiciones pendientes a tomar al llegar
 
@@ -247,9 +249,8 @@ verifique con un validador que no depende del solver.
   una instancia sintética con la misma forma; la historia 2.5 no se cierra sin los datos reales
   del caso de prueba.
 - **Límite de tiempo por defecto** de una corrida (y de dónde sale el número).
-- **Objetivo del Proyecto A:** factibilidad pura o un objetivo trivial de desempate (por ejemplo,
-  minimizar el bloque de fin más tardío) para que la solución sea reproducible y "razonable" a la
-  vista. Se recomienda factibilidad pura con semilla fija; decidir y registrar.
+- ~~Objetivo del Proyecto A~~ — factibilidad pura, sin función objetivo, con resultado
+  reproducible, decisión 0030 (2026-11-24).
 - **Mecanismo de tipos alternativos** en la instancia (lista por comisión, según 0009).
 
 ### Cierre
