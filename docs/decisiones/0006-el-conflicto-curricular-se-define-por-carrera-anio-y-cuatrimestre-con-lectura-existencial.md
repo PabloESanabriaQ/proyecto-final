@@ -1,6 +1,8 @@
 # 0006 — El conflicto curricular se define por (carrera, año, cuatrimestre), con lectura existencial y materias compartidas en varios grupos
 
 **Estado:** Aceptada — 2026-09-16
+**Modificada por:** [0032](0032-la-lectura-existencial-de-r1-r3-exige-una-eleccion-global-de-combinaciones-por-grupo.md)
+— la combinación cursable se elige una por materia y en conjunto para todo el grupo.
 
 ## Contexto
 
